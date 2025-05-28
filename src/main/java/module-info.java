@@ -5,6 +5,8 @@ module com.unisa.progettogruppocinque {
 
     requires eu.hansolo.tilesfx;
 
-    opens com.mdl04.progettogruppo05 to javafx.fxml;
-    exports com.mdl04.progettogruppo05;
+    opens application to javafx.fxml;
+    exports application;
+    exports controller;
+    opens controller to javafx.fxml;
 }

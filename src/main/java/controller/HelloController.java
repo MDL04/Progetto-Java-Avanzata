@@ -1,4 +1,4 @@
-package com.mdl04.progettogruppo05;
+package controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

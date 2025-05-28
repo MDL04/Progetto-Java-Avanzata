@@ -1,4 +1,4 @@
-package Actors;
+package actors;
 
 public class User {
     private Long id;

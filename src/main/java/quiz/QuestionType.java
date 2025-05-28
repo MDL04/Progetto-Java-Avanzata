@@ -1,4 +1,4 @@
-package Quiz;
+package quiz;
 
 public enum QuestionType {
     ABSOLUTE_FREQUENCY("Frequenza Assoluta",
