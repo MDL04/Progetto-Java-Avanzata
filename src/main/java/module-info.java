@@ -4,6 +4,7 @@ module com.unisa.progettogruppocinque {
     requires javafx.web;
 
     requires eu.hansolo.tilesfx;
+    requires java.sql;
 
     opens application to javafx.fxml;
     exports application;
