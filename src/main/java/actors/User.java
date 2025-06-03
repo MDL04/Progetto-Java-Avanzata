@@ -12,9 +12,12 @@ public class User {
     private int partite_easy;
     private int partite_normal;
     private int partite_hard;
+    private int score_normal;
+    private int score_hard;
+    private int score_easy;
     private String url_avatar;
 
-    public User(Long id, String username, String email, String password, boolean isAdmin, int best_score_easy, int best_score_normal, int best_score_hard, int partite_easy, int partite_normal, int partite_hard, String url_avatar) {
+    public User(Long id, String username, String email, String password, boolean isAdmin, int best_score_easy, int best_score_normal, int best_score_hard, int partite_easy, int partite_normal, int partite_hard, int score_easy, int score_normal, int score_hard, String url_avatar) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -26,6 +29,9 @@ public class User {
         this.partite_easy = partite_easy;
         this.partite_normal = partite_normal;
         this.partite_hard = partite_hard;
+        this.score_easy = score_easy;
+        this.score_normal = score_normal;
+        this.score_hard = score_hard;
         this.url_avatar = url_avatar;
     }
 
@@ -127,6 +133,28 @@ public class User {
         this.url_avatar = url_avatar;
     }
 
+    public int getScore_normal() {
+        return score_normal;
+    }
 
+    public void setScore_normal(int score_normal) {
+        this.score_normal = score_normal;
+    }
+
+    public int getScore_hard() {
+        return score_hard;
+    }
+
+    public void setScore_hard(int score_hard) {
+        this.score_hard = score_hard;
+    }
+
+    public int getScore_easy() {
+        return score_easy;
+    }
+
+    public void setScore_easy(int score_easy) {
+        this.score_easy = score_easy;
+    }
 }
 
