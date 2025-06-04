@@ -1,4 +1,4 @@
-package DAO;
+package dao;
 
 import actors.User;
 
@@ -21,16 +21,16 @@ public class UserDAO {
                     user.setId(rs.getLong("id"));
                     user.setEmail(rs.getString("email"));
                     user.setAdmin(rs.getBoolean("is_admin"));
-                    user.setBest_score_easy(rs.getInt("best_easy"));
-                    user.setBest_score_hard(rs.getInt("best_hard"));
-                    user.setBest_score_normal(rs.getInt("best_medium"));
-                    user.setScore_easy(rs.getInt("score_total_easy"));
-                    user.setScore_hard(rs.getInt("score_total_hard"));
-                    user.setScore_normal(rs.getInt("score_total_medium"));
-                    user.setPartite_easy(rs.getInt("games_easy"));
-                    user.setPartite_hard(rs.getInt("games_hard"));
-                    user.setPartite_normal(rs.getInt("games_medium"));
-                    user.setUrl_avatar(rs.getString("avatar_url"));
+                    user.setBestScoreEasy(rs.getInt("best_easy"));
+                    user.setBestScoreHard(rs.getInt("best_hard"));
+                    user.setBestScoreNormal(rs.getInt("best_medium"));
+                    user.setScoreEasy(rs.getInt("score_total_easy"));
+                    user.setScoreHard(rs.getInt("score_total_hard"));
+                    user.setScoreNormal(rs.getInt("score_total_medium"));
+                    user.setPartiteEasy(rs.getInt("games_easy"));
+                    user.setPartiteHard(rs.getInt("games_hard"));
+                    user.setPartiteNormal(rs.getInt("games_medium"));
+                    user.setUrlAvatar(rs.getString("avatar_url"));
                 }
                 result = Optional.ofNullable(user);
             }catch (SQLException e){

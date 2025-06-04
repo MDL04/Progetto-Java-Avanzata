@@ -6,33 +6,33 @@ public class User {
     private String email;
     private String password;
     private boolean isAdmin;
-    private int best_score_easy;
-    private int best_score_normal;
-    private int best_score_hard;
-    private int partite_easy;
-    private int partite_normal;
-    private int partite_hard;
-    private int score_normal;
-    private int score_hard;
-    private int score_easy;
-    private String url_avatar;
+    private int bestScoreEasy;
+    private int bestScoreNormal;
+    private int bestScoreHard;
+    private int partiteEasy;
+    private int partiteNormal;
+    private int partiteHard;
+    private int scoreNormal;
+    private int scoreHard;
+    private int scoreEasy;
+    private String urlAvatar;
 
-    public User(Long id, String username, String email, String password, boolean isAdmin, int best_score_easy, int best_score_normal, int best_score_hard, int partite_easy, int partite_normal, int partite_hard, int score_easy, int score_normal, int score_hard, String url_avatar) {
+    public User(Long id, String username, String email, String password, boolean isAdmin, int bestScoreEasy, int bestScoreNormal, int bestScoreHard, int partiteEasy, int partiteNormal, int partiteHard, int scoreEasy, int scoreNormal, int scoreHard, String urlAvatar) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
         this.isAdmin = isAdmin;
-        this.best_score_easy = best_score_easy;
-        this.best_score_normal = best_score_normal;
-        this.best_score_hard = best_score_hard;
-        this.partite_easy = partite_easy;
-        this.partite_normal = partite_normal;
-        this.partite_hard = partite_hard;
-        this.score_easy = score_easy;
-        this.score_normal = score_normal;
-        this.score_hard = score_hard;
-        this.url_avatar = url_avatar;
+        this.bestScoreEasy = bestScoreEasy;
+        this.bestScoreNormal = bestScoreNormal;
+        this.bestScoreHard = bestScoreHard;
+        this.partiteEasy = partiteEasy;
+        this.partiteNormal = partiteNormal;
+        this.partiteHard = partiteHard;
+        this.scoreEasy = scoreEasy;
+        this.scoreNormal = scoreNormal;
+        this.scoreHard = scoreHard;
+        this.urlAvatar = urlAvatar;
     }
 
 
@@ -77,84 +77,84 @@ public class User {
         isAdmin = admin;
     }
 
-    public int getBest_score_easy() {
-        return best_score_easy;
+    public int getBestScoreEasy() {
+        return bestScoreEasy;
     }
 
-    public void setBest_score_easy(int best_score_easy) {
-        this.best_score_easy = best_score_easy;
+    public void setBestScoreEasy(int bestScoreEasy) {
+        this.bestScoreEasy = bestScoreEasy;
     }
 
-    public int getBest_score_normal() {
-        return best_score_normal;
+    public int getBestScoreNormal() {
+        return bestScoreNormal;
     }
 
-    public void setBest_score_normal(int best_score_normal) {
-        this.best_score_normal = best_score_normal;
+    public void setBestScoreNormal(int bestScoreNormal) {
+        this.bestScoreNormal = bestScoreNormal;
     }
 
-    public int getBest_score_hard() {
-        return best_score_hard;
+    public int getBestScoreHard() {
+        return bestScoreHard;
     }
 
-    public void setBest_score_hard(int best_score_hard) {
-        this.best_score_hard = best_score_hard;
+    public void setBestScoreHard(int bestScoreHard) {
+        this.bestScoreHard = bestScoreHard;
     }
 
-    public int getPartite_easy() {
-        return partite_easy;
+    public int getPartiteEasy() {
+        return partiteEasy;
     }
 
-    public void setPartite_easy(int partite_easy) {
-        this.partite_easy = partite_easy;
+    public void setPartiteEasy(int partiteEasy) {
+        this.partiteEasy = partiteEasy;
     }
 
-    public int getPartite_normal() {
-        return partite_normal;
+    public int getPartiteNormal() {
+        return partiteNormal;
     }
 
-    public void setPartite_normal(int partite_normal) {
-        this.partite_normal = partite_normal;
+    public void setPartiteNormal(int partiteNormal) {
+        this.partiteNormal = partiteNormal;
     }
 
-    public int getPartite_hard() {
-        return partite_hard;
+    public int getPartiteHard() {
+        return partiteHard;
     }
 
-    public void setPartite_hard(int partite_hard) {
-        this.partite_hard = partite_hard;
+    public void setPartiteHard(int partiteHard) {
+        this.partiteHard = partiteHard;
     }
 
-    public String getUrl_avatar() {
-        return url_avatar;
+    public String getUrlAvatar() {
+        return urlAvatar;
     }
 
-    public void setUrl_avatar(String url_avatar) {
-        this.url_avatar = url_avatar;
+    public void setUrlAvatar(String urlAvatar) {
+        this.urlAvatar = urlAvatar;
     }
 
-    public int getScore_normal() {
-        return score_normal;
+    public int getScoreNormal() {
+        return scoreNormal;
     }
 
-    public void setScore_normal(int score_normal) {
-        this.score_normal = score_normal;
+    public void setScoreNormal(int scoreNormal) {
+        this.scoreNormal = scoreNormal;
     }
 
-    public int getScore_hard() {
-        return score_hard;
+    public int getScoreHard() {
+        return scoreHard;
     }
 
-    public void setScore_hard(int score_hard) {
-        this.score_hard = score_hard;
+    public void setScoreHard(int scoreHard) {
+        this.scoreHard = scoreHard;
     }
 
-    public int getScore_easy() {
-        return score_easy;
+    public int getScoreEasy() {
+        return scoreEasy;
     }
 
-    public void setScore_easy(int score_easy) {
-        this.score_easy = score_easy;
+    public void setScoreEasy(int scoreEasy) {
+        this.scoreEasy = scoreEasy;
     }
 }
 
