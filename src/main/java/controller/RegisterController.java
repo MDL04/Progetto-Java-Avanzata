@@ -4,7 +4,13 @@ import actors.User;
 import dao.UserDAO;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 import utils.PasswordUtils;
+
+import java.io.IOException;
 
 public class RegisterController {
 
@@ -27,7 +33,8 @@ public class RegisterController {
         String confirmPassword = confirmPasswordFld.getText();
 
         if(!password.equals(confirmPassword)) {
-            messageLbl.setText("Le password non coincindono");
+            messageLbl.setText("Le password non coincindono!");
+            messageLbl.setStyle("-fx-text-fill: red;");
             return;
         }
 
@@ -41,6 +48,21 @@ public class RegisterController {
         user.setUrlAvatar("default_avatar.png");
 
         userDAO.insert(user);
-        messageLbl.setText("Registrazione completata");
+        messageLbl.setText("Registrazione completata!");
+        messageLbl.setStyle("-fx-text-fill: green;");
+    }
+
+    @FXML
+    private void goToLogin(){
+        try{
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/login.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) usernameFld.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Login");
+            stage.show();
+        } catch (IOException e) {
+                throw new RuntimeException(e);
+        }
     }
 }

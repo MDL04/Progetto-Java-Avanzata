@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:controller="controller.RegisterController"
+            xmlns:fx="http://javafx.com/fxml" prefWidth="400" prefHeight="400">
+
+    <VBox spacing="10" layoutX="50" layoutY="30">
+        <TextField fx:id="usernameFld" promptText="Username"/>
+        <TextField fx:id="emailFld" promptText="Email"/>
+        <PasswordField fx:id="passwordFld" promptText="Password"/>
+        <PasswordField fx:id="confirmPasswordFld" promptText="Conferma Password"/>
+
+        <Button text="Registrati" onAction="#handleRegister"/>
+        <Label fx:id="messageLbl"/>
+
+        <HBox alignment="CENTER">
+            <Label text="Sei già registrato? " />
+            <Hyperlink text="Effettua il login!"
+                       style="-fx-text-fill: #0077cc; -fx-font-size: 11px;"
+                       onAction="#goToLogin"/>
+        </HBox>
+
+    </VBox>
+</AnchorPane>
+
