@@ -102,7 +102,7 @@ public class UserDAO {
 
         public boolean checkLogin(String username, String password) {
             try (Connection connection = DBManager.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM users WHERE username = ? AND password = ?")) {
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM users WHERE username = ? AND password_hash = ?")) {
                 preparedStatement.setString(1, username);
                 preparedStatement.setString(2, password);
                 ResultSet rs = preparedStatement.executeQuery();
