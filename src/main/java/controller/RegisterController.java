@@ -32,6 +32,16 @@ public class RegisterController {
         String password = passwordFld.getText();
         String confirmPassword = confirmPasswordFld.getText();
 
+        if(!email.contains("@")){
+            messageLbl.setText("Email non valida. Deve contenere il carattere '@'");
+            messageLbl.setStyle("-fx-text-fill: red;");
+        }
+
+        if(password.length() < 7){
+            messageLbl.setText("Password non valida. Deve contenere almeno 7 caratteri");
+            messageLbl.setStyle("-fx-text-fill: red;");
+        }
+
         if(!password.equals(confirmPassword)) {
             messageLbl.setText("Le password non coincindono!");
             messageLbl.setStyle("-fx-text-fill: red;");
