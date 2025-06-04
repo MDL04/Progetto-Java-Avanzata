@@ -1,6 +1,7 @@
 package dao;
 
-import actors.User;
+import model.User;
+import utils.DBManager;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ public class UserDAO {
         public Optional<User> selectById(long id) {
             Optional<User> result = Optional.empty();
             try(Connection connection = DBManager.getConnection();
-            Statement sta = connection.createStatement();
+                Statement sta = connection.createStatement();
                 ResultSet rs = sta.executeQuery("SELECT * FROM users WHERE id = " + id)){
                 User user = null;
                 if (rs.next()) {

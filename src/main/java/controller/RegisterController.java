@@ -1,6 +1,6 @@
 package controller;
 
-import actors.User;
+import model.User;
 import dao.UserDAO;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
