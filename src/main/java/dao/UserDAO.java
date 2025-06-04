@@ -113,13 +113,15 @@ public class UserDAO {
             return false;
         }
 
-//        public boolean update(User user, String difficulty, int score) {
-//            try (Connection connection = DBManager.getConnection();
-//            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE users SET games_" + difficulty + " = games_" + difficulty + " + 1, total_score_" + difficulty + " = total_score_" + difficulty + " + " + score + ", best_" + difficulty + " = GREATEST(best_" + difficulty + ", " + score + ") WHERE id = " + user.getId());
-//            ){
-//
-//            } catch (SQLException ex) {
-//                ex.printStackTrace();
-//            }
-//        }
+        public void update(User user, String difficulty, int score) {
+            try (Connection connection = DBManager.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE users " + "SET " + "games_" + difficulty + " = games_" + difficulty + " + 1, " + "total_score_" + difficulty + " = total_score_" + difficulty + " + ?, " + "best_" + difficulty + " = GREATEST(best_" + difficulty + ", ?) " + "WHERE id = ?")){
+                preparedStatement.setInt(1, score);
+                preparedStatement.setInt(2, score);
+                preparedStatement.setLong(3, user.getId());
+                preparedStatement.executeUpdate();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
 }
