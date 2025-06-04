@@ -121,5 +121,5 @@ public class UserDAO {
 //            } catch (SQLException ex) {
 //                ex.printStackTrace();
 //            }
-//        } puerco dios
+//        }
 }

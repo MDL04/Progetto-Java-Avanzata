@@ -47,9 +47,13 @@ public class RegisterController {
         user.setAdmin(false);
         user.setUrlAvatar("default_avatar.png");
 
-        userDAO.insert(user);
-        messageLbl.setText("Registrazione completata!");
-        messageLbl.setStyle("-fx-text-fill: green;");
+        if(userDAO.insert(user)){
+            messageLbl.setText("Registrazione completata!");
+            messageLbl.setStyle("-fx-text-fill: green;");
+        }else{
+            messageLbl.setText("Errore nella registrazione!");
+            messageLbl.setStyle("-fx-text-fill: red;");
+        }
     }
 
     @FXML
