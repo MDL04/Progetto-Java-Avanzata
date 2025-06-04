@@ -35,6 +35,7 @@ public class User {
         this.urlAvatar = urlAvatar;
     }
 
+    public User(){}
 
 
     public Long getId() {
