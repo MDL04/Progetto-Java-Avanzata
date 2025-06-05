@@ -35,11 +35,19 @@ public class RegisterController {
         if(!email.contains("@")){
             messageLbl.setText("Email non valida. Deve contenere il carattere '@'");
             messageLbl.setStyle("-fx-text-fill: red;");
+            return;
+        }
+
+        if (!email.contains("@") || !email.substring(email.indexOf("@")).contains(".")) {
+            messageLbl.setText("❌ Email non valida: dominio non riconosciuto");
+            messageLbl.setStyle("-fx-text-fill: red;");
+            return;
         }
 
         if(password.length() < 7){
             messageLbl.setText("Password non valida. Deve contenere almeno 7 caratteri");
             messageLbl.setStyle("-fx-text-fill: red;");
+            return;
         }
 
         if(!password.equals(confirmPassword)) {
