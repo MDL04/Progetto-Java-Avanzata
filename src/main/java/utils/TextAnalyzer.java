@@ -3,6 +3,11 @@ package utils;
 import java.util.*;
 
 public class TextAnalyzer {
+    private final StopwordsManager stopwordsManager;
+
+    public TextAnalyzer(final StopwordsManager stopwordsManager) {
+        this.stopwordsManager = stopwordsManager;
+    }
 
     public Map<String, Integer> analyze(String content) {
         Map<String, Integer> frequencies = new HashMap<>();
@@ -12,7 +17,7 @@ public class TextAnalyzer {
                 .split("\\s+");
 
         for (String word : words) {
-            if (!word.isBlank()) {
+            if (!word.isBlank() && !stopwordsManager.isStopword(word)) {
                 frequencies.put(word, frequencies.getOrDefault(word, 0) + 1);
             }
         }
