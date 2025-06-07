@@ -125,4 +125,17 @@ public class UserDAO {
                 ex.printStackTrace();
             }
         }
+
+        public void delete(User user){
+            try(Connection connection = DBManager.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM users WHERE username = ?")) {
+                preparedStatement.setString(1, user.getUsername());
+                int rowsAffected = preparedStatement.executeUpdate();
+                if (rowsAffected == 0) {
+                    System.out.println("Nessun utente eliminato.");
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
 }

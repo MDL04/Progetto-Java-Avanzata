@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.HomepageController">
+   <children>
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="153.0" layoutY="14.0" prefHeight="42.0" prefWidth="294.0" text="WORDAGEDDON">
+         <font>
+            <Font name="Arial Black" size="28.0" />
+         </font>
+      </Label>
+      <Label layoutX="285.0" layoutY="81.0" />
+      <ToggleButton fx:id="accessButton" layoutX="241.0" layoutY="138.0" mnemonicParsing="false" onAction="#goToLogin" prefHeight="35.0" prefWidth="97.0" text="Accedi">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </ToggleButton>
+      <ToggleButton fx:id="accessButton1" layoutX="241.0" layoutY="187.0" mnemonicParsing="false" text="Classifica">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </ToggleButton>
+      <ToggleButton fx:id="accessButton2" layoutX="240.0" layoutY="234.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="97.0" text="Info">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </ToggleButton>
+   </children>
+</AnchorPane>

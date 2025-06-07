@@ -50,7 +50,21 @@ public class LoginController {
             stage.setTitle("Registrazione");
             stage.show();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void goToHome() {
+        try{
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/homepage.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) usernameFld.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Homepage");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

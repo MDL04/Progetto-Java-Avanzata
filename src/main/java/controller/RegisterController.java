@@ -39,7 +39,7 @@ public class RegisterController {
         }
 
         if (!email.contains("@") || !email.substring(email.indexOf("@")).contains(".")) {
-            messageLbl.setText("❌ Email non valida: dominio non riconosciuto");
+            messageLbl.setText("Email non valida: dominio non riconosciuto");
             messageLbl.setStyle("-fx-text-fill: red;");
             return;
         }
@@ -75,7 +75,7 @@ public class RegisterController {
     }
 
     @FXML
-    private void goToLogin(){
+    void goToLogin(){
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/login.fxml"));
             Parent root = loader.load();
