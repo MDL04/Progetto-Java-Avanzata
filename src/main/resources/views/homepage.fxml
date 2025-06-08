@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.HomepageController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.HomepageController">
    <children>
       <Label alignment="CENTER" contentDisplay="CENTER" layoutX="153.0" layoutY="14.0" prefHeight="42.0" prefWidth="294.0" text="WORDAGEDDON">
          <font>
@@ -13,20 +15,33 @@
          </font>
       </Label>
       <Label layoutX="285.0" layoutY="81.0" />
-      <ToggleButton fx:id="accessButton" layoutX="241.0" layoutY="138.0" mnemonicParsing="false" onAction="#goToLogin" prefHeight="35.0" prefWidth="97.0" text="Accedi">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </ToggleButton>
-      <ToggleButton fx:id="accessButton1" layoutX="241.0" layoutY="187.0" mnemonicParsing="false" text="Classifica">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </ToggleButton>
-      <ToggleButton fx:id="accessButton2" layoutX="240.0" layoutY="234.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="97.0" text="Info">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </ToggleButton>
+      <VBox alignment="CENTER" layoutX="240.0" layoutY="138.0">
+         <children>
+            <ToggleButton fx:id="accessButton" mnemonicParsing="false" onAction="#goToLogin" prefHeight="35.0" prefWidth="97.0" text="Accedi">
+               <font>
+                  <Font size="18.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="10.0" top="10.0" />
+               </VBox.margin>
+            </ToggleButton>
+            <ToggleButton fx:id="leaderboardButton" mnemonicParsing="false" onAction="#goToLeaderboard" text="Classifica">
+               <font>
+                  <Font size="18.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="10.0" top="10.0" />
+               </VBox.margin>
+            </ToggleButton>
+            <ToggleButton fx:id="infoButton" mnemonicParsing="false" onAction="#goToInfo" prefHeight="35.0" prefWidth="97.0" text="Info">
+               <font>
+                  <Font size="18.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="10.0" top="10.0" />
+               </VBox.margin>
+            </ToggleButton>
+         </children>
+      </VBox>
    </children>
 </AnchorPane>

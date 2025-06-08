@@ -3,9 +3,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="300" prefWidth="400" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.12" fx:controller="controller.LoginController">
+<AnchorPane prefHeight="400" prefWidth="600" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LoginController">
 
-    <VBox layoutX="50" layoutY="30" spacing="10">
+    <VBox alignment="TOP_CENTER" layoutX="191.0" layoutY="75.0" spacing="10">
         <TextField fx:id="usernameFld" promptText="Username" />
         <PasswordField fx:id="passwordFld" promptText="Password" />
 
@@ -18,5 +18,5 @@
         </HBox>
 
     </VBox>
-   <Label layoutX="50.0" layoutY="221.0" text="Go back" />
+    <Button layoutX="245.0" layoutY="341.0" onAction="#goToHome" text="Tona alla home" />
 </AnchorPane>

@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.event.ActionEvent;
 import model.User;
 import dao.UserDAO;
 import javafx.fxml.FXML;
@@ -9,6 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import utils.PasswordUtils;
+import javafx.scene.Node;
 
 import java.io.IOException;
 
@@ -85,6 +87,20 @@ public class RegisterController {
             stage.show();
         } catch (IOException e) {
                 throw new RuntimeException(e);
+        }
+    }
+
+    @FXML
+    private void goToHome(ActionEvent event) {
+        try{
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/homepage.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Homepage");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
