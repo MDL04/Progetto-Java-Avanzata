@@ -92,6 +92,11 @@ public class LoginController {
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/userdashboard.fxml"));
             Parent root = loader.load();
+            UserDashboardController userDashboardController = loader.getController();
+            Optional<User> userOpt = userDAO.selectByUsername(usernameFld.getText());
+            if(userOpt.isPresent()) {
+                userDashboardController.setUser(userOpt.get());
+            }
             Stage stage = (Stage) usernameFld.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("Area utente");
