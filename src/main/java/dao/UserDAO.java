@@ -14,7 +14,8 @@ public class UserDAO {
             Optional<User> result = Optional.empty();
             try(Connection connection = DBManager.getConnection();
                 Statement sta = connection.createStatement();
-                ResultSet rs = sta.executeQuery("SELECT * FROM users WHERE id = " + id)){
+                ResultSet rs = sta.executeQuery("SELECT * FROM users WHERE id = ?")){
+                rs.getLong("id");
                 User user = null;
                 if (rs.next()) {
                     user.setUsername(rs.getString("username"));
@@ -43,27 +44,61 @@ public class UserDAO {
         public Optional<User> selectByUsername(String username) {
             Optional<User> result = Optional.empty();
             try (Connection connection = DBManager.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM users WHERE username = " + username);
-                ResultSet rs = preparedStatement.executeQuery()){
-                User user = null;
-                if (rs.next()) {
-                    user.setUsername(rs.getString("username"));
-                    user.setPassword(rs.getString("password_hash"));
-                    user.setId(rs.getLong("id"));
-                    user.setEmail(rs.getString("email"));
-                    user.setAdmin(rs.getBoolean("is_admin"));
-                    user.setBestScoreEasy(rs.getInt("best_easy"));
-                    user.setBestScoreNormal(rs.getInt("best_medium"));
-                    user.setBestScoreHard(rs.getInt("best_hard"));
-                    user.setScoreEasy(rs.getInt("score_total_easy"));
-                    user.setScoreNormal(rs.getInt("score_total_medium"));
-                    user.setScoreHard(rs.getInt("score_total_hard"));
-                    user.setPartiteEasy(rs.getInt("games_easy"));
-                    user.setPartiteNormal(rs.getInt("games_medium"));
-                    user.setPartiteHard(rs.getInt("games_hard"));
-                    user.setUrlAvatar(rs.getString("avatar_url"));
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM users WHERE username = ?")){
+                preparedStatement.setString(1, username);
+                try (ResultSet rs = preparedStatement.executeQuery()) {
+                    if (rs.next()) {
+                        User user = new User();
+                        user.setUsername(rs.getString("username"));
+                        user.setPassword(rs.getString("password_hash"));
+                        user.setId(rs.getLong("id"));
+                        user.setEmail(rs.getString("email"));
+                        user.setAdmin(rs.getBoolean("is_admin"));
+                        user.setBestScoreEasy(rs.getInt("best_easy"));
+                        user.setBestScoreNormal(rs.getInt("best_medium"));
+                        user.setBestScoreHard(rs.getInt("best_hard"));
+                        user.setScoreEasy(rs.getInt("score_total_easy"));
+                        user.setScoreNormal(rs.getInt("score_total_medium"));
+                        user.setScoreHard(rs.getInt("score_total_hard"));
+                        user.setPartiteEasy(rs.getInt("games_easy"));
+                        user.setPartiteNormal(rs.getInt("games_medium"));
+                        user.setPartiteHard(rs.getInt("games_hard"));
+                        user.setUrlAvatar(rs.getString("avatar_url"));
+                        return Optional.ofNullable(user);
+                    }
                 }
-                return result;
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            return result;
+        }
+
+        public Optional<User> selectByEmail(String email) {
+            Optional<User> result = Optional.empty();
+            try (Connection connection = DBManager.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM users WHERE email = ?")) {
+                preparedStatement.setString(1, email);
+                try (ResultSet rs = preparedStatement.executeQuery()) {
+                    while (rs.next()) {
+                        User user = new User();
+                        user.setUsername(rs.getString("username"));
+                        user.setPassword(rs.getString("password_hash"));
+                        user.setId(rs.getLong("id"));
+                        user.setEmail(rs.getString("email"));
+                        user.setAdmin(rs.getBoolean("is_admin"));
+                        user.setBestScoreEasy(rs.getInt("best_easy"));
+                        user.setBestScoreNormal(rs.getInt("best_medium"));
+                        user.setBestScoreHard(rs.getInt("best_hard"));
+                        user.setScoreEasy(rs.getInt("score_total_easy"));
+                        user.setScoreNormal(rs.getInt("score_total_medium"));
+                        user.setScoreHard(rs.getInt("score_total_hard"));
+                        user.setPartiteEasy(rs.getInt("games_easy"));
+                        user.setPartiteNormal(rs.getInt("games_medium"));
+                        user.setPartiteHard(rs.getInt("games_hard"));
+                        user.setUrlAvatar(rs.getString("avatar_url"));
+                        return Optional.ofNullable(user);
+                    }
+                }
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }

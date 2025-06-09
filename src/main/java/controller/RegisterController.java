@@ -58,6 +58,18 @@ public class RegisterController {
             return;
         }
 
+        if(userDAO.selectByUsername(username).isPresent()){
+            messageLbl.setText("Username non disponibile. Scegline un altro!");
+            messageLbl.setStyle("-fx-text-fill: red;");
+            return;
+        }
+
+        if (userDAO.selectByEmail(email).isPresent()) {
+            messageLbl.setText("Email non disponibile. Potresti avere già un account.");
+            messageLbl.setStyle("-fx-text-fill: red;");
+            return;
+        }
+
         String hashedPassword = PasswordUtils.hashPassword(password);
 
         User user = new User();
@@ -70,6 +82,7 @@ public class RegisterController {
         if(userDAO.insert(user)){
             messageLbl.setText("Registrazione completata!");
             messageLbl.setStyle("-fx-text-fill: green;");
+            goToLogin();
         }else{
             messageLbl.setText("Errore nella registrazione!");
             messageLbl.setStyle("-fx-text-fill: red;");
