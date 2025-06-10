@@ -1,15 +1,15 @@
 package controller;
 
-import javafx.event.ActionEvent;
+
+import dao.DocumentDAO;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import model.Document;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -26,20 +26,55 @@ public class AdminController {
     @FXML
     private Label messageLabel;
 
+    @FXML
+    private ComboBox<String> languageComboBox;
 
     @FXML
-    public void handleLoadDocumentFile() {
+    private void initialize() {
+        languageComboBox.setValue("Seleziona linguaggio");
+
+        languageComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if ("Italiano".equals(newValue)) {
+                languageComboBox.setValue("");
+                handleLoadItDoc();
+            } else if ("Inglese".equals(newValue)) {
+                languageComboBox.setValue("");
+                handleLoadEnDoc();
+            }
+        });
+    }
+
+
+
+
+    @FXML
+    public void handleLoadItDoc() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Seleziona un file di documento (.txt)");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("File di Testo", "*.txt"));
 
         File file = fileChooser.showOpenDialog(getStage());
         if (file != null) {
-            documentList.getItems().add(file.getAbsolutePath());
+            documentList.getItems().add(file.getName());
             messageLabel.setText("Documento caricato: " + file.getName());
             //WDMManager.delete(); // per rigenerare l’indice
         }
     }
+
+    @FXML
+    public void handleLoadEnDoc() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Seleziona un file di documento (.txt)");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("File di Testo", "*.txt"));
+
+        File file = fileChooser.showOpenDialog(getStage());
+        if (file != null) {
+            documentList.getItems().add(file.getName());
+            messageLabel.setText("Documento caricato: " + file.getName());
+            //WDMManager.delete(); // per rigenerare l’indice
+        }
+    }
+
 
     @FXML
     public void handleLoadStopwordFile() {
@@ -66,7 +101,6 @@ public class AdminController {
         String selected = documentList.getSelectionModel().getSelectedItem();
         if (selected != null) {
             documentList.getItems().remove(selected);
-            messageLabel.setText("Documento rimosso.");
             //WDMManager.delete();
         }
     }

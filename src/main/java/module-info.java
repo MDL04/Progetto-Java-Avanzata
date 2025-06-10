@@ -5,6 +5,7 @@ module com.unisa.progettogruppocinque {
 
     requires eu.hansolo.tilesfx;
     requires java.sql;
+    requires java.desktop;
 
     opens application to javafx.fxml;
     exports application;
