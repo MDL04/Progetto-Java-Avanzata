@@ -77,4 +77,12 @@
    </HBox>
    <ListView prefHeight="141.0" prefWidth="333.0" />
    <Label fx:id="messageLabel" />
+   <Button fx:id="logoutButton" mnemonicParsing="false" onAction="#handleLogout" text="Logout">
+      <font>
+         <Font name="Arial Bold" size="14.0" />
+      </font>
+      <HBox.margin>
+         <Insets left="20.0" right="20.0" />
+      </HBox.margin>
+   </Button>
 </VBox>

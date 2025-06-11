@@ -49,6 +49,14 @@
                         <Font size="18.0" />
                      </font>
                   </Button>
+                  <Button fx:id="logoutButton" mnemonicParsing="false" onAction="#handleLogout" text="Logout">
+                     <VBox.margin>
+                        <Insets bottom="10.0" top="10.0" />
+                     </VBox.margin>
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Button>
                </children>
                <HBox.margin>
                   <Insets right="40.0" />

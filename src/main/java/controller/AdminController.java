@@ -2,7 +2,12 @@ package controller;
 
 
 import dao.DocumentDAO;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -177,6 +182,22 @@ public class AdminController {
             stopwordList.getItems().remove(selected);
             messageLabel.setText("Stopword rimossa.");
             WDMManager.delete();
+        }
+    }
+
+    @FXML
+    private void handleLogout(ActionEvent event) {
+        try {
+            Stage currentStage = (Stage) documentList.getScene().getWindow();
+            currentStage.close();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/homepage.fxml"));
+            Parent root = loader.load();
+            Stage homeStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            homeStage.setScene(new Scene(root));
+            homeStage.setTitle("Homepage");
+            homeStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
