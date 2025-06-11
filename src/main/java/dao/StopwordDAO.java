@@ -3,7 +3,6 @@ package dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import model.Document;
 import model.Stopword;
 import java.sql.*;
 import utils.DBManager;
