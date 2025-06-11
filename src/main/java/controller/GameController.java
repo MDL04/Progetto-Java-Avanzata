@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.stage.Stage;
 import quiz.GameSession;
 import quiz.Question;
 import quiz.QuestionFactory;
@@ -91,19 +92,17 @@ public class GameController {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Conferma uscita");
         alert.setHeaderText("Sei sicuro di voler uscire?");
-        alert.setContentText("Scegli un'opzione:");
+        alert.setContentText("Uscendo ora, perderai i progressi si questa partita e non potrai salvarli.");
 
-        ButtonType salva = new ButtonType("Salva e Esci");
         ButtonType esciSenzaSalvare = new ButtonType("Esci senza salvare");
         ButtonType annulla = new ButtonType("Annulla", ButtonBar.ButtonData.CANCEL_CLOSE);
 
-        alert.getButtonTypes().setAll(salva, esciSenzaSalvare, annulla);
+        alert.getButtonTypes().setAll(esciSenzaSalvare, annulla);
 
         Optional<ButtonType> result = alert.showAndWait();
-        if(result.isPresent()){
-            if(result.get() == salva){
-                //Salvo nel database. Per farlo si può creare un metodo in gamesessionDAO. Devo quittare. -Franzab
-            }
+        if(result.isPresent() && result.get() == esciSenzaSalvare){
+            Stage stage = (Stage) alert.getOwner();
+            stage.close();
         }
     }
 
