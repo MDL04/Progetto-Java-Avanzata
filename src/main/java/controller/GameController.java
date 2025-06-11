@@ -1,5 +1,9 @@
 package controller;
 
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 import quiz.GameSession;
 import quiz.Question;
 import quiz.QuestionFactory;
@@ -7,6 +11,7 @@ import model.WordDocumentMatrix;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
+import java.io.IOException;
 import java.util.Optional;
 
 public class GameController {
@@ -120,6 +125,23 @@ public class GameController {
         nextButton.setDisable(true);
         questionLabel.setText("Fine quiz");
         optionsList.getItems().clear();
+    }
+
+    @FXML
+    public void goToPostGameDashboard() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/postgamedashboard.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Riepilogo Partita");
+            stage.setScene(new Scene(root, 800, 600));
+            stage.show();
+
+        } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Errore nel caricamento della dashboard");
+            alert.show();
+        }
+
     }
 
 }
