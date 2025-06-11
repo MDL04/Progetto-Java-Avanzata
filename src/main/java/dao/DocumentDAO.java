@@ -74,7 +74,7 @@ public class DocumentDAO {
 
     }
 
-    public static List<Document> selectAll() {
+    public static List<Document> selectAllDocuments() {
         List<Document> documents = new ArrayList<>();
         try(Connection connection = DBManager.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM documents");

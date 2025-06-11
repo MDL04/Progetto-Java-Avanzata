@@ -2,11 +2,12 @@ package controller;
 
 
 import dao.DocumentDAO;
+import dao.StopwordDAO;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import model.Document;
+import model.Stopword;
 import utils.WDMManager;
 
 import java.io.File;
@@ -31,11 +32,17 @@ public class AdminController {
     @FXML
     private void initialize() {
         List<Document> allDocs = new ArrayList<>();
-        allDocs.addAll(DocumentDAO.selectAll());
+        allDocs.addAll(DocumentDAO.selectAllDocuments());
 
-        for (Document doc : allDocs) {
+        List<Stopword> allStopwords = new ArrayList<>();
+        allStopwords.addAll(StopwordDAO.selectAllStopwords());
+
+        for (Document doc : allDocs)
             documentList.getItems().add(doc.getTitle());
-        }
+
+
+        for  (Stopword stopword : allStopwords)
+            stopwordList.getItems().add(stopword.getTitle());
 
     }
 
@@ -80,6 +87,19 @@ public class AdminController {
 
     @FXML
     public void handleLoadStopword() {
+        List<String> choices = Arrays.asList("Italiano", "Inglese");
+        ChoiceDialog<String> dialog = new ChoiceDialog<>("Italiano", choices);
+        dialog.setTitle("Seleziona lingua");
+        dialog.setHeaderText("Scegli la lingua del documento");
+        dialog.setContentText("Lingua:");
+
+        Optional<String> result = dialog.showAndWait();
+        if (result.isEmpty()) {
+            return;
+        }
+        String selectedLang = result.get();
+        String language = selectedLang.equals("Italiano") ? "it" : "en";
+
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Seleziona un file di stopwords");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("File di Testo", "*.txt"));
@@ -87,9 +107,12 @@ public class AdminController {
         File file = fileChooser.showOpenDialog(null);
         if (file != null) {
             try {
-                List<String> words = Files.readAllLines(file.toPath());
-                stopwordList.getItems().addAll(words);
-                //WDMManager.delete();
+                String content = Files.readString(file.toPath());
+                String title = file.getName();
+                Stopword stopword = new Stopword(language, content, 0, title);
+                StopwordDAO.insertStopword(stopword);
+                stopwordList.getItems().add(title);
+                showAlert("Successo", "Stopwords caricate correttamente.");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -127,7 +150,21 @@ public class AdminController {
     public void handleRemoveSelectedStopword() {
         String selected = stopwordList.getSelectionModel().getSelectedItem();
         if (selected != null) {
-            stopwordList.getItems().remove(selected);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Conferma");
+            alert.setHeaderText(null);
+            alert.setContentText("Vuoi davvero eliminare le stopwords \"" + selected + "\"?");
+
+            Optional<ButtonType> result = alert.showAndWait();
+
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                Optional<Stopword> optionalStopword = StopwordDAO.selectSWByTitle(selected);
+                if (optionalStopword.isPresent()) {
+                    Stopword stopword = optionalStopword.get();
+                    StopwordDAO.deleteStopword(stopword);
+                    stopwordList.getItems().remove(selected);
+                }else showAlert("Errore", "Stopwords " + selected + " non trovate nel database.");
+            }
             WDMManager.delete();
         }
     }
