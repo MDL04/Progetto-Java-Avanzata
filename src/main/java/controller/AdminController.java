@@ -1,6 +1,5 @@
 package controller;
 
-
 import dao.DocumentDAO;
 import dao.StopwordDAO;
 import javafx.event.ActionEvent;
@@ -47,6 +46,8 @@ public class AdminController {
         for (Stopword sw : allSW)
             stopwordList.getItems().add(sw.getTitle());
 
+        // ⚠️ Inizializza WDM appena avvii la schermata
+        WDMManager.getInstance();
     }
 
     @FXML
@@ -78,6 +79,11 @@ public class AdminController {
                 Document doc = new Document(0, language, content, title);
                 DocumentDAO.insertDocument(doc);
                 documentList.getItems().add(title);
+
+                // ✅ Ricarica WDM
+                WDMManager.delete();
+                WDMManager.getInstance();
+
                 showInfoAlert("Successo", "Documento caricato correttamente.");
             } catch (IOException | SQLException e) {
                 e.printStackTrace();
@@ -86,13 +92,12 @@ public class AdminController {
         }
     }
 
-
     @FXML
     public void handleLoadStopwords() {
         List<String> choices = Arrays.asList("Italiano", "Inglese");
         ChoiceDialog<String> dialog = new ChoiceDialog<>("Italiano", choices);
         dialog.setTitle("Seleziona lingua");
-        dialog.setHeaderText("Scegli la lingua del documento");
+        dialog.setHeaderText("Scegli la lingua delle stopwords");
         dialog.setContentText("Lingua:");
 
         Optional<String> result = dialog.showAndWait();
@@ -114,33 +119,34 @@ public class AdminController {
                 Stopword stopword = new Stopword(language, words, 0, title);
                 StopwordDAO.insertStopword(stopword);
                 stopwordList.getItems().add(title);
+
+                // ✅ Ricarica WDM
+                WDMManager.delete();
+                WDMManager.getInstance();
             } catch (IOException e) {
                 e.printStackTrace();
+                showInfoAlert("Errore", "Errore durante il caricamento delle stopwords.");
             }
         }
     }
 
-
     @FXML
     public void handleRemoveSelectedDocument() {
         String selected = documentList.getSelectionModel().getSelectedItem();
-
-        if (selected!=null) {
+        if (selected != null) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Conferma");
-            alert.setHeaderText(null);
             alert.setContentText("Vuoi davvero eliminare il documento \"" + selected + "\"?");
-
             Optional<ButtonType> result = alert.showAndWait();
+
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 Optional<Document> optionalDocument = DocumentDAO.selectDocumentByTitle(selected);
                 if (optionalDocument.isPresent()) {
                     DocumentDAO.deleteDocument(optionalDocument.get());
                     documentList.getItems().remove(selected);
-                }else{
+                } else {
                     showInfoAlert("Errore", "Documento \"" + selected + "\" non trovato nel database.");
                 }
-                WDMManager.delete();
             }
         }
     }
@@ -151,19 +157,17 @@ public class AdminController {
         if (selected != null) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Conferma");
-            alert.setHeaderText(null);
             alert.setContentText("Vuoi davvero eliminare le stopwords \"" + selected + "\"?");
-
             Optional<ButtonType> result = alert.showAndWait();
+
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 Optional<Stopword> optionalStopword = StopwordDAO.selectSWByTitle(selected);
                 if (optionalStopword.isPresent()) {
                     StopwordDAO.deleteStopword(optionalStopword.get());
                     stopwordList.getItems().remove(selected);
-                }else{
+                } else {
                     showInfoAlert("Errore", "Stopwords \"" + selected + "\" non trovato nel database.");
                 }
-                WDMManager.delete();
             }
         }
     }
@@ -195,7 +199,6 @@ public class AdminController {
             }
         }
     }
-
 
     private void showInfoAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);

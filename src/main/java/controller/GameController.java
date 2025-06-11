@@ -3,7 +3,7 @@ package controller;
 import quiz.GameSession;
 import quiz.Question;
 import quiz.QuestionFactory;
-import utils.WordDocumentMatrix;
+import model.WordDocumentMatrix;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 

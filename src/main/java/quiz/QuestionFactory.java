@@ -1,6 +1,6 @@
 package quiz;
 
-import utils.WordDocumentMatrix;
+import model.WordDocumentMatrix;
 
 import java.util.*;
 

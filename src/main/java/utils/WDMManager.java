@@ -1,40 +1,47 @@
 package utils;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.util.List;
+import dao.DocumentDAO;
+import dao.StopwordDAO;
+import model.Document;
+import model.Stopword;
+import model.WordDocumentMatrix;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class WDMManager {
-    private static final String WDM_FILE = "resources/wordDocumentMatrix.ser";
+    private static WordDocumentMatrix matrix;
 
-    public static void rigenera(List<File> documenti, List<String> stopwords) {
-        WordDocumentMatrix matrix = new WordDocumentMatrix();
-        matrix.setStopwords(stopwords);
-
-        for (File doc : documenti) {
-            try {
-                String contenuto = Files.readString(doc.toPath());
-                matrix.aggiungiDocumento(doc.getName(), contenuto);
-            } catch (Exception e) {
-                System.err.println("Errore nel file: " + doc.getName());
-                e.printStackTrace();
-            }
+    // Restituisce l'istanza singleton, caricandola dal DB se necessario
+    public static WordDocumentMatrix getInstance() {
+        if (matrix == null) {
+            matrix = new WordDocumentMatrix();
+            caricaDaDatabase();
         }
-
-        try {
-            matrix.salva(WDM_FILE);
-            System.out.println("WordDocumentMatrix salvata correttamente.");
-        } catch (Exception e) {
-            System.err.println("Errore nel salvataggio della WDM.");
-            e.printStackTrace();
-        }
+        return matrix;
     }
 
+    // Elimina l'istanza in memoria (verrà ricostruita alla prossima chiamata a getInstance)
     public static void delete() {
-        File f = new File(WDM_FILE);
-        if (f.exists()) {
-            f.delete();
-            System.out.println("WordDocumentMatrix eliminata.");
+        matrix = null;
+    }
+
+    // Metodo privato per caricare documenti e stopwords dal database
+    private static void caricaDaDatabase() {
+        List<Document> documenti = DocumentDAO.selectAllDocuments();
+        List<Stopword> stopwordsDB = StopwordDAO.selectAllStopwords();
+
+        // Unisci tutte le stopwords (da più righe) in un unico set
+        Set<String> tutteLeStopwords = stopwordsDB.stream()
+                .flatMap(sw -> Arrays.stream(sw.getContent().split("\\s+")))
+                .map(String::toLowerCase)
+                .collect(Collectors.toSet());
+
+        matrix.setStopwords(tutteLeStopwords);
+
+        // Aggiungi i documenti alla matrice
+        for (Document doc : documenti) {
+            matrix.aggiungiDocumento(doc.getTitle(), doc.getContent());
         }
     }
 }
