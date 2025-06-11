@@ -49,4 +49,9 @@ public enum QuestionType {
         return questionList;
     }
 
+    public String getRandomTemplate() {
+        Collections.shuffle(questionList);
+        return questionList.get((int) (Math.random() * questionList.size()));
+    }
+
 }
