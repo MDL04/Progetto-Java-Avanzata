@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controller.GameController"
+      spacing="20" alignment="CENTER" padding="20">
+
+    <!-- Sezione selezione lingua e difficoltà -->
+    <HBox spacing="15" alignment="CENTER">
+        <VBox spacing="5" alignment="CENTER">
+            <Label text="Seleziona Lingua"/>
+            <ComboBox fx:id="languageComboBox" prefWidth="200"/>
+        </VBox>
+        <VBox spacing="5" alignment="CENTER">
+            <Label text="Seleziona Difficoltà"/>
+            <ComboBox fx:id="difficultyComboBox" prefWidth="200"/>
+        </VBox>
+        <Button text="Inizia Quiz" onAction="#handleStartQuiz" prefWidth="120"/>
+    </HBox>
+
+    <!-- Sezione visualizzazione domanda -->
+    <Label fx:id="questionLabel" wrapText="true" maxWidth="600" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+
+    <!-- Lista delle opzioni -->
+    <ListView fx:id="optionsList" prefWidth="500" maxHeight="160"/>
+
+    <!-- Pulsante per andare alla prossima domanda -->
+    <Button fx:id="nextButton" text="Prossima Domanda" onAction="#handleNextQuestion" prefWidth="180" disable="true"/>
+
+    <!-- Etichetta per risultati / errori -->
+    <Label fx:id="resultLabel" wrapText="true" maxWidth="600" style="-fx-text-fill: #d9534f; -fx-font-size: 14px;"/>
+
+    <BorderPane maxWidth="600">
+        <Button text="Esci" onAction="#handleExitClick" BorderPane.alignment="BOTTOM_LEFT"/>
+    </BorderPane>
+</VBox>
