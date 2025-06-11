@@ -5,12 +5,38 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import javafx.scene.Node;
 
 import java.io.IOException;
 
 public class InfoController {
+
+    @FXML private TextFlow descriptionFlow;
+
+    @FXML
+    public void initialize() {
+        Text t = new Text(
+                "Wordageddon è un gioco a quiz basato sull’analisi del testo.\n\n" +
+                        "Dopo aver effettuato il login, l’utente affronta una serie di domande\n" +
+                        "generate automaticamente a partire dal contenuto di uno o più documenti.\n\n" +
+                        "Le domande si dividono in 4 categorie:\n" +
+                        "- Frequenza assoluta\n" +
+                        "- Confronto tra parole\n" +
+                        "- Esclusione di parole non presenti\n" +
+                        "- Analisi su documenti specifici\n\n" +
+                        "Le parole non significative (stopwords) vengono ignorate.\n" +
+                        "Al termine, punteggio e tempo vengono salvati in una sessione di gioco.\n" +
+                        "L’obiettivo: rispondere correttamente e scalare la classifica!"
+        );
+        t.setWrappingWidth(580);
+        t.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
+        descriptionFlow.getChildren().add(t);
+    }
 
     @FXML
     private void goToHome(ActionEvent event) {
