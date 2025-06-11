@@ -2,12 +2,16 @@ package controller;
 
 
 import dao.DocumentDAO;
-import dao.StopwordDAO;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import model.Document;
-import model.Stopword;
 import utils.WDMManager;
 
 import java.io.File;
@@ -15,7 +19,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,50 +33,61 @@ public class AdminController {
     private ListView<String> stopwordList;
 
     @FXML
+    private Label messageLabel;
+
+    @FXML
+    private ComboBox<String> LanguageComboBox;
+
+    private String language;
+
+    @FXML
     private void initialize() {
-        List<Document> allDocs = new ArrayList<>();
-        allDocs.addAll(DocumentDAO.selectAllDocuments());
+        try {
+            List<Document> allDocs = new ArrayList<>();
+            allDocs.addAll(DocumentDAO.selectAllFromItalian());
+            allDocs.addAll(DocumentDAO.selectAllFromEnglish());
 
-        List<Stopword> allStopwords = new ArrayList<>();
-        allStopwords.addAll(StopwordDAO.selectAllStopwords());
+            for (Document doc : allDocs) {
+                documentList.getItems().add(doc.getTitle());
+            }
 
-        for (Document doc : allDocs)
-            documentList.getItems().add(doc.getTitle());
+        } catch (SQLException e) {
+            e.printStackTrace();
+            messageLabel.setText("Errore nel caricamento dei documenti.");
+        }
 
-
-        for  (Stopword stopword : allStopwords)
-            stopwordList.getItems().add(stopword.getTitle());
+        LanguageComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            language = newValue;
+        });
 
     }
 
     @FXML
     private void handleUploadDocument() {
-        List<String> choices = Arrays.asList("Italiano", "Inglese");
-        ChoiceDialog<String> dialog = new ChoiceDialog<>("Italiano", choices);
-        dialog.setTitle("Seleziona lingua");
-        dialog.setHeaderText("Scegli la lingua del documento");
-        dialog.setContentText("Lingua:");
-
-        Optional<String> result = dialog.showAndWait();
-        if (result.isEmpty()) {
+        if (language == null || language.isEmpty()) {
+            showAlert("Errore", "Seleziona prima una lingua per il documento.");
             return;
         }
-        String selectedLang = result.get();
-        String language = selectedLang.equals("Italiano") ? "it" : "en";
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Seleziona il documento da caricare");
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Text Files", "*.txt")
         );
-        File file = fileChooser.showOpenDialog(null);
+        File file = fileChooser.showOpenDialog(getStage());
 
         if (file != null) {
             try {
                 String content = Files.readString(file.toPath());
                 String title = file.getName();
                 Document doc = new Document(0, language, content, title);
-                DocumentDAO.insertDocument(doc);
+
+                if ("Italiano".equals(language)) {
+                    DocumentDAO.insertITDocument(doc);
+                } else if ("Inglese".equals(language)) {
+                    DocumentDAO.insertENDocument(doc);
+                }
+
                 documentList.getItems().add(title);
                 showAlert("Successo", "Documento caricato correttamente.");
 
@@ -85,44 +99,58 @@ public class AdminController {
     }
 
 
+
+
+
     @FXML
-    public void handleLoadStopword() {
-        List<String> choices = Arrays.asList("Italiano", "Inglese");
-        ChoiceDialog<String> dialog = new ChoiceDialog<>("Italiano", choices);
-        dialog.setTitle("Seleziona lingua");
-        dialog.setHeaderText("Scegli la lingua del documento");
-        dialog.setContentText("Lingua:");
-
-        Optional<String> result = dialog.showAndWait();
-        if (result.isEmpty()) {
-            return;
-        }
-        String selectedLang = result.get();
-        String language = selectedLang.equals("Italiano") ? "it" : "en";
-
+    public void handleLoadITStopword() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Seleziona un file di stopwords");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("File di Testo", "*.txt"));
 
-        File file = fileChooser.showOpenDialog(null);
+        File file = fileChooser.showOpenDialog(getStage());
         if (file != null) {
             try {
-                String content = Files.readString(file.toPath());
-                String title = file.getName();
-                Stopword stopword = new Stopword(language, content, 0, title);
-                StopwordDAO.insertStopword(stopword);
-                stopwordList.getItems().add(title);
-                showAlert("Successo", "Stopwords caricate correttamente.");
+                List<String> words = Files.readAllLines(file.toPath());
+                stopwordList.getItems().addAll(words);
+                messageLabel.setText("Stopwords caricate da: " + file.getName());
+                //WDMManager.delete();
             } catch (IOException e) {
+                messageLabel.setText("Errore nella lettura del file di stopwords.");
                 e.printStackTrace();
             }
         }
     }
 
+    @FXML
+    public void handleLoadENStopword() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Seleziona un file di stopwords");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("File di Testo", "*.txt"));
 
+        File file = fileChooser.showOpenDialog(getStage());
+        if (file != null) {
+            try {
+                List<String> words = Files.readAllLines(file.toPath());
+                stopwordList.getItems().addAll(words);
+                messageLabel.setText("Stopwords caricate da: " + file.getName());
+                //WDMManager.delete();
+            } catch (IOException e) {
+                messageLabel.setText("Errore nella lettura del file di stopwords.");
+                e.printStackTrace();
+            }
+        }
+    }
 
     @FXML
     public void handleRemoveSelectedDocument() {
+        String selectedLanguage = LanguageComboBox.getSelectionModel().getSelectedItem();
+        if (selectedLanguage == null) {
+            showAlert("Errore", "Seleziona una lingua prima di eliminare un documento.");
+            return;
+        }
+        String tableName = selectedLanguage.equals("Italiano") ? "it_documents" : "en_documents";
+        String langCode = selectedLanguage.equals("Italiano") ? "it" : "en";
         String selected = documentList.getSelectionModel().getSelectedItem();
 
         if (selected!=null) {
@@ -133,13 +161,14 @@ public class AdminController {
 
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
-                Optional<Document> optionalDocument = DocumentDAO.selectDocumentByTitle(selected);
+                Optional<Document> optionalDocument = DocumentDAO.selectDocumentByTitle(tableName, langCode, selected);
                 if (optionalDocument.isPresent()) {
                     Document document = optionalDocument.get();
                     DocumentDAO.deleteDocument(document);
                     documentList.getItems().remove(selected);
+                    messageLabel.setText("Documento " + selected + " rimosso.");
                 }else{
-                    showAlert("Errore", "Documento " + selected + " non trovato nel database.");
+                    messageLabel.setText("Documento " + selected + " non trovato nel database.");
                 }
                 WDMManager.delete();
             }
@@ -150,25 +179,45 @@ public class AdminController {
     public void handleRemoveSelectedStopword() {
         String selected = stopwordList.getSelectionModel().getSelectedItem();
         if (selected != null) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Conferma");
-            alert.setHeaderText(null);
-            alert.setContentText("Vuoi davvero eliminare le stopwords \"" + selected + "\"?");
-
-            Optional<ButtonType> result = alert.showAndWait();
-
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                Optional<Stopword> optionalStopword = StopwordDAO.selectSWByTitle(selected);
-                if (optionalStopword.isPresent()) {
-                    Stopword stopword = optionalStopword.get();
-                    StopwordDAO.deleteStopword(stopword);
-                    stopwordList.getItems().remove(selected);
-                }else showAlert("Errore", "Stopwords " + selected + " non trovate nel database.");
-            }
+            stopwordList.getItems().remove(selected);
+            messageLabel.setText("Stopword rimossa.");
             WDMManager.delete();
         }
     }
 
+    @FXML
+    private void handleLogout(ActionEvent event) {
+        // Mostra dialogo di conferma
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Conferma Logout");
+        alert.setHeaderText("Stai per effettuare il logout");
+        alert.setContentText("Sei sicuro di voler uscire? I dati non salvati andranno persi.");
+
+        // Personalizza i pulsanti
+        ButtonType confirmButton = new ButtonType("Conferma", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButton = new ButtonType("Annulla", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getButtonTypes().setAll(confirmButton, cancelButton);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == confirmButton) {
+            try {
+                Stage currentStage = (Stage) documentList.getScene().getWindow();
+                currentStage.close();
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/homepage.fxml"));
+                Parent root = loader.load();
+                Stage homeStage = new Stage();
+                homeStage.setScene(new Scene(root));
+                homeStage.setTitle("Homepage");
+                homeStage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private Stage getStage() {
+        return (Stage) messageLabel.getScene().getWindow();
+    }
 
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
