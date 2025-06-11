@@ -6,12 +6,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import model.User;
 
 import java.io.IOException;
+import java.util.Optional;
 
 public class UserDashboardController {
 
@@ -42,18 +42,32 @@ public class UserDashboardController {
 
     @FXML
     private void handleLogout(ActionEvent event) {
-        try {
-            Stage currentStage = (Stage) logoutButton.getScene().getWindow();
-            currentStage.close();
+        // Mostra dialogo di conferma
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Conferma Logout");
+        alert.setHeaderText("Stai per effettuare il logout");
+        alert.setContentText("Sei sicuro di voler uscire? I dati non salvati andranno persi.");
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/homepage.fxml"));
-            Parent root = loader.load();
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Homepage");
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
+        // Personalizza i pulsanti
+        ButtonType confirmButton = new ButtonType("Conferma", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButton = new ButtonType("Annulla", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getButtonTypes().setAll(confirmButton, cancelButton);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == confirmButton) {
+            try {
+                Stage currentStage = (Stage) logoutButton.getScene().getWindow();
+                currentStage.close();
+
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/homepage.fxml"));
+                Parent root = loader.load();
+                Stage stage = new Stage();
+                stage.setScene(new Scene(root));
+                stage.setTitle("Homepage");
+                stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

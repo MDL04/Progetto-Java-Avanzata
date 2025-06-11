@@ -187,17 +187,31 @@ public class AdminController {
 
     @FXML
     private void handleLogout(ActionEvent event) {
-        try {
-            Stage currentStage = (Stage) documentList.getScene().getWindow();
-            currentStage.close();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/homepage.fxml"));
-            Parent root = loader.load();
-            Stage homeStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            homeStage.setScene(new Scene(root));
-            homeStage.setTitle("Homepage");
-            homeStage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
+        // Mostra dialogo di conferma
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Conferma Logout");
+        alert.setHeaderText("Stai per effettuare il logout");
+        alert.setContentText("Sei sicuro di voler uscire? I dati non salvati andranno persi.");
+
+        // Personalizza i pulsanti
+        ButtonType confirmButton = new ButtonType("Conferma", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButton = new ButtonType("Annulla", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getButtonTypes().setAll(confirmButton, cancelButton);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == confirmButton) {
+            try {
+                Stage currentStage = (Stage) documentList.getScene().getWindow();
+                currentStage.close();
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/homepage.fxml"));
+                Parent root = loader.load();
+                Stage homeStage = new Stage();
+                homeStage.setScene(new Scene(root));
+                homeStage.setTitle("Homepage");
+                homeStage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
