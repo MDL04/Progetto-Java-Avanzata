@@ -1,60 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.collections.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox prefHeight="597.0" prefWidth="333.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="controller.AdminController">
-   <ComboBox fx:id="LanguageComboBox" prefHeight="32.0" prefWidth="245.0" promptText="Seleziona linguaggio">
-      <items>
-         <FXCollections fx:factory="observableArrayList">
-            <String fx:value="Italiano"/>
-            <String fx:value="Inglese"/>
-         </FXCollections>
-      </items>
-      <VBox.margin>
-         <Insets bottom="10.0" left="30.0" top="10.0"/>
-      </VBox.margin>
-   </ComboBox>
+<VBox prefHeight="597.0" prefWidth="333.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AdminController">
    <Button mnemonicParsing="false" onAction="#handleUploadDocument" text="Aggiungi documento">
       <VBox.margin>
-         <Insets bottom="10.0" left="30.0" top="20.0"/>
+         <Insets bottom="10.0" left="30.0" top="20.0" />
       </VBox.margin>
       <font>
-         <Font name="Arial Bold" size="14.0"/>
+         <Font name="Arial Bold" size="14.0" />
       </font>
    </Button>
-   <ListView fx:id="documentList" prefHeight="205.0" prefWidth="333.0"/>
-   <Button fx:id="delDocButton" alignment="CENTER" mnemonicParsing="false" onAction="#handleRemoveSelectedDocument"
-           prefHeight="32.0" prefWidth="240.0" text="Rimuovi documento selezionato">
+   <ListView fx:id="documentList" prefHeight="205.0" prefWidth="333.0" />
+   <Button fx:id="delDocButton" alignment="CENTER" mnemonicParsing="false" onAction="#handleRemoveSelectedDocument" prefHeight="32.0" prefWidth="240.0" text="Rimuovi documento selezionato">
       <font>
-         <Font name="Arial Bold" size="14.0"/>
+         <Font name="Arial Bold" size="14.0" />
       </font>
       <VBox.margin>
-         <Insets bottom="10.0" left="30.0" top="10.0"/>
+         <Insets bottom="10.0" left="30.0" top="10.0" />
       </VBox.margin>
    </Button>
    <Button mnemonicParsing="false" text="Aggiungi stopwords">
       <VBox.margin>
-         <Insets bottom="10.0" left="30.0" top="20.0"/>
+         <Insets bottom="10.0" left="30.0" top="20.0" />
       </VBox.margin>
       <font>
-         <Font name="Arial Bold" size="14.0"/>
+         <Font name="Arial Bold" size="14.0" />
       </font>
    </Button>
-   <ListView prefHeight="141.0" prefWidth="333.0"/>
-   <Button mnemonicParsing="false" onAction="#handleRemoveSelectedStopword" prefHeight="32.0" prefWidth="240.0"
-           text="Rimuovi stopword selezionata">
+   <ListView prefHeight="141.0" prefWidth="333.0" />
+   <Button mnemonicParsing="false" onAction="#handleRemoveSelectedStopword" prefHeight="32.0" prefWidth="240.0" text="Rimuovi stopword selezionata">
       <VBox.margin>
-         <Insets left="30.0" top="10.0"/>
+         <Insets left="30.0" top="10.0" />
       </VBox.margin>
       <font>
-         <Font name="Arial Bold" size="14.0"/>
+         <Font name="Arial Bold" size="14.0" />
       </font>
    </Button>
-   <Label fx:id="messageLabel"/>
 </VBox>
