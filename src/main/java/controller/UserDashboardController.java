@@ -7,10 +7,13 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import model.User;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Optional;
 
 public class UserDashboardController {
@@ -23,22 +26,72 @@ public class UserDashboardController {
     @FXML
     private Button logoutButton;
 
+    @FXML
+    private ImageView userAvatarImageView;
+
+    @FXML
     private void initialize() {
-        userLabel.setText("Ciao, " + currentUser.getUsername() + "!");
     }
 
     @FXML
     private void handleGioca(ActionEvent event) {
-
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/game_selection.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Gioco");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
     private void handleModifica(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/modify.fxml"));
+            Parent root = loader.load();
 
+            ModifyUserController modifyController = loader.getController();
+            modifyController.setUser(currentUser);
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+            stage.setScene(new Scene(root));
+
+            stage.setMinHeight(400);
+            stage.setMinWidth(600);
+
+            stage.setTitle("Modifica dati personali");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
-    private void goToLeaderboard(ActionEvent event) {}
+    private void goToLeaderboard(ActionEvent event) {
+        try{
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/leaderboard.fxml"));
+            Parent root = loader.load();
+            LeaderboardController leaderboardController = loader.getController();
+            leaderboardController.isLoggedin = true;
+            leaderboardController.setUser(currentUser);
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+            stage.setScene(new Scene(root));
+
+            stage.setMinWidth(600);
+            stage.setMinHeight(400);
+
+            stage.setTitle("Classifica");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @FXML
     private void handleLogout(ActionEvent event) {
@@ -63,6 +116,10 @@ public class UserDashboardController {
                 Parent root = loader.load();
                 Stage stage = new Stage();
                 stage.setScene(new Scene(root));
+
+                stage.setMinWidth(600);
+                stage.setMinHeight(400);
+
                 stage.setTitle("Homepage");
                 stage.show();
             } catch (IOException e) {
@@ -73,7 +130,47 @@ public class UserDashboardController {
 
     public void setUser(User user) {
         this.currentUser = user;
-        initialize();
+        if (currentUser != null) {
+            userLabel.setText("Ciao, " + currentUser.getUsername() + "!");
+            loadUserAvatar();
+        }
     }
 
+    private void loadUserAvatar() {
+        if (currentUser != null && currentUser.getUrlAvatar() != null) {
+            String avatarPath = currentUser.getUrlAvatar();
+
+            try {
+                // Prova a caricare l'avatar dell'utente
+                InputStream imageStream = getClass().getResourceAsStream(avatarPath);
+                if (imageStream != null) {
+                    Image userImage = new Image(imageStream);
+                    userAvatarImageView.setImage(userImage);
+                } else {
+                    // Se non trova l'avatar, carica quello di default
+                    loadDefaultAvatar();
+                }
+            } catch (Exception e) {
+                System.err.println("Errore nel caricare l'avatar utente: " + avatarPath);
+                loadDefaultAvatar();
+            }
+        } else {
+            // Se l'utente non ha un avatar impostato, carica quello di default
+            loadDefaultAvatar();
+        }
+    }
+
+    private void loadDefaultAvatar() {
+        try {
+            InputStream defaultStream = getClass().getResourceAsStream("/images/avatar/default.png");
+            if (defaultStream != null) {
+                Image defaultImage = new Image(defaultStream);
+                userAvatarImageView.setImage(defaultImage);
+            } else {
+                System.err.println("Impossibile caricare l'avatar di default");
+            }
+        } catch (Exception e) {
+            System.err.println("Errore nel caricare l'avatar di default: " + e.getMessage());
+        }
+    }
 }

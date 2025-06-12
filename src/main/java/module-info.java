@@ -8,7 +8,9 @@ module com.unisa.progettogruppocinque {
     requires java.desktop;
 
     opens application to javafx.fxml;
+    opens controller to javafx.fxml;
+    opens model to javafx.base;
+
     exports application;
     exports controller;
-    opens controller to javafx.fxml;
 }

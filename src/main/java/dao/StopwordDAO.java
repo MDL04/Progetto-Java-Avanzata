@@ -1,11 +1,14 @@
 package dao;
 
+import model.Stopword;
+import utils.DBManager;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import model.Stopword;
-import java.sql.*;
-import utils.DBManager;
 import java.util.Optional;
 
 public class StopwordDAO {
@@ -15,7 +18,7 @@ public class StopwordDAO {
             PreparedStatement sta = c.prepareStatement("SELECT * FROM stopwords WHERE language = ?")) {
             sta.setString(1, language);
             ResultSet rs = sta.executeQuery();
-            if (rs.next()) {
+            while (rs.next()) {
                 Stopword stopword = new Stopword(language, rs.getString("words"),rs.getLong("id") ,rs.getString("title"));
                 SWlist.add(stopword);
             }

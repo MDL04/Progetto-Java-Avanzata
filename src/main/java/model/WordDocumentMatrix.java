@@ -49,6 +49,9 @@ public class WordDocumentMatrix {
         for (String parola : parole) {
             if (parola.isBlank() || stopwords.contains(parola)) continue;
             frequenze.put(parola, frequenze.getOrDefault(parola, 0) + 1);
+            System.out.println("[DEBUG] >>> aggiungiDocumento: " + nome);
+            System.out.println("[DEBUG] >>> Frequenze parole = " + frequenze);
+
         }
 
         matrix.put(nome, frequenze);

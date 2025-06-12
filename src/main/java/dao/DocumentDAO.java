@@ -1,11 +1,14 @@
 package dao;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import model.Document;
 import utils.DBManager;
-import java.sql.*;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -17,7 +20,7 @@ public class DocumentDAO {
             PreparedStatement sta = c.prepareStatement("SELECT * FROM documents WHERE language = ?")) {
             sta.setString(1, language);
             ResultSet rs = sta.executeQuery();
-            if (rs.next()) {
+            while (rs.next()) {
                 Document doc = new Document(rs.getLong("id"), language, rs.getString("content"), rs.getString("title"));
                 documents.add(doc);
             }

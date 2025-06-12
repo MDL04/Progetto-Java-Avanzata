@@ -1,16 +1,18 @@
 package controller;
 
-import javafx.event.ActionEvent;
-import model.User;
 import dao.UserDAO;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import model.User;
 import utils.PasswordUtils;
-import javafx.scene.Node;
 
 import java.io.IOException;
 
@@ -34,46 +36,43 @@ public class RegisterController {
         String password = passwordFld.getText();
         String confirmPassword = confirmPasswordFld.getText();
 
-
+        //Controllo campi vuoti
         if (username.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-            messageLbl.setText("Completa tutti i campi!");
-            messageLbl.setStyle("-fx-text-fill: red;");
+            showError("Completa tutti i campi!");
             return;
         }
 
-        if(!email.contains("@")){
-            messageLbl.setText("Email non valida. Deve contenere il carattere '@'");
-            messageLbl.setStyle("-fx-text-fill: red;");
-            return;
-        }
-
+        // Controllo email
         if (!email.contains("@") || !email.substring(email.indexOf("@")).contains(".")) {
-            messageLbl.setText("Email non valida: dominio non riconosciuto");
-            messageLbl.setStyle("-fx-text-fill: red;");
+            showError("Email non valida: dominio non riconosciuto!");
             return;
         }
 
+        // Controllo password
         if(password.length() < 7){
-            messageLbl.setText("Password non valida. Deve contenere almeno 7 caratteri");
-            messageLbl.setStyle("-fx-text-fill: red;");
+            showError("La password deve contenere almeno 7 caratteri!");
             return;
         }
 
+        // Controllo che conferma password sia uguale a password
         if(!password.equals(confirmPassword)) {
-            messageLbl.setText("Le password non coincindono!");
-            messageLbl.setStyle("-fx-text-fill: red;");
+            showError("Le password non coincidono!");
             return;
         }
 
-        if(userDAO.selectByUsername(username).isPresent()){
-            messageLbl.setText("Username non disponibile. Scegline un altro!");
-            messageLbl.setStyle("-fx-text-fill: red;");
-            return;
-        }
+        // Se il database è raggiungibile controlla se esista già un utente con quella mail o username
+        try {
+            if (userDAO.selectByUsername(username).isPresent()) {
+                showError("Username non disponibile!");
+                return;
+            }
 
-        if (userDAO.selectByEmail(email).isPresent()) {
-            messageLbl.setText("Email non disponibile. Potresti avere già un account.");
-            messageLbl.setStyle("-fx-text-fill: red;");
+            if (userDAO.selectByEmail(email).isPresent()) {
+                showError("Email non disponibile! Potresti già avere un account.");
+                return;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
             return;
         }
 
@@ -87,12 +86,10 @@ public class RegisterController {
         user.setUrlAvatar("default_avatar.png");
 
         if(userDAO.insert(user)){
-            messageLbl.setText("Registrazione completata!");
-            messageLbl.setStyle("-fx-text-fill: green;");
+            showSuccess("Registrazione completata!");
             goToLogin();
         }else{
-            messageLbl.setText("Errore nella registrazione!");
-            messageLbl.setStyle("-fx-text-fill: red;");
+            showError("Errore durante la registrazione!");
         }
     }
 
@@ -103,6 +100,10 @@ public class RegisterController {
             Parent root = loader.load();
             Stage stage = (Stage) usernameFld.getScene().getWindow();
             stage.setScene(new Scene(root));
+
+            stage.setMinWidth(600);
+            stage.setMinHeight(400);
+
             stage.setTitle("Login");
             stage.show();
         } catch (IOException e) {
@@ -117,10 +118,25 @@ public class RegisterController {
             Parent root = loader.load();
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
+
+            stage.setMinWidth(600);
+            stage.setMinHeight(400);
+
             stage.setTitle("Homepage");
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    private void showError(String message) {
+        messageLbl.setText(message);
+        messageLbl.setStyle("-fx-text-fill: red;");
+    }
+
+    private void showSuccess(String message) {
+        messageLbl.setText(message);
+        messageLbl.setStyle("-fx-text-fill: green;");
+    }
+
 }

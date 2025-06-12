@@ -3,15 +3,16 @@ package controller;
 import dao.UserDAO;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import model.User;
-import utils.PasswordUtils;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import javafx.scene.Node;
-
+import model.User;
+import utils.PasswordUtils;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -66,6 +67,10 @@ public class LoginController {
             Parent root = loader.load();
             Stage stage = (Stage) usernameFld.getScene().getWindow();
             stage.setScene(new Scene(root));
+
+            stage.setMinWidth(600);
+            stage.setMinHeight(400);
+
             stage.setTitle("Registrazione");
             stage.show();
         } catch (IOException e) {
@@ -90,7 +95,7 @@ public class LoginController {
     @FXML
     private void goToUserDashboard() {
         try{
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/userdashboard.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/user_dashboard.fxml"));
             Parent root = loader.load();
             UserDashboardController userDashboardController = loader.getController();
             Optional<User> userOpt = userDAO.selectByUsername(usernameFld.getText());
@@ -99,6 +104,10 @@ public class LoginController {
             }
             Stage stage = (Stage) usernameFld.getScene().getWindow();
             stage.setScene(new Scene(root));
+
+            stage.setMinWidth(600);
+            stage.setMinHeight(400);
+
             stage.setTitle("Area utente");
             stage.show();
         } catch (IOException e) {
@@ -109,11 +118,15 @@ public class LoginController {
     @FXML
     private void goToAdminDashboard() {
         try{
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/admindashboard.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/admin_dashboard.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) usernameFld.getScene().getWindow();
             stage.setScene(new Scene(root));
-            stage.setTitle("Admin Dashboard");
+
+            stage.setMinWidth(600);
+            stage.setMinHeight(400);
+
+            stage.setTitle("Area admin");
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();

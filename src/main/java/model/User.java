@@ -7,30 +7,30 @@ public class User {
     private String password;
     private boolean isAdmin;
     private int bestScoreEasy;
-    private int bestScoreNormal;
+    private int bestScoreMedium;
     private int bestScoreHard;
     private int partiteEasy;
-    private int partiteNormal;
+    private int partiteMedium;
     private int partiteHard;
-    private int scoreNormal;
+    private int scoreMedium;
     private int scoreHard;
     private int scoreEasy;
     private String urlAvatar;
 
-    public User(Long id, String username, String email, String password, boolean isAdmin, int bestScoreEasy, int bestScoreNormal, int bestScoreHard, int partiteEasy, int partiteNormal, int partiteHard, int scoreEasy, int scoreNormal, int scoreHard, String urlAvatar) {
+    public User(Long id, String username, String email, String password, boolean isAdmin, int bestScoreEasy, int bestScoreMedium, int bestScoreHard, int partiteEasy, int partiteMedium, int partiteHard, int scoreEasy, int scoreMedium, int scoreHard, String urlAvatar) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
         this.isAdmin = isAdmin;
         this.bestScoreEasy = bestScoreEasy;
-        this.bestScoreNormal = bestScoreNormal;
+        this.bestScoreMedium = bestScoreMedium;
         this.bestScoreHard = bestScoreHard;
         this.partiteEasy = partiteEasy;
-        this.partiteNormal = partiteNormal;
+        this.partiteMedium = partiteMedium;
         this.partiteHard = partiteHard;
         this.scoreEasy = scoreEasy;
-        this.scoreNormal = scoreNormal;
+        this.scoreMedium = scoreMedium;
         this.scoreHard = scoreHard;
         this.urlAvatar = urlAvatar;
     }
@@ -86,12 +86,12 @@ public class User {
         this.bestScoreEasy = bestScoreEasy;
     }
 
-    public int getBestScoreNormal() {
-        return bestScoreNormal;
+    public int getBestScoreMedium() {
+        return bestScoreMedium;
     }
 
-    public void setBestScoreNormal(int bestScoreNormal) {
-        this.bestScoreNormal = bestScoreNormal;
+    public void setBestScoreMedium(int bestScoreMedium) {
+        this.bestScoreMedium = bestScoreMedium;
     }
 
     public int getBestScoreHard() {
@@ -110,12 +110,12 @@ public class User {
         this.partiteEasy = partiteEasy;
     }
 
-    public int getPartiteNormal() {
-        return partiteNormal;
+    public int getPartiteMedium() {
+        return partiteMedium;
     }
 
-    public void setPartiteNormal(int partiteNormal) {
-        this.partiteNormal = partiteNormal;
+    public void setPartiteMedium(int partiteMedium) {
+        this.partiteMedium = partiteMedium;
     }
 
     public int getPartiteHard() {
@@ -134,12 +134,12 @@ public class User {
         this.urlAvatar = urlAvatar;
     }
 
-    public int getScoreNormal() {
-        return scoreNormal;
+    public int getScoreMedium() {
+        return scoreMedium;
     }
 
-    public void setScoreNormal(int scoreNormal) {
-        this.scoreNormal = scoreNormal;
+    public void setScoreMedium(int scoreMedium) {
+        this.scoreMedium = scoreMedium;
     }
 
     public int getScoreHard() {

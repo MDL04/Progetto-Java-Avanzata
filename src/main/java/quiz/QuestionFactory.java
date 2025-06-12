@@ -9,10 +9,14 @@ public class QuestionFactory {
     private final Random random = new Random();
 
     public QuestionFactory(WordDocumentMatrix matrix) {
+        if (matrix == null) {
+            throw new IllegalArgumentException("WordDocumentMatrix non può essere null");
+        }
         this.matrix = matrix;
     }
 
     public Question generateQuestion(int id, QuestionType type) {
+        validateMatrix(); // Controlla che la matrice sia valida
         return switch (type) {
             case ABSOLUTE_FREQUENCY -> generateAbsoluteFrequencyQuestion(id);
             case COMPARISON -> generateComparisonQuestion(id);
@@ -22,207 +26,198 @@ public class QuestionFactory {
     }
 
     public Question generateAbsoluteFrequencyQuestion(int id) {
+        validateMatrix();
         String doc = getRandomDocument();
         String parola = getRandomWord();
-        int freq = matrix.getFrequenza(doc, parola);
 
         List<String> templates = QuestionType.ABSOLUTE_FREQUENCY.getQuestionList();
         String template = templates.get(random.nextInt(templates.size()));
 
-        String domanda;
-        List<String> opzioni = new ArrayList<>();
-        String risposta;
-
-        switch (template) {
-            case "Quante volte compare la parola '%s' nel documento '%s'?" -> {
-                domanda = String.format(template, parola, doc);
-                risposta = String.valueOf(freq);
-                opzioni = generaDistrattoriNumerici(freq);
-            }
-            case "La parola '%s' compare nel documento '%s':" -> {
-                domanda = String.format(template, parola, doc);
-                if (freq == 0) risposta = "0-2 volte";
-                else if (freq <= 2) risposta = "0-2 volte";
-                else if (freq <= 5) risposta = "3-5 volte";
-                else if (freq <= 9) risposta = "6-9 volte";
-                else risposta = ">=10 volte";
-                opzioni = List.of("0-2 volte", "3-5 volte", "6-9 volte", ">=10 volte");
-            }
-            case "La parola '%s', nel documento '%s' ha una frequenza:" -> {
-                domanda = String.format(template, parola, doc);
-                if (freq <= 1) risposta = "minima (0-1)";
-                else if (freq <= 3) risposta = "bassa (2-3)";
-                else if (freq <= 5) risposta = "media (4-5)";
-                else risposta = "alta (>=6)";
-                opzioni = List.of("minima (0-1)", "bassa (2-3)", "media (4-5)", "alta (>=6)");
-            }
-            case "La parola '%s' compare nel documento '%s' più o meno di '%d' volte? " -> {
-                int soglia = random.nextInt(10) + 1;
-                domanda = String.format(template, parola, doc, soglia);
-                risposta = freq > soglia ? "più" : freq < soglia ? "meno" : "uguale";
-                opzioni = List.of("più", "meno", "uguale", "non compare");
-            }
-            default -> throw new IllegalStateException("Template non valido");
-        }
+        String domanda = String.format(template, parola, doc);
+        int risposta = matrix.getFrequenza(doc, parola);
+        List<String> opzioni = new ArrayList<>(generaDistrattoriNumerici(risposta));
 
         Collections.shuffle(opzioni);
-        return new Question(id, QuestionType.ABSOLUTE_FREQUENCY, domanda, opzioni, risposta);
+        return new Question(id, QuestionType.ABSOLUTE_FREQUENCY, domanda, opzioni, String.valueOf(risposta));
     }
 
     public Question generateComparisonQuestion(int id) {
+        validateMatrix();
         String doc = getRandomDocument();
-        List<String> parole = getRandomWords(30);
+        List<String> parole = getRandomWords(10);
 
         List<String> templates = QuestionType.COMPARISON.getQuestionList();
         String template = templates.get(random.nextInt(templates.size()));
 
         String domanda;
-        List<String> opzioni;
-        String risposta;
+        int risposta;
 
         switch (template) {
-            case "Quale parola è più frequente tra '%s', '%s', '%s', '%s' nel documento '%s'?" -> {
-                List<String> scelte = parole.subList(0, 4);
-                risposta = getMaxFrequenzaParola(doc, scelte);
-                domanda = String.format(template, scelte.get(0), scelte.get(1), scelte.get(2), scelte.get(3), doc);
-                opzioni = new ArrayList<>(scelte);
-            }
-            case "Qual è la parola più frequente nel documento '%s'?" -> {
-                Map<String, Integer> freq = getFrequenzeParole(doc, parole);
-                risposta = getMax(freq);
-                opzioni = getDistractors(freq, risposta);
-                opzioni.add(risposta);
+            case "Quante volte compare la parola più frequente nel documento '%s'?" -> {
                 domanda = String.format(template, doc);
+                risposta = parole.stream()
+                        .mapToInt(p -> matrix.getFrequenza(doc, p))
+                        .max()
+                        .orElse(0);
             }
-            case "Quale parola è meno frequente tra '%s', '%s', '%s', '%s' nel documento '%s'?" -> {
-                List<String> scelte = parole.subList(0, 4);
-                risposta = getMinFrequenzaParola(doc, scelte);
-                domanda = String.format(template, scelte.get(0), scelte.get(1), scelte.get(2), scelte.get(3), doc);
-                opzioni = new ArrayList<>(scelte);
-            }
-            case "Qual è la parola meno frequente nel documento '%s'?" -> {
-                Map<String, Integer> freq = getFrequenzeParole(doc, parole);
-                risposta = getMin(freq);
-                opzioni = getDistractors(freq, risposta);
-                opzioni.add(risposta);
+            case "Qual è la frequenza massima di una parola nel documento '%s'?" -> {
                 domanda = String.format(template, doc);
+                risposta = matrix.getTutteLeParole().stream()
+                        .mapToInt(p -> matrix.getFrequenza(doc, p))
+                        .max()
+                        .orElse(0);
             }
-            default -> throw new IllegalStateException("Template non valido");
+            case "Qual è la differenza di frequenza tra '%s' e '%s' nel documento '%s'?" -> {
+                String p1 = getRandomWord();
+                String p2 = getRandomWord();
+                domanda = String.format(template, p1, p2, doc);
+                int freq1 = matrix.getFrequenza(doc, p1);
+                int freq2 = matrix.getFrequenza(doc, p2);
+                risposta = Math.abs(freq1 - freq2);
+            }
+            case "Quante volte in più compare '%s' rispetto a '%s' nel documento '%s'?" -> {
+                String p1 = getRandomWord();
+                String p2 = getRandomWord();
+                domanda = String.format(template, p1, p2, doc);
+                int freq1 = matrix.getFrequenza(doc, p1);
+                int freq2 = matrix.getFrequenza(doc, p2);
+                risposta = Math.max(0, freq1 - freq2);
+            }
+            case "Qual è la somma delle frequenze di '%s' e '%s' nel documento '%s'?" -> {
+                String p1 = getRandomWord();
+                String p2 = getRandomWord();
+                domanda = String.format(template, p1, p2, doc);
+                int freq1 = matrix.getFrequenza(doc, p1);
+                int freq2 = matrix.getFrequenza(doc, p2);
+                risposta = freq1 + freq2;
+            }
+            default -> throw new IllegalStateException("Template non valido: " + template);
         }
 
+        List<String> opzioni = new ArrayList<>(generaDistrattoriNumerici(risposta));
         Collections.shuffle(opzioni);
-        return new Question(id, QuestionType.COMPARISON, domanda, opzioni, risposta);
+        return new Question(id, QuestionType.COMPARISON, domanda, opzioni, String.valueOf(risposta));
     }
 
     public Question generateDocumentSpecificQuestion(int id) {
+        validateMatrix();
         String parola = getRandomWord();
-        List<String> documenti = getRandomDocuments(4);
+        List<String> docs = new ArrayList<>(matrix.getDocumenti());
 
-        List<String> templates = QuestionType.EXCLUSION.getQuestionList();
+        List<String> templates = QuestionType.DOCUMENT_SPECIFIC.getQuestionList();
         String template = templates.get(random.nextInt(templates.size()));
 
         String domanda;
-        List<String> opzioni;
-        String risposta;
+        int risposta;
 
         switch (template) {
-            case "Quale di queste parole non compare nel testo del documento '%s'?" -> {
-                String doc = getRandomDocument();
-                List<String> parole = getRandomWords(3);
-                String fake = "fantasma" + random.nextInt(1000);
-                opzioni = new ArrayList<>(parole);
-                opzioni.add(fake);
-                domanda = String.format(template, doc);
-                risposta = fake;
-            }
-            case "Quale parola non è presente nel testo dei vari documenti?" -> {
-                List<String> parole = getRandomWords(3);
-                String fake = "illusione" + random.nextInt(1000);
-                opzioni = new ArrayList<>(parole);
-                opzioni.add(fake);
-                domanda = String.format(template);
-                risposta = fake;
-            }
-            case "La parola '%s' compare nei testi?" -> {
+            case "In quanti documenti compare la parola '%s'?" -> {
                 domanda = String.format(template, parola);
-                boolean inTutti = documenti.stream().allMatch(doc -> matrix.getFrequenza(doc, parola) > 0);
-                boolean inNessuno = documenti.stream().noneMatch(doc -> matrix.getFrequenza(doc, parola) > 0);
-                risposta = inTutti ? "in tutti i documenti" : inNessuno ? "no" : "in uno dei documenti";
-                opzioni = List.of("sì", "no", "in uno dei documenti", "in tutti i documenti");
+                risposta = (int) docs.stream()
+                        .mapToInt(doc -> matrix.getFrequenza(doc, parola))
+                        .map(freq -> freq > 0 ? 1 : 0)
+                        .sum();
             }
-            case "Quale parola tra '%s' e '%s' è presente nel testo del documento?" -> {
-                String doc = getRandomDocument();
-                String p1 = getRandomWord();
-                String p2 = "nonpresente" + random.nextInt(1000);
-                opzioni = List.of(p1, p2, "una delle due", "nessuna delle due");
-                domanda = String.format(template, p1, p2);
-                risposta = matrix.getFrequenza(doc, p1) > 0 ? p1 : p2;
+            case "Quante volte compare la parola '%s' nel documento dove è più frequente?" -> {
+                domanda = String.format(template, parola);
+                risposta = docs.stream()
+                        .mapToInt(doc -> matrix.getFrequenza(doc, parola))
+                        .max()
+                        .orElse(0);
             }
-            default -> throw new IllegalStateException("Template non valido");
+            case "Qual è la frequenza totale della parola '%s' in tutti i documenti?" -> {
+                domanda = String.format(template, parola);
+                risposta = docs.stream()
+                        .mapToInt(doc -> matrix.getFrequenza(doc, parola))
+                        .sum();
+            }
+            case "In quanti documenti la parola '%s' compare almeno 2 volte?" -> {
+                domanda = String.format(template, parola);
+                risposta = (int) docs.stream()
+                        .mapToInt(doc -> matrix.getFrequenza(doc, parola))
+                        .map(freq -> freq >= 2 ? 1 : 0)
+                        .sum();
+            }
+            case "Qual è la frequenza media (arrotondata) della parola '%s' nei documenti dove compare?" -> {
+                domanda = String.format(template, parola);
+                List<Integer> frequenze = docs.stream()
+                        .mapToInt(doc -> matrix.getFrequenza(doc, parola))
+                        .filter(freq -> freq > 0)
+                        .boxed()
+                        .toList();
+                risposta = frequenze.isEmpty() ? 0 :
+                        (int) Math.round(frequenze.stream().mapToInt(Integer::intValue).average().orElse(0));
+            }
+            default -> throw new IllegalStateException("Template non valido: " + template);
         }
 
+        List<String> opzioni = new ArrayList<>(generaDistrattoriNumerici(risposta));
         Collections.shuffle(opzioni);
-        return new Question(id, QuestionType.EXCLUSION, domanda, opzioni, risposta);
+        return new Question(id, QuestionType.DOCUMENT_SPECIFIC, domanda, opzioni, String.valueOf(risposta));
     }
 
     public Question generateExclusionQuestion(int id) {
+        validateMatrix();
+        List<String> docs = new ArrayList<>(matrix.getDocumenti());
+        List<String> parole = new ArrayList<>(matrix.getTutteLeParole());
+
         List<String> templates = QuestionType.EXCLUSION.getQuestionList();
         String template = templates.get(random.nextInt(templates.size()));
 
-        List<String> docs = new ArrayList<>(matrix.getDocumenti());
-        List<String> parole = new ArrayList<>(matrix.getTutteLeParole());
-        Collections.shuffle(parole);
-
         String domanda;
-        List<String> opzioni;
-        String corretta;
+        int risposta;
 
         switch (template) {
-            case "In quale documento compare più spesso la parola '%s'?" -> {
-                String parola = parole.get(0);
-                Map<String, Integer> freq = new HashMap<>();
-                for (String d : docs) freq.put(d, matrix.getFrequenza(d, parola));
-                corretta = Collections.max(freq.entrySet(), Map.Entry.comparingByValue()).getKey();
-                domanda = String.format(template, parola);
-                opzioni = docs.stream().limit(4).toList();
-                if (!opzioni.contains(corretta)) {
-                    opzioni = new ArrayList<>(opzioni);
-                    opzioni.set(0, corretta);
-                }
+            case "Quante volte compare la parola '%s' in tutti i documenti tranne '%s'?" -> {
+                String parola = getRandomWord();
+                String docEscluso = getRandomDocument();
+                domanda = String.format(template, parola, docEscluso);
+                risposta = docs.stream()
+                        .filter(doc -> !doc.equals(docEscluso))
+                        .mapToInt(doc -> matrix.getFrequenza(doc, parola))
+                        .sum();
             }
-            case "In che documento è presente la parola '%s'?" -> {
-                String parola = parole.get(0);
-                String presenteIn = docs.stream().filter(d -> matrix.getFrequenza(d, parola) > 0).findFirst().orElse("Nessuno");
-                domanda = String.format(template, parola);
-                opzioni = new ArrayList<>(docs);
-                opzioni.add("Nessuno");
-                corretta = presenteIn;
+            case "Qual è la frequenza della parola più comune in tutti i documenti?" -> {
+                domanda = String.format(template);
+                risposta = parole.stream()
+                        .mapToInt(parola -> docs.stream()
+                                .mapToInt(doc -> matrix.getFrequenza(doc, parola))
+                                .sum())
+                        .max()
+                        .orElse(0);
             }
-            case "Nella totalità dei documenti, qual è il termine più ricorrente?" -> {
-                Map<String, Integer> freq = new HashMap<>();
-                for (String p : parole) {
-                    int total = docs.stream().mapToInt(d -> matrix.getFrequenza(d, p)).sum();
-                    freq.put(p, total);
-                }
-                corretta = Collections.max(freq.entrySet(), Map.Entry.comparingByValue()).getKey();
-                domanda = template;
-                opzioni = parole.stream().filter(p -> !p.equals(corretta)).limit(3).toList();
-                opzioni = new ArrayList<>(opzioni);
-                opzioni.add(corretta);
+            case "Quante parole diverse compaiono almeno 3 volte nel documento '%s'?" -> {
+                String doc = getRandomDocument();
+                domanda = String.format(template, doc);
+                risposta = (int) parole.stream()
+                        .mapToInt(parola -> matrix.getFrequenza(doc, parola))
+                        .filter(freq -> freq >= 3)
+                        .count();
             }
-            case "In che documento non compare la parola '%s'?" -> {
-                String parola = parole.get(0);
-                String nonPresente = docs.stream().filter(d -> matrix.getFrequenza(d, parola) == 0).findFirst().orElse("Tutti");
-                domanda = String.format(template, parola);
-                opzioni = new ArrayList<>(docs);
-                opzioni.add("Tutti");
-                corretta = nonPresente;
+            case "Qual è il numero di parole uniche nel documento '%s'?" -> {
+                String doc = getRandomDocument();
+                domanda = String.format(template, doc);
+                risposta = (int) parole.stream()
+                        .mapToInt(parola -> matrix.getFrequenza(doc, parola))
+                        .filter(freq -> freq > 0)
+                        .count();
             }
-            default -> throw new IllegalStateException("Template non riconosciuto: " + template);
+            case "Quante volte compare complessivamente la parola meno frequente in tutti i documenti?" -> {
+                domanda = String.format(template);
+                risposta = parole.stream()
+                        .mapToInt(parola -> docs.stream()
+                                .mapToInt(doc -> matrix.getFrequenza(doc, parola))
+                                .sum())
+                        .filter(freq -> freq > 0)
+                        .min()
+                        .orElse(0);
+            }
+            default -> throw new IllegalStateException("Template non valido: " + template);
         }
 
+        List<String> opzioni = new ArrayList<>(generaDistrattoriNumerici(risposta));
         Collections.shuffle(opzioni);
-        return new Question(id, QuestionType.EXCLUSION, domanda, opzioni, corretta);
+        return new Question(id, QuestionType.EXCLUSION, domanda, opzioni, String.valueOf(risposta));
     }
 
     // ========== Metodi di supporto ==========
@@ -230,60 +225,53 @@ public class QuestionFactory {
     private List<String> generaDistrattoriNumerici(int corretta) {
         Set<Integer> opzioni = new HashSet<>();
         opzioni.add(corretta);
+
         while (opzioni.size() < 4) {
-            int offset = random.nextInt(5) + 1;
-            int distr = corretta + (random.nextBoolean() ? offset : -offset);
-            opzioni.add(Math.max(distr, 0));
+            int offset = random.nextInt(Math.max(5, corretta / 2 + 1)) + 1;
+            int distrattore = corretta + (random.nextBoolean() ? offset : -offset);
+            opzioni.add(Math.max(distrattore, 0));
         }
-        return opzioni.stream().map(String::valueOf).toList();
+
+        return opzioni.stream()
+                .map(String::valueOf)
+                .sorted((a, b) -> Integer.compare(Integer.parseInt(a), Integer.parseInt(b)))
+                .toList();
     }
 
     private String getRandomDocument() {
+        if (matrix == null || matrix.getDocumenti() == null || matrix.getDocumenti().isEmpty()) {
+            throw new IllegalStateException("Nessun documento disponibile nella matrice");
+        }
         List<String> docs = new ArrayList<>(matrix.getDocumenti());
         return docs.get(random.nextInt(docs.size()));
     }
 
     private String getRandomWord() {
+        if (matrix == null || matrix.getTutteLeParole() == null || matrix.getTutteLeParole().isEmpty()) {
+            throw new IllegalStateException("Nessuna parola disponibile nella matrice");
+        }
         List<String> parole = new ArrayList<>(matrix.getTutteLeParole());
         return parole.get(random.nextInt(parole.size()));
     }
 
     private List<String> getRandomWords(int count) {
+        if (matrix == null || matrix.getTutteLeParole() == null || matrix.getTutteLeParole().isEmpty()) {
+            throw new IllegalStateException("Nessuna parola disponibile nella matrice");
+        }
         List<String> parole = new ArrayList<>(matrix.getTutteLeParole());
         Collections.shuffle(parole);
         return parole.subList(0, Math.min(count, parole.size()));
     }
 
-    private List<String> getRandomDocuments(int count) {
-        List<String> docs = new ArrayList<>(matrix.getDocumenti());
-        Collections.shuffle(docs);
-        return docs.subList(0, Math.min(count, docs.size()));
-    }
-
-    private Map<String, Integer> getFrequenzeParole(String doc, List<String> parole) {
-        Map<String, Integer> freq = new HashMap<>();
-        for (String p : parole) freq.put(p, matrix.getFrequenza(doc, p));
-        return freq;
-    }
-
-    private String getMaxFrequenzaParola(String doc, List<String> parole) {
-        return parole.stream().max(Comparator.comparingInt(p -> matrix.getFrequenza(doc, p))).orElse("");
-    }
-
-    private String getMinFrequenzaParola(String doc, List<String> parole) {
-        return parole.stream().min(Comparator.comparingInt(p -> matrix.getFrequenza(doc, p))).orElse("");
-    }
-
-    private String getMax(Map<String, Integer> map) {
-        return map.entrySet().stream().max(Map.Entry.comparingByValue()).map(Map.Entry::getKey).orElse("");
-    }
-
-    private String getMin(Map<String, Integer> map) {
-        return map.entrySet().stream().min(Map.Entry.comparingByValue()).map(Map.Entry::getKey).orElse("");
-    }
-
-    private List<String> getDistractors(Map<String, Integer> freq, String exclude) {
-        return freq.keySet().stream().filter(p -> !p.equals(exclude)).limit(3).toList();
+    private void validateMatrix() {
+        if (matrix == null) {
+            throw new IllegalStateException("WordDocumentMatrix non inizializzata");
+        }
+        if (matrix.getDocumenti() == null || matrix.getDocumenti().isEmpty()) {
+            throw new IllegalStateException("Nessun documento caricato nella matrice");
+        }
+        if (matrix.getTutteLeParole() == null || matrix.getTutteLeParole().isEmpty()) {
+            throw new IllegalStateException("Nessuna parola trovata nei documenti");
+        }
     }
 }
-

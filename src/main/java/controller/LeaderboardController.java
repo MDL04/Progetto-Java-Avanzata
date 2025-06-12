@@ -9,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -35,28 +36,75 @@ public class LeaderboardController {
     @FXML
     TableColumn hardColumn;
 
+    @FXML
+    Button homeButton;
+
+    @FXML
+    Button dashboardButton;
+
+    boolean isLoggedin = false;
+    private User currentUser;
+
     private ObservableList<User> leaderboardData = FXCollections.observableArrayList();
     private final UserDAO userDAO = new UserDAO();
 
     @FXML
     private void initialize() {
         setupColumns();
-
         hardColumn.setSortType(TableColumn.SortType.DESCENDING);
         leaderboardTable.getSortOrder().add(hardColumn);
+        updateLeaderboard();
+    }
 
-
-        //updateLeaderboard();
+    private void updateButtonVisibility() {
+        if(isLoggedin && currentUser != null) {
+            homeButton.setVisible(false);
+            dashboardButton.setVisible(true);
+        } else {
+            homeButton.setVisible(true);
+            dashboardButton.setVisible(false);
+        }
     }
 
     @FXML
     private void goToHome(ActionEvent event) {
-        try{
+        try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/homepage.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
             stage.setScene(new Scene(root));
+
+            stage.setMinHeight(400);
+            stage.setMinWidth(600);
+
             stage.setTitle("Homepage");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void goToUserDashboard(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/user_dashboard.fxml"));
+            Parent root = loader.load();
+
+            // Passa l'utente al controller della dashboard
+            UserDashboardController dashboardController = loader.getController();
+            if (currentUser != null) {
+                dashboardController.setUser(currentUser);
+            }
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+            stage.setScene(new Scene(root));
+
+            stage.setMinHeight(400);
+            stage.setMinWidth(600);
+
+            stage.setTitle("Dashboard Utente");
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -65,22 +113,24 @@ public class LeaderboardController {
 
     private void setupColumns() {
         usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
-
-        easyColumn.setCellValueFactory(new PropertyValueFactory<>("easyScore"));
-        mediumColumn.setCellValueFactory(new PropertyValueFactory<>("mediumScore"));
-        hardColumn.setCellValueFactory(new PropertyValueFactory<>("hardScore"));
+        easyColumn.setCellValueFactory(new PropertyValueFactory<>("bestScoreEasy"));
+        mediumColumn.setCellValueFactory(new PropertyValueFactory<>("bestScoreMedium"));
+        hardColumn.setCellValueFactory(new PropertyValueFactory<>("bestScoreHard"));
     }
 
+    private void updateLeaderboard() {
+        ObservableList<User> data = FXCollections.observableArrayList();
+        List<User> users = userDAO.selectAll();
+        List<User> filteredUsers = users.stream()
+                .filter(user -> user.getBestScoreEasy() > 0 && user.getBestScoreMedium() > 0 && user.getBestScoreHard() > 0)
+                .toList();
+        data.addAll(filteredUsers);
+        leaderboardTable.setItems(data);
+    }
 
-//    private void updateLeaderboard() {
-//        ObservableList<User> data = FXCollections.observableArrayList();
-//
-//        List<User> users = userDAO.selectAll();
-//        List<User> filteredUsers = users.stream().filter(user -> user.getBestScoreEasy() > 0 && user.getBestScoreNormal() > 0 && user.getBestScoreHard() > 0).toList();
-//
-//        data.addAll(filteredUsers);
-//
-//        leaderboardTable.setItems(data);
-//    }
-
+    // Metodo per settare l'utente corrente
+    public void setUser(User user) {
+        this.currentUser = user;
+        updateButtonVisibility();
+    }
 }
