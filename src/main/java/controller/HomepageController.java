@@ -18,7 +18,12 @@ public class HomepageController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/login.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
             stage.setScene(new Scene(root));
+
+            stage.setMinWidth(600);
+            stage.setMinHeight(400);
+
             stage.setTitle("Login");
             stage.show();
         } catch (IOException e) {
@@ -32,8 +37,13 @@ public class HomepageController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/leaderboard.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root, 600, 400));
-            stage.setTitle("Leaderboard");
+
+            stage.setScene(new Scene(root));
+
+            stage.setMinWidth(600);
+            stage.setMinHeight(400);
+
+            stage.setTitle("Classifica");
             stage.show();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -46,7 +56,12 @@ public class HomepageController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/info.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root, 600, 400));
+
+            stage.setScene(new Scene(root));
+
+            stage.setMinWidth(600);
+            stage.setMinHeight(400);
+
             stage.setTitle("Info");
             stage.show();
         } catch (IOException e) {

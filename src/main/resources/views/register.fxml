@@ -2,10 +2,17 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="400" prefWidth="600" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.12" fx:controller="controller.RegisterController">
+<AnchorPane minHeight="400.0" minWidth="600.0" prefHeight="400" prefWidth="600" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RegisterController">
 
-    <VBox alignment="TOP_CENTER" layoutX="199.0" layoutY="33.0" spacing="10">
+    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="237.0" layoutY="14.0" text="Registrati">
+        <font>
+            <Font name="Arial Black" size="28.0" />
+        </font>
+    </Label>
+
+    <VBox alignment="TOP_CENTER" layoutX="199.0" layoutY="75.0" spacing="10">
         <TextField fx:id="usernameFld" promptText="Username" />
         <TextField fx:id="emailFld" promptText="Email" />
         <PasswordField fx:id="passwordFld" promptText="Password" />
@@ -20,5 +27,5 @@
         </HBox>
 
     </VBox>
-    <Button layoutX="241.0" layoutY="329.0" onAction="#goToHome" text="Torna alla home" />
+    <Button layoutX="242.0" layoutY="347.0" onAction="#goToHome" text="Torna alla home" />
 </AnchorPane>

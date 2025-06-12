@@ -191,7 +191,12 @@ public class AdminController {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/homepage.fxml"));
                 Parent root = loader.load();
                 Stage homeStage = new Stage();
+
                 homeStage.setScene(new Scene(root));
+
+                homeStage.setMinHeight(400);
+                homeStage.setMinWidth(600);
+
                 homeStage.setTitle("Homepage");
                 homeStage.show();
             } catch (IOException e) {

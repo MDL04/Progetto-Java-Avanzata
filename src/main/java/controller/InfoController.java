@@ -3,6 +3,7 @@ package controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.text.Font;
@@ -10,7 +11,6 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
-import javafx.scene.Node;
 
 import java.io.IOException;
 
@@ -44,7 +44,12 @@ public class InfoController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/homepage.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
             stage.setScene(new Scene(root));
+
+            stage.setMinWidth(600);
+            stage.setMinHeight(400);
+
             stage.setTitle("Homepage");
             stage.show();
         } catch (IOException e) {

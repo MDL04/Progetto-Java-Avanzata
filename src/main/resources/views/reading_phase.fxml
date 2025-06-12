@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ReadingPhaseController">
+    <children>
+        <HBox style="-fx-padding: 10; -fx-spacing: 20;">
+            <children>
+                <Label fx:id="timerLabel" style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Tempo rimanente: 01:00" />
+                <Label fx:id="progressLabel" text="Documento 1 di 2" />
+            </children>
+        </HBox>
+
+        <Label fx:id="documentTitleLabel" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 10;" text="Documento 1: Titolo" />
+
+        <TextArea fx:id="documentArea" editable="false" prefHeight="400.0" style="-fx-font-size: 14px;" wrapText="true" />
+
+        <HBox style="-fx-padding: 10; -fx-spacing: 10; -fx-alignment: center;">
+            <children>
+                <Button fx:id="nextDocumentButton" onAction="#prossimoDocumento" text="Prossimo Documento" />
+            </children>
+        </HBox>
+    </children>
+</VBox>

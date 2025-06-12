@@ -7,7 +7,10 @@
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="controller.GameController"
-      spacing="20" alignment="CENTER" padding="20">
+      spacing="20" alignment="CENTER">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
 
     <!-- Sezione selezione lingua e difficoltà -->
     <HBox spacing="15" alignment="CENTER">
