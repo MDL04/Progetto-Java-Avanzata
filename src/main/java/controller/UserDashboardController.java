@@ -9,9 +9,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
 import javafx.stage.Stage;
 import model.User;
 import utils.WDMManager;
+import javafx.scene.paint.Color;
+
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -148,6 +152,13 @@ public class UserDashboardController {
         if (currentUser != null) {
             userLabel.setText("Ciao, " + currentUser.getUsername() + "!");
             loadUserAvatar();
+
+            LinearGradient gradient = new LinearGradient(0, 0, 1, 0, true, null,
+                    new Stop(0, Color.web("#0077cc")),  // Blu
+                    new Stop(1, Color.web("#f6a500"))); // Arancione
+
+            // Applicazione del gradiente al testo della label
+            userLabel.setTextFill(gradient);
 
             // Miglior punteggio
             bestEasyLabel.setText(String.valueOf(user.getBestScoreEasy()));

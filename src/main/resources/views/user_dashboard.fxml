@@ -6,7 +6,10 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.UserDashboardController">
+<AnchorPane minHeight="400.0" minWidth="600.0"
+            prefHeight="400.0" prefWidth="600.0"
+            xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controller.UserDashboardController" stylesheets="@../styles/style.css">
    <children>
       <HBox layoutX="31.0" layoutY="28.0" prefHeight="100.0" prefWidth="522.0">
          <children>
@@ -66,7 +69,7 @@
             </VBox>
             <VBox alignment="CENTER">
                <children>
-                  <Label alignment="CENTER" contentDisplay="CENTER" text="Statistiche personali" />
+                  <Label style="-fx-text-fill: white" alignment="CENTER" contentDisplay="CENTER" text="Statistiche personali" />
                   <GridPane fx:id="statsGrid" prefWidth="275.0">
                      <columnConstraints>
                         <ColumnConstraints prefWidth="90.0"/>
@@ -81,7 +84,7 @@
                         <RowConstraints prefHeight="30.0"/>
                      </rowConstraints>
                      <!-- Intestazioni colonne -->
-                     <Label text="" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                     <Label style="-fx-text-fill: white" text="" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
                      <Label text="Facile" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
                      <Label text="Medio" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
                      <Label text="Difficile" GridPane.rowIndex="0" GridPane.columnIndex="3"/>
