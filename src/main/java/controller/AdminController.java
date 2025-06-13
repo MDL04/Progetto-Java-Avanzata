@@ -144,6 +144,10 @@ public class AdminController {
                 if (optionalDocument.isPresent()) {
                     DocumentDAO.deleteDocument(optionalDocument.get());
                     documentList.getItems().remove(selected);
+
+                    // ✅ Ricarica WDM
+                    WDMManager.delete();
+                    WDMManager.getInstance();
                 } else {
                     showInfoAlert("Errore", "Documento \"" + selected + "\" non trovato nel database.");
                 }
@@ -165,6 +169,10 @@ public class AdminController {
                 if (optionalStopword.isPresent()) {
                     StopwordDAO.deleteStopword(optionalStopword.get());
                     stopwordList.getItems().remove(selected);
+
+                    // ✅ Ricarica WDM
+                    WDMManager.delete();
+                    WDMManager.getInstance();
                 } else {
                     showInfoAlert("Errore", "Stopwords \"" + selected + "\" non trovato nel database.");
                 }

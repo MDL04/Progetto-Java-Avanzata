@@ -2,19 +2,19 @@ package quiz;
 
 import java.util.*;
 
-public class GameSession {
+public class QuizAttempt {
     private final int idSessione;
-    private long idUser;
     private final List<Question> domande;
     private final Map<Integer, String> risposteUtente;
     private int punteggio;
+    private final String lingua;
 
-    public GameSession(int idSessione, QuestionFactory factory, int numeroDomande) {
+    public QuizAttempt(int idSessione, QuestionFactory factory, int numeroDomande, String lingua) {
         this.idSessione = idSessione;
         this.domande = new ArrayList<>();
         this.risposteUtente = new HashMap<>();
         this.punteggio = 0;
-
+        this.lingua = lingua;
         generaDomande(factory, numeroDomande);
     }
 
@@ -41,12 +41,11 @@ public class GameSession {
         for (int i = 0; i < numeroDomande; i++) {
             QuestionType tipo = tipi.get(r.nextInt(tipi.size()));
             try {
-                Question q = factory.generateQuestion(i + 1, tipo);
+                Question q = factory.generateQuestion(i + 1, tipo, lingua);
                 domande.add(q);
             } catch (Exception e) {
                 e.printStackTrace();
                 System.err.println("Errore nella generazione della domanda: " + e.getMessage());
-                // Riprova con un tipo diverso
                 i--;
             }
         }

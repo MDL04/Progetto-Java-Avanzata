@@ -11,6 +11,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import model.User;
+import utils.WDMManager;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,8 +30,20 @@ public class UserDashboardController {
     @FXML
     private ImageView userAvatarImageView;
 
+    @FXML private Label bestEasyLabel;
+    @FXML private Label bestMediumLabel;
+    @FXML private Label bestHardLabel;
+    @FXML private Label gamesEasyLabel;
+    @FXML private Label gamesMediumLabel;
+    @FXML private Label gamesHardLabel;
+    @FXML private Label avgEasyLabel;
+    @FXML private Label avgMediumLabel;
+    @FXML private Label avgHardLabel;
+
+
     @FXML
     private void initialize() {
+        WDMManager.getInstance();
     }
 
     @FXML
@@ -128,11 +141,28 @@ public class UserDashboardController {
         }
     }
 
+
+
     public void setUser(User user) {
         this.currentUser = user;
         if (currentUser != null) {
             userLabel.setText("Ciao, " + currentUser.getUsername() + "!");
             loadUserAvatar();
+
+            // Miglior punteggio
+            bestEasyLabel.setText(String.valueOf(user.getBestScoreEasy()));
+            bestMediumLabel.setText(String.valueOf(user.getBestScoreMedium()));
+            bestHardLabel.setText(String.valueOf(user.getBestScoreHard()));
+
+            // Partite giocate
+            gamesEasyLabel.setText(String.valueOf(user.getPartiteEasy()));
+            gamesMediumLabel.setText(String.valueOf(user.getPartiteMedium()));
+            gamesHardLabel.setText(String.valueOf(user.getPartiteHard()));
+
+            // Punteggio medio
+            avgEasyLabel.setText(user.getPartiteEasy() > 0 ? String.valueOf(user.getScoreEasy() / user.getPartiteEasy()) : "0");
+            avgMediumLabel.setText(user.getPartiteMedium() > 0 ? String.valueOf(user.getScoreMedium() / user.getPartiteMedium()) : "0");
+            avgHardLabel.setText(user.getPartiteHard() > 0 ? String.valueOf(user.getScoreHard() / user.getPartiteHard()) : "0");
         }
     }
 
