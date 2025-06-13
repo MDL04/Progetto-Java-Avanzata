@@ -55,6 +55,10 @@ public class UserDashboardController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/game_selection.fxml"));
             Parent root = loader.load();
+
+            GameSelectionController gameSelectionController = loader.getController();
+            gameSelectionController.setUser(currentUser);
+
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("Gioco");
