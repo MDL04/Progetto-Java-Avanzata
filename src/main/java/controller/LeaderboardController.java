@@ -122,7 +122,7 @@ public class LeaderboardController {
         ObservableList<User> data = FXCollections.observableArrayList();
         List<User> users = userDAO.selectAll();
         List<User> filteredUsers = users.stream()
-                .filter(user -> user.getBestScoreEasy() > 0 && user.getBestScoreMedium() > 0 && user.getBestScoreHard() > 0)
+                .filter(user -> user.getBestScoreEasy() > 0 || user.getBestScoreMedium() > 0 || user.getBestScoreHard() > 0)
                 .toList();
         data.addAll(filteredUsers);
         leaderboardTable.setItems(data);
@@ -132,5 +132,6 @@ public class LeaderboardController {
     public void setUser(User user) {
         this.currentUser = user;
         updateButtonVisibility();
+        updateLeaderboard();
     }
 }

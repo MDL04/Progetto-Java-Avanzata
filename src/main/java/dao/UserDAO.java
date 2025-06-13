@@ -15,13 +15,12 @@ public class UserDAO {
 
     public Optional<User> selectById(long id) {
         Optional<User> result = Optional.empty();
-        try(Connection connection = DBManager.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM users WHERE id = ?")){
+        try (Connection connection = DBManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM users WHERE id = ?")) {
             preparedStatement.setLong(1, id);
             ResultSet rs = preparedStatement.executeQuery();
-            rs.getLong("id");
-            User user = null;
             if (rs.next()) {
+                User user = new User();
                 user.setUsername(rs.getString("username"));
                 user.setPassword(rs.getString("password_hash"));
                 user.setId(rs.getLong("id"));
@@ -37,9 +36,9 @@ public class UserDAO {
                 user.setPartiteHard(rs.getInt("games_hard"));
                 user.setPartiteMedium(rs.getInt("games_medium"));
                 user.setUrlAvatar(rs.getString("avatar_url"));
+                result = Optional.of(user);
             }
-            result = Optional.ofNullable(user);
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return result;
@@ -155,10 +154,12 @@ public class UserDAO {
 
     public void update(User user, String difficulty, int score) {
         try (Connection connection = DBManager.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement("UPDATE users " + "SET " + "games_" + difficulty + " = games_" + difficulty + " + 1, " + "score_total" + difficulty + " = score_total" + difficulty + " + ?, " + "best_" + difficulty + " = GREATEST(best_" + difficulty + ", ?) " + "WHERE id = ?")){
+        PreparedStatement preparedStatement = connection.prepareStatement("UPDATE users " + "SET " + "games_" + difficulty + " = games_" + difficulty + " + 1, " + "score_total_" + difficulty + " = score_total_" + difficulty + " + ?, " + "best_" + difficulty + " = CASE WHEN best_" + difficulty + " > ? THEN best_" + difficulty + " ELSE ? END " +
+                "WHERE id = ?")){
             preparedStatement.setInt(1, score);
             preparedStatement.setInt(2, score);
-            preparedStatement.setLong(3, user.getId());
+            preparedStatement.setInt(3, score);
+            preparedStatement.setLong(4, user.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();

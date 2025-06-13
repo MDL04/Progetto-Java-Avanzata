@@ -167,7 +167,7 @@ public class ReadingPhaseController {
             Parent root = loader.load();
 
             QuizController quizController = loader.getController();
-            // Passa la lingua!
+            quizController.setUser(currentUser);
             quizController.initialize(matrix, difficolta, documentiDaMostrare, lingua);
 
             Stage stage = (Stage) documentArea.getScene().getWindow();

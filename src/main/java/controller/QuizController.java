@@ -41,6 +41,7 @@ public class QuizController {
     private GameSessionDAO gameSessionDAO;
 
     private LocalDateTime startTime;
+    private LocalDateTime endTime;
     private String difficoltà;
     private String timeSpent;
 
@@ -66,7 +67,7 @@ public class QuizController {
 
         try {
             QuestionFactory factory = new QuestionFactory(matrix);
-            session = new QuizAttempt(1, factory, numDomande, lingua);
+            session = new QuizAttempt(factory, numDomande, lingua);
 
             resultLabel.setText("Quiz avviato! Ricordi quello che hai letto?");
             mostraDomandaCorrente();
@@ -135,13 +136,15 @@ public class QuizController {
                 punteggio, session.getDomande().size(), percentuale
         ));
 
-        LocalDateTime endTime = LocalDateTime.now();
+        endTime = LocalDateTime.now();
         Duration duration = Duration.between(startTime, endTime);
         long seconds = duration.getSeconds();
         long absSeconds = Math.abs(seconds);
         timeSpent = String.format("%02d:%02d", absSeconds / 60, absSeconds % 60);
 
         mostraFineQuiz();
+        updateDB();
+
         questionLabel.setText("Complimenti! Quiz terminato!");
         optionsList.getItems().clear();
     }
@@ -183,11 +186,19 @@ public class QuizController {
             Parent root = loader.load();
 
             UserDashboardController controller = loader.getController();
-            if (currentUser != null) {
-                controller.setUser(currentUser);
+
+
+            Optional<User> utenteAggiornato = userDAO.selectById(currentUser.getId());
+            User nuovoUtente = utenteAggiornato.orElseThrow();
+            if (nuovoUtente == null) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Utente non trovato nel database.");
+                alert.show();
+                return;
             }
+            controller.setUser(nuovoUtente);
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setOnCloseRequest(null);
             stage.setScene(new Scene(root));
 
             stage.setMinWidth(600);
@@ -203,6 +214,9 @@ public class QuizController {
 
     private void updateDB() {
 
+        userDAO = new UserDAO();
+        gameSessionDAO = new GameSessionDAO();
+
         String difficulty = switch (difficoltà) {
             case "Facile" -> "easy";
             case "Media" -> "medium";
@@ -211,7 +225,7 @@ public class QuizController {
         };
         userDAO.update(currentUser, difficulty, session.getPunteggio());
 
-//        gameSessionDAO.insert();
+        gameSessionDAO.insert(currentUser.getId().intValue(), session.getPunteggio(), difficulty, endTime);
     }
 
     @FXML

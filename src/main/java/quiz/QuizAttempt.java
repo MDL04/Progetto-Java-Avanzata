@@ -3,23 +3,17 @@ package quiz;
 import java.util.*;
 
 public class QuizAttempt {
-    private final int idSessione;
     private final List<Question> domande;
     private final Map<Integer, String> risposteUtente;
     private int punteggio;
     private final String lingua;
 
-    public QuizAttempt(int idSessione, QuestionFactory factory, int numeroDomande, String lingua) {
-        this.idSessione = idSessione;
+    public QuizAttempt(QuestionFactory factory, int numeroDomande, String lingua) {
         this.domande = new ArrayList<>();
         this.risposteUtente = new HashMap<>();
         this.punteggio = 0;
         this.lingua = lingua;
         generaDomande(factory, numeroDomande);
-    }
-
-    public int getIdSessione() {
-        return idSessione;
     }
 
     public List<Question> getDomande() {
