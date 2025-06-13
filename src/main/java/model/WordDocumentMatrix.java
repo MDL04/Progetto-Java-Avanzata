@@ -185,5 +185,25 @@ public class WordDocumentMatrix {
         return inversa;
     }
 
+    /**
+     * Restituisce la mappa delle frequenze per un documento specifico
+     *
+     * @param titolo Il titolo del documento
+     * @return Una mappa che associa le parole alle loro frequenze nel documento, o una mappa vuota se il documento non esiste
+     */
+    public Map<String, Integer> getFrequenzeDocumento(String titolo) {
+        return matrix.getOrDefault(titolo, Map.of());
+    }
+
+    /**
+     * Aggiunge direttamente una mappa di frequenze per un documento.
+     *
+     * @param titolo Il titolo del documento
+     * @param frequenze Una mappa che associa le parole alle loro frequenze nel documento
+     */
+    public void aggiungiFrequenzeDocumento(String titolo, Map<String, Integer> frequenze) {
+        matrix.put(titolo, new HashMap<>(frequenze));
+    }
+
 
 }

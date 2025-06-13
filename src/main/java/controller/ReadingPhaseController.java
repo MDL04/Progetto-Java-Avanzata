@@ -17,10 +17,7 @@ import model.User;
 import model.WordDocumentMatrix;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ReadingPhaseController {
@@ -191,7 +188,7 @@ public class ReadingPhaseController {
      */
     private void avviaQuiz() {
         try {
-            WordDocumentMatrix matrix = creaMatriceDaiDocumenti();
+            WordDocumentMatrix matrix = creaMatriceDaiCSVSeEsiste();
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/quiz.fxml"));
             Parent root = loader.load();
@@ -235,6 +232,40 @@ public class ReadingPhaseController {
         }
 
         return matrix;
+    }
+
+
+    /**
+     * In caso esista il file CSV con la matrice dei documenti e il file delle stopwords,
+     * crea una matrice con i documenti da usare nel quiz che sta andando a giocare l'utente.
+     *
+     * @return matrice con i documenti usati nel quiz
+     */
+    private WordDocumentMatrix creaMatriceDaiCSVSeEsiste() {
+        java.io.File wdmFile = new java.io.File("wdm.csv");
+        java.io.File stopwordsFile = new java.io.File("stopwords.txt");
+        if (wdmFile.exists() && stopwordsFile.exists()) {
+            try {
+                WordDocumentMatrix completa = WordDocumentMatrix.importaCSV("wdm.csv", "stopwords.txt");
+                WordDocumentMatrix sessione = new WordDocumentMatrix();
+                sessione.setStopwords(completa.getStopwords());
+                for (Document doc : documentiDaMostrare) {
+                    if (completa.getDocumenti().contains(doc.getTitle())) {
+                        // Copia le frequenze delle parole per il documento
+                        Map<String, Integer> freq = new HashMap<>(completa.getFrequenzeDocumento(doc.getTitle()));
+                        sessione.aggiungiFrequenzeDocumento(doc.getTitle(), freq);
+                    } else {
+                        // Se non c'è, aggiungi normalmente
+                        sessione.aggiungiDocumento(doc.getTitle(), doc.getContent());
+                    }
+                }
+                return sessione;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        // In caso di errori crea la matrice "da zero"
+        return creaMatriceDaiDocumenti();
     }
 
     /**
