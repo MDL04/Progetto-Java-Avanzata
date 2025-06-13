@@ -4,16 +4,18 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox fx:id="vBox" alignment="CENTER" minHeight="400.0" minWidth="600.0" spacing="20" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GameSelectionController">
+<VBox fx:id="vBox" alignment="CENTER" minHeight="400.0" minWidth="600.0"
+      spacing="20" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="controller.GameSelectionController" stylesheets="@../styles/style.css">
     <padding>
         <Insets bottom="20" left="20" right="20" top="20" />
     </padding>
      <VBox alignment="CENTER" spacing="5">
-         <Label text="Seleziona Lingua" />
+         <Label style="-fx-text-fill: white" text="Seleziona Lingua" />
          <ComboBox fx:id="languageComboBox" prefWidth="200" />
      </VBox>
      <VBox alignment="CENTER" spacing="5">
-         <Label text="Seleziona Difficoltà" />
+         <Label style="-fx-text-fill: white" text="Seleziona Difficoltà" />
          <ComboBox fx:id="difficultyComboBox" prefWidth="200" />
      </VBox>
      <Button onAction="#handleStartQuiz" prefWidth="120" text="Inizia Quiz" />

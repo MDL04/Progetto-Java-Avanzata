@@ -1,0 +1,61 @@
+/* Impostazioni di base per il background */
+.root {
+    -fx-background-color: #fef3d8; /* Colore di sfondo giallo chiaro */
+}
+
+/* Stile per il layout principale */
+.vbox {
+    -fx-padding: 20px;
+    -fx-spacing: 20px;
+    -fx-alignment: top-center;
+}
+
+/* Stile per HBox */
+.hbox {
+    -fx-spacing: 10px; /* Distanza tra i pulsanti */
+    -fx-alignment: center;
+}
+
+/* Stile per il pulsante */
+.button {
+    -fx-background-color: #f6a500; /* Arancione chiaro per il pulsante */
+    -fx-text-fill: white;
+    -fx-padding: 10px 20px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-border-radius: 5px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 2, 2); /* Ombra per i pulsanti */
+}
+
+/* Stile per il ListView */
+.list-view {
+    -fx-background-color: white; /* Sfondo bianco per la lista */
+    -fx-border-color: #cccccc; /* Colore del bordo grigio chiaro */
+    -fx-border-radius: 5px;
+}
+
+/* Stile per il Separator */
+.separator {
+    -fx-background-color: #cccccc; /* Colore del separator */
+}
+
+/* Stile per il pulsante logout */
+#logoutButton {
+    -fx-background-color: #0077cc; /* Colore blu per il pulsante logout */
+    -fx-text-fill: white;
+    -fx-padding: 10px 20px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-border-radius: 5px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 2, 2);
+}
+
+/* Margini tra gli elementi */
+.button, .list-view, .separator {
+    -fx-margin-bottom: 15px;
+}
+
+/* Stile per i titoli dei pulsanti (in HBox) */
+.button:hover {
+    -fx-background-color: #f6a500; /* Cambia colore al passaggio del mouse */
+}

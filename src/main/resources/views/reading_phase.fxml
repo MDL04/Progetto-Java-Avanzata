@@ -3,7 +3,10 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ReadingPhaseController">
+<VBox xmlns="http://javafx.com/javafx/11.0.1"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="controller.ReadingPhaseController"
+      stylesheets="@../styles/style.css">
     <children>
         <HBox style="-fx-padding: 10; -fx-spacing: 20;">
             <children>
@@ -12,7 +15,7 @@
             </children>
         </HBox>
 
-        <Label fx:id="documentTitleLabel" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 10;" text="Documento 1: Titolo" />
+        <Label fx:id="documentTitleLabel" style="-fx-font-size: 16px; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10;" text="Documento 1: Titolo" />
 
         <TextArea fx:id="documentArea" editable="false" prefHeight="400.0" style="-fx-font-size: 14px;" wrapText="true" />
 

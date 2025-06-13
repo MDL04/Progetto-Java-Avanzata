@@ -4,9 +4,12 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane minHeight="400.0" minWidth="600.0" prefHeight="400" prefWidth="600" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LoginController">
+<AnchorPane minHeight="400.0" minWidth="600.0" prefHeight="400"
+            prefWidth="600" xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controller.LoginController" stylesheets="@../styles/style.css">
 
-    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="258.0" layoutY="14.0" text="Accedi">
+    <Label fx:id="title" alignment="CENTER" contentDisplay="CENTER" layoutX="258.0" layoutY="14.0" text="Accedi">
         <font>
             <Font name="Arial Black" size="28.0" />
         </font>
@@ -21,7 +24,7 @@
         <Label fx:id="messageLbl" />
 
         <HBox alignment="CENTER">
-            <Label style="-fx-font-size: 11px;" text="Non sei ancora registrato?" />
+            <Label style="-fx-font-size: 11px; -fx-text-fill: white" text="Non sei ancora registrato?" />
             <Hyperlink onAction="#goToRegister" style="-fx-text-fill: #0077cc; -fx-font-size: 11px;" text=" Registrati ora!" />
         </HBox>
 

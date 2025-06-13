@@ -1,0 +1,90 @@
+/* Impostazioni generali */
+.root {
+    -fx-background-color: #2d3b45; /* Colore di sfondo della finestra */
+    -fx-font-family: Arial, sans-serif; /* Font generale */
+    -fx-padding: 20px;
+}
+
+/* Stile per il titolo "Accedi" */
+#title {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: linear-gradient(to right, #0077cc, #f6a500); /* Gradiente blu-arancione */
+    -fx-alignment: center;
+    -fx-padding: 0 0 0 20px;
+}
+
+/* Stile per la VBox */
+.vbox {
+    -fx-spacing: 15px;
+    -fx-alignment: center;
+    -fx-background-color: #ffffff; /* Sfondo bianco per la VBox */
+    -fx-padding: 20px;
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 2, 2); /* Leggera ombra */
+}
+
+/* Stile per TextField e PasswordField */
+.text-field, .password-field {
+    -fx-pref-width: 250px;
+    -fx-padding: 5px;
+    -fx-background-color: #f5f5f5;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5px;
+    -fx-font-size: 14px;
+    -fx-alignment: center;
+}
+
+/* Stile per il bottone Login */
+.button {
+    -fx-background-color: #0077cc; /* Colore blu per il bottone */
+    -fx-text-fill: white;
+    -fx-padding: 10px 20px;
+    -fx-font-size: 16px;
+    -fx-border-radius: 5px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 3, 0, 2, 2); /* Ombra per il bottone */
+}
+
+/* Stile per il bottone "Torna alla home" */
+.button#homeButton {
+    -fx-background-color: #444444;
+    -fx-text-fill: white;
+    -fx-padding: 10px 20px;
+    -fx-font-size: 16px;
+    -fx-border-radius: 5px;
+}
+
+/* Stile per il link "Registrati ora!" */
+.hyperlink {
+    -fx-text-fill: #0077cc;
+    -fx-font-size: 12px;
+}
+
+/* Stile per il messaggio di errore o successivo */
+#messageLbl {
+    -fx-text-fill: red;
+    -fx-font-size: 14px;
+    -fx-padding: 10px;
+}
+
+/* Stile per il label di "Non sei ancora registrato?" */
+#registerLabel {
+    -fx-font-size: 12px;
+    -fx-text-fill: #ffffff;
+}
+
+/* Per il contenitore del gridpane e altri elementi */
+#user_dashboard, #statsGrid {
+    -fx-background-color: #2d3b45; /* Colore di sfondo del dashboard */
+    -fx-text-fill: white; /* Testo bianco nel GridPane */
+}
+
+#statsGrid .label, #modify .label{
+    -fx-text-fill: white;
+}
+
+#timerLabel, #progressLabel, #questionLabel {
+    -fx-font-weight: bold;
+    -fx-text-fill: linear-gradient(to right, #0077cc, #f6a500);
+}
+
