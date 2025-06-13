@@ -27,12 +27,14 @@ public class GameSelectionController {
 
     private User currentUser;
 
+    /**
+     * Inizializza la view
+     */
     @FXML
     public void initialize() {
         languageComboBox.getItems().addAll("it", "en");
         difficultyComboBox.getItems().addAll("Facile", "Media", "Difficile");
 
-        // Listener per quando la scena è disponibile
         vBox.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
                 newScene.windowProperty().addListener((obsWin, oldWin, newWin) -> {
@@ -48,6 +50,9 @@ public class GameSelectionController {
         });
     }
 
+    /**
+     * Controlla la view delle impostazioni di partita
+     */
     @FXML
     public void handleStartQuiz(){
         String linguaCodice = languageComboBox.getValue();
@@ -59,7 +64,6 @@ public class GameSelectionController {
         }
 
         try {
-            // ✅ VAI ALLA FASE DI LETTURA
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/reading_phase.fxml"));
             Parent root = loader.load();
 
@@ -78,6 +82,9 @@ public class GameSelectionController {
         }
     }
 
+    /**
+     * Controlla la possibilità di uscire dal gioco durante la seleziona delle impostazioni di partita
+     */
     @FXML
     public void handleExitClick() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -103,6 +110,7 @@ public class GameSelectionController {
         }
     }
 
+    /**@param currentUser*/
     public void setUser(User currentUser) {
         this.currentUser = currentUser;
     }

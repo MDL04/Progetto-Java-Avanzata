@@ -12,6 +12,10 @@ import java.io.IOException;
 
 public class HomepageController {
 
+    /**
+     * Permette di andare alla sezione Login
+     * @param event
+     */
     @FXML
     private void goToLogin(ActionEvent event) {
         try{
@@ -31,6 +35,10 @@ public class HomepageController {
         }
     }
 
+    /**
+     * Permette di andare alla sezione Leaderboard
+     * @param event
+     */
     @FXML
     private void goToLeaderboard(ActionEvent event) {
         try{
@@ -50,6 +58,10 @@ public class HomepageController {
         }
     }
 
+    /**
+     * Permette di andare alla sezione Info
+     * @param event
+     */
     @FXML
     private void goToInfo(ActionEvent event) {
         try{

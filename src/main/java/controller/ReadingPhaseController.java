@@ -43,6 +43,12 @@ public class ReadingPhaseController {
 
     private User currentUser;
 
+    /**
+     * Inizializza la difficoltà, carica i documenti da database e mostra un documento
+     *
+     * @param lingua
+     * @param difficolta
+     */
     @FXML
     public void initialize(String lingua, String difficolta) {
         this.lingua = lingua;
@@ -89,6 +95,9 @@ public class ReadingPhaseController {
         });
     }
 
+    /**
+     * Permette di recuperare un documento dal database
+     */
     private void caricaDocumenti() {
         List<Document> tuttiDocumenti = DocumentDAO.selectDocumentByLanguage(lingua);
 
@@ -107,10 +116,20 @@ public class ReadingPhaseController {
         }
     }
 
+    /**
+     * Conta le parole in un testo
+     * @param testo
+     * @return
+     */
     private int contaParole(String testo) {
         return testo.trim().split("\\s+").length;
     }
 
+    /**
+     * Permette di mostrare il documento selezionatoInoltre.
+     * Un timer viene avviato per il tempo assegnato al documento.
+     * Quando il timer scade, il metodo passa automaticamente al documento successivo.
+     */
     private void mostraDocumentoCorrente() {
         if (documentoCorrente >= documentiDaMostrare.size()) {
             avviaQuiz();
@@ -138,6 +157,9 @@ public class ReadingPhaseController {
         timer.play();
     }
 
+    /**
+     * Permette di aggiornare il timer
+     */
     private void aggiornaTimer() {
         int minuti = tempoRimanente / 60;
         int secondi = tempoRimanente % 60;
@@ -150,6 +172,9 @@ public class ReadingPhaseController {
         }
     }
 
+    /**
+     * Permette di passare al prossimo documento stoppando il timer corrente
+     */
     @FXML
     private void prossimoDocumento() {
         if (timer != null) {
@@ -159,6 +184,11 @@ public class ReadingPhaseController {
         mostraDocumentoCorrente();
     }
 
+    /**
+     * Avvia il quiz mostrando la scena del quiz e inizializzandola con i dati necessari,
+     * creando una matrice dei documenti.
+     *
+     */
     private void avviaQuiz() {
         try {
             WordDocumentMatrix matrix = creaMatriceDaiDocumenti();
@@ -184,6 +214,12 @@ public class ReadingPhaseController {
         }
     }
 
+    /**
+     * Crea un'istanza di {@link WordDocumentMatrix}, aggiunge tutte le stopwords per la lingua selezionata
+     * e poi carica i documenti nella matrice
+     *
+     * @return matrice dei documenti
+     */
     private WordDocumentMatrix creaMatriceDaiDocumenti() {
         WordDocumentMatrix matrix = new WordDocumentMatrix();
 
@@ -201,6 +237,9 @@ public class ReadingPhaseController {
         return matrix;
     }
 
+    /**
+     * Permette di uscire dalla fase di lettura del gameplay
+     */
     @FXML
     public void handleExitClick() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -226,6 +265,7 @@ public class ReadingPhaseController {
         }
     }
 
+    /**@param currentUser*/
     public void setUser(User currentUser) {
         this.currentUser = currentUser;
     }

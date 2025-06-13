@@ -50,6 +50,13 @@ public class QuizController {
     private List<Document> documentiMostrati;
     private String lingua; // nuovo campo
 
+    /**
+     * Inizializza la view del quiz
+     * @param matrix
+     * @param difficoltà
+     * @param documentiMostrati
+     * @param lingua
+     */
     @FXML
     public void initialize(WordDocumentMatrix matrix, String difficoltà, List<Document> documentiMostrati, String lingua) {
         this.documentiMostrati = documentiMostrati;
@@ -93,6 +100,9 @@ public class QuizController {
         });
     }
 
+    /**
+     * Controlla le domande da far visualizzare
+     */
     @FXML
     private void handleNextQuestion() {
         String rispostaSelezionata = optionsList.getSelectionModel().getSelectedItem();
@@ -113,6 +123,9 @@ public class QuizController {
         }
     }
 
+    /**
+     * Mostra le domande selezionate all'utente
+     */
     private void mostraDomandaCorrente() {
         Question q = session.getDomande().get(currentIndex);
         questionLabel.setText(q.getQuestionText());
@@ -127,6 +140,9 @@ public class QuizController {
         nextButton.setDisable(true);
     }
 
+    /**
+     * Inizializza i dati per il fine quiz
+     */
     private void fineQuiz() {
         int punteggio = session.valutaRisposte();
         double percentuale = session.getPercentualeCorrette();
@@ -149,6 +165,9 @@ public class QuizController {
         optionsList.getItems().clear();
     }
 
+    /**
+     * Mostra i pulsanti utili a far vedere la fine del quiz e cela quelli non necessari
+     */
     private void mostraFineQuiz() {
         reviewButton.setVisible(true);
         backButton.setVisible(true);
@@ -157,6 +176,10 @@ public class QuizController {
         optionsList.setDisable(true);
     }
 
+    /**
+     * Gestice la visualizzazione della revisione della partita appena conclusa
+     * @param event
+     */
     @FXML
     private void handleReview(ActionEvent event) {
         try {
@@ -179,6 +202,10 @@ public class QuizController {
         }
     }
 
+    /**
+     * Permette di tornare alla user dashboard
+     * @param event
+     */
     @FXML
     private void goToDashboard(ActionEvent event) {
         try {
@@ -212,6 +239,9 @@ public class QuizController {
         }
     }
 
+    /**
+     * Permette di aggiornare i dati dell'user corrente nel database
+     */
     private void updateDB() {
 
         userDAO = new UserDAO();
@@ -228,6 +258,9 @@ public class QuizController {
         gameSessionDAO.insert(currentUser.getId().intValue(), session.getPunteggio(), difficulty, endTime);
     }
 
+    /**
+     * Permette di uscire dalla fase di rispota del gameplay
+     */
     @FXML
     public void handleExitClick() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -243,16 +276,15 @@ public class QuizController {
         Optional<ButtonType> result = alert.showAndWait();
         if(result.isPresent()){
             if (result.get() == esciSenzaSalvare) {
-                // Chiudi l'applicazione senza salvare
                 Stage stage = (Stage) nextButton.getScene().getWindow();
                 stage.close();
             } else {
-                // Annulla l'uscita
                 alert.close();
             }
         }
     }
 
+    /**@param user*/
     public void setUser(User user) {
         this.currentUser = user;
     }

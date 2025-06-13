@@ -20,12 +20,22 @@ public class PostGameController{
     @FXML
     private ListView listView;
 
+    /**
+     * Inizializza i dati della dashboard post-game
+     * @param session
+     * @param difficolta
+     * @param tempo
+     */
     public void initData(QuizAttempt session, String difficolta, String tempo) {
         userScore.setText("Punteggio: " + session.valutaRisposte() + "/" + session.getDomande().size());
         difficulty.setText("Difficoltà: " + difficolta);
         timeSpent.setText("Tempo utilizzato: " + tempo);
     }
 
+    /**
+     * Aggiorna la ListView con i parametri della sessione appena terminata
+     * @param session
+     */
     public void updateListView(QuizAttempt session) {
         for(Question question : session.getDomande()){
             StringBuilder sb = new StringBuilder();

@@ -4,6 +4,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * Permette di ottenere una connessione al database
+ */
+
 public class DBManager {
     private static final String DB_URL = "jdbc:sqlite:wordageddon.db";
     private static Connection connection;

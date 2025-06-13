@@ -9,6 +9,14 @@ public class GameSession {
     private int score;
     private String difficulty;
 
+    /**
+     * Crea un'istanza di quest'oggetto
+     * @param id
+     * @param userId
+     * @param date
+     * @param score
+     * @param difficulty
+     */
     public GameSession(int id, int userId, LocalDateTime date, int score, String difficulty) {
         this.id = id;
         this.userId = userId;
@@ -17,45 +25,41 @@ public class GameSession {
         this.difficulty = difficulty;
     }
 
+    /**@return id*/
     public int getId() {
         return id;
     }
 
+    /**@return userId*/
     public int getUserId() {
         return userId;
     }
 
+    /**@return date*/
     public LocalDateTime getDate() {
         return date;
     }
 
-    public int getScore() {
-        return score;
-    }
+    /**@return score*/
+    public int getScore() {return score;}
 
-    public String getDifficulty() {
-        return difficulty;
-    }
+    /**@return difficulty*/
+    public String getDifficulty() {return difficulty;}
 
-    public void setId(int id) {
-        this.id = id;
-    }
+    /**@param id*/
+    public void setId(int id) {this.id = id;}
 
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
+    /**@param userId*/
+    public void setUserId(int userId) {this.userId = userId;}
 
-    public void setDate(LocalDateTime date) {
-        this.date = date;
-    }
+    /**@param date*/
+    public void setDate(LocalDateTime date) {this.date = date;}
 
-    public void setScore(int score) {
-        this.score = score;
-    }
+    /**@param score*/
+    public void setScore(int score) {this.score = score;}
 
-    public void setDifficulty(String difficulty) {
-        this.difficulty = difficulty;
-    }
+    /**@param difficulty*/
+    public void setDifficulty(String difficulty) {this.difficulty = difficulty;}
 
     @Override
     public String toString() {

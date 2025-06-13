@@ -23,8 +23,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-
-
+/**
+ * Gestisce le view relative alle funzionalità disponibili
+ * all'user admin
+ */
 
 public class AdminController {
     @FXML
@@ -33,6 +35,9 @@ public class AdminController {
     @FXML
     private ListView<String> stopwordList;
 
+    /**
+     * Inizializza la view
+     */
     @FXML
     private void initialize() {
         List<Document> allDocs = new ArrayList<>();
@@ -50,6 +55,9 @@ public class AdminController {
         WDMManager.getInstance();
     }
 
+    /**
+     * Permette di caricare del database un documento nelle lingue disponibili
+     */
     @FXML
     private void handleUploadDocument() {
         List<String> choices = Arrays.asList("Italiano", "Inglese");
@@ -92,6 +100,9 @@ public class AdminController {
         }
     }
 
+    /**
+     * Permette di caricare del database un documento di stopowords nelle lingue disponibili
+     */
     @FXML
     public void handleLoadStopwords() {
         List<String> choices = Arrays.asList("Italiano", "Inglese");
@@ -130,6 +141,9 @@ public class AdminController {
         }
     }
 
+    /**
+     * Permette di eliminare dal database il documento selezionato
+     */
     @FXML
     public void handleRemoveSelectedDocument() {
         String selected = documentList.getSelectionModel().getSelectedItem();
@@ -155,6 +169,10 @@ public class AdminController {
         }
     }
 
+
+    /**
+     * Permette di eliminare dal database il documento di stopwords selezionato
+     */
     @FXML
     public void handleRemoveSelectedStopword() {
         String selected = stopwordList.getSelectionModel().getSelectedItem();
@@ -180,6 +198,10 @@ public class AdminController {
         }
     }
 
+    /**
+     * Permette di tornare alla hompepage
+     * @param event
+     */
     @FXML
     private void handleLogout(ActionEvent event) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);

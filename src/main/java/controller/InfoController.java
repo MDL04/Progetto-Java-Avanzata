@@ -18,6 +18,9 @@ public class InfoController {
 
     @FXML private TextFlow descriptionFlow;
 
+    /**
+     * Inizializza la view
+     */
     @FXML
     public void initialize() {
         Text t = new Text(
@@ -38,6 +41,10 @@ public class InfoController {
         descriptionFlow.getChildren().add(t);
     }
 
+    /**
+     * Permette di tornare alla homepage
+     * @param event
+     */
     @FXML
     private void goToHome(ActionEvent event) {
         try{

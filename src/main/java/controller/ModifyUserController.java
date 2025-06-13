@@ -56,6 +56,9 @@ public class ModifyUserController {
     @FXML
     private Label messageLabel;
 
+    /**
+     *  Costruisce un'istanza di ModifyUserController
+     */
     public ModifyUserController() {
         this.userDAO = new UserDAO();
         this.availableAvatars = new ArrayList<>();
@@ -67,28 +70,33 @@ public class ModifyUserController {
         setupAvatarComboBox();
     }
 
+    /**
+     * Popola la combobox di della lista degli avatar disponibili predefiniti
+     */
     private void loadAvailableAvatars() {
-        // Lista degli avatar disponibili nella cartella resources/images/avatar/
         availableAvatars.add("default_avatar.png");
         availableAvatars.add("avatar1.png");
         availableAvatars.add("avatar2.png");
         availableAvatars.add("avatar3.png");
         availableAvatars.add("avatar4.png");
         availableAvatars.add("avatar5.png");
-        // Aggiungi altri avatar se necessario
 
-        // Popola la ComboBox
         avatarComboBox.getItems().clear();
         for (String avatar : availableAvatars) {
             avatarComboBox.getItems().add(avatar.replace(".png", ""));
         }
     }
 
+    /**
+     * Aggiorna l'anteprima dell'avatar quando viene selezionato
+     */
     private void setupAvatarComboBox() {
-        // Quando viene selezionato un avatar, aggiorna l'anteprima
         avatarComboBox.setOnAction(e -> updateAvatarPreview());
     }
 
+    /**
+     * Aggiorna l'anteprima dell'avatar quando viene selezionato
+     */
     private void updateAvatarPreview() {
         String selected = avatarComboBox.getValue();
         if (selected != null) {
@@ -109,6 +117,9 @@ public class ModifyUserController {
         }
     }
 
+    /**
+     * Imposta il l'avatar di default
+     */
     private void loadDefaultAvatar() {
         try {
             InputStream defaultStream = getClass().getResourceAsStream("/images/avatar/default.png");
@@ -126,6 +137,9 @@ public class ModifyUserController {
         loadUserData();
     }
 
+    /**
+     * Setta i dati dell'utente
+     */
     private void loadUserData() {
         if (currentUser != null) {
             usernameField.setText(currentUser.getUsername());
@@ -146,6 +160,10 @@ public class ModifyUserController {
         }
     }
 
+    /**
+     * Salva i dati dell'utente
+     * @param event
+     */
     @FXML
     private void handleSave(ActionEvent event) {
         if (!validateInput()) {
@@ -153,16 +171,13 @@ public class ModifyUserController {
         }
 
         try {
-            // Aggiorna i dati del profilo
             boolean profileUpdated = updateProfile();
 
-            // Aggiorna la password se specificata
             boolean passwordUpdated = updatePasswordIfNeeded();
 
             if (profileUpdated && passwordUpdated) {
                 showMessage("Dati aggiornati con successo!", Alert.AlertType.INFORMATION);
 
-                // Torna alla dashboard
                 goToDashboard(event);
             } else {
                 showMessage("Errore durante l'aggiornamento dei dati.", Alert.AlertType.ERROR);
@@ -174,12 +189,14 @@ public class ModifyUserController {
         }
     }
 
+    /**
+     * Aggiorna i dati dell'utente
+     * @return
+     */
     private boolean updateProfile() {
-        // Aggiorna i dati dell'utente
         currentUser.setUsername(usernameField.getText().trim());
         currentUser.setEmail(emailField.getText().trim());
 
-        // Costruisci l'URL dell'avatar basato sulla selezione
         String selectedAvatar = avatarComboBox.getValue();
         if (selectedAvatar != null) {
             String avatarUrl = "/images/avatar/" + selectedAvatar + ".png";
@@ -189,23 +206,23 @@ public class ModifyUserController {
         return userDAO.updateUserProfile(currentUser);
     }
 
-    // Resto del codice rimane uguale...
+    /**
+     * Valida i dati dell'utente
+     * @return
+     */
     private boolean validateInput() {
-        // Validazione username
         String username = usernameField.getText().trim();
         if (username.isEmpty()) {
             showMessage("Il nome utente non può essere vuoto.", Alert.AlertType.WARNING);
             return false;
         }
 
-        // Controlla se il nome utente è disponibile (solo se è stato cambiato)
         if (!username.equals(currentUser.getUsername()) &&
                 !isUsernameAvailable(username)) {
             showMessage("Username già in uso.", Alert.AlertType.WARNING);
             return false;
         }
 
-        // Validazione email
         String email = emailField.getText().trim();
         if (email.isEmpty()) {
             showMessage("L'email non può essere vuota.", Alert.AlertType.WARNING);
@@ -217,14 +234,12 @@ public class ModifyUserController {
             return false;
         }
 
-        // Controlla se l'email è disponibile (solo se è stata cambiata)
         if (!email.equals(currentUser.getEmail()) &&
                 !isEmailAvailable(email)) {
             showMessage("Email già in uso.", Alert.AlertType.WARNING);
             return false;
         }
 
-        // Validazione password (solo se vengono inserite)
         String currentPassword = currentPasswordField.getText();
         String newPassword = newPasswordField.getText();
         String confirmPassword = confirmPasswordField.getText();
@@ -235,7 +250,6 @@ public class ModifyUserController {
                 return false;
             }
 
-            // Verifica password attuale
             if (!userDAO.checkLogin(currentUser.getUsername(), PasswordUtils.hashPassword(currentPassword))) {
                 showMessage("Password attuale non corretta.", Alert.AlertType.WARNING);
                 return false;
@@ -260,6 +274,10 @@ public class ModifyUserController {
         return true;
     }
 
+    /**
+     * Permette di cambiare la password se richiesta
+     * @return
+     */
     private boolean updatePasswordIfNeeded() {
         String newPassword = newPasswordField.getText();
 
@@ -274,13 +292,23 @@ public class ModifyUserController {
             return updated;
         }
 
-        return true; // Non c'è bisogno di aggiornare la password
+        return true;
     }
 
+    /**
+     *
+     * @param email
+     * @return
+     */
     private boolean isValidEmail(String email) {
         return email.contains("@") && email.substring(email.indexOf("@")).contains(".");
     }
 
+    /**
+     *
+     * @param message
+     * @param type
+     */
     private void showMessage(String message, Alert.AlertType type) {
         Alert alert = new Alert(type);
         alert.setTitle("Modifica Dati");
@@ -289,9 +317,12 @@ public class ModifyUserController {
         alert.showAndWait();
     }
 
+    /**
+     * Permette di annullare le modifiche
+     * @param event
+     */
     @FXML
     private void handleCancel(ActionEvent event) {
-        // Chiedi conferma prima di annullare
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Conferma");
         alert.setHeaderText("Annullare le modifiche?");
@@ -303,6 +334,10 @@ public class ModifyUserController {
         }
     }
 
+    /**
+     * Permette di ritornare alla dashboard
+     * @param event
+     */
     private void goToDashboard(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/user_dashboard.fxml"));
@@ -326,10 +361,20 @@ public class ModifyUserController {
         }
     }
 
+    /**
+     *
+     * @param username
+     * @return
+     */
     private boolean isUsernameAvailable(String username) {
         return !userDAO.selectByUsername(username).isPresent();
     }
 
+    /**
+     *
+     * @param email
+     * @return
+     */
     private boolean isEmailAvailable(String email) {
         return !userDAO.selectByEmail(email).isPresent();
     }
