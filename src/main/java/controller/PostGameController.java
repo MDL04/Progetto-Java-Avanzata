@@ -6,6 +6,12 @@ import javafx.scene.control.TextField;
 import quiz.Question;
 import quiz.QuizAttempt;
 
+/**
+ * Controller per la schermata post-game, che visualizza i risultati del quiz
+ *  * e fornisce informazioni sui punteggi e sul tempo trascorso.
+ */
+
+
 public class PostGameController{
 
     @FXML
@@ -21,7 +27,7 @@ public class PostGameController{
     private ListView listView;
 
     /**
-     * Inizializza i dati della dashboard post-game
+     * Inizializza i dati della dashboard post-game e mostrando il punto dell'utente, la difficoltà e il tempo speso.
      * @param session
      * @param difficolta
      * @param tempo
@@ -33,7 +39,7 @@ public class PostGameController{
     }
 
     /**
-     * Aggiorna la ListView con i parametri della sessione appena terminata
+     * Aggiorna la ListView con i parametri risultanti dalla sessione appena conclusa
      * @param session
      */
     public void updateListView(QuizAttempt session) {

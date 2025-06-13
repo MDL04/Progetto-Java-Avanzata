@@ -10,6 +10,11 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * Controller per la schermata principale (Homepage).
+ * Gestisce la navigazione tra le diverse sezioni dell'applicazione: Login, Leaderboard e Info.
+ */
+
 public class HomepageController {
 
     /**

@@ -13,10 +13,17 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Classe responsabile della gestione della matrice dei documenti
+ */
+
 public class WDMManager {
     private static WordDocumentMatrix matrix;
 
-    // Restituisce l'istanza singleton, caricandola dal DB se necessario
+    /**
+     * Restituisce l'istanza della matrice e se non è stata creata, la carica da file CSV, altrimenti da database
+     * @return
+     */
     public static WordDocumentMatrix getInstance() {
         if (matrix == null) {
             File csv = new File("wdm.csv");
@@ -47,16 +54,19 @@ public class WDMManager {
         return matrix;
     }
 
-    // Elimina l'istanza in memoria (verrà ricostruita alla prossima chiamata a getInstance)
+    /**
+     * Elimina l'istanza della matrice in memoria
+     */
     public static void delete() {
         matrix = null;
     }
 
-    // Metodo privato per caricare documenti e stopwords dal database
+    /**
+     * Carica i documenti e le stopwords dal databaase e li carica nella matrice.
+     */
     private static void caricaDaDatabase() {
         System.out.println("=== [DEBUG] Avvio caricamento da database ===");
 
-        // Recupero documenti e stopwords
         List<Document> documenti = DocumentDAO.selectAllDocuments();
         List<Stopword> stopwordsDB = StopwordDAO.selectAllStopwords();
 
@@ -67,7 +77,6 @@ public class WDMManager {
 
         System.out.println("[DEBUG] Stopwords trovate nel DB: " + stopwordsDB.size());
 
-        // Unisci tutte le stopwords in un unico set
         Set<String> tutteLeStopwords = stopwordsDB.stream()
                 .flatMap(sw -> Arrays.stream(sw.getContent().split("\\s+")))
                 .map(String::toLowerCase)
@@ -78,13 +87,11 @@ public class WDMManager {
 
         matrix.setStopwords(tutteLeStopwords);
 
-        // Aggiungi i documenti alla matrice
         for (Document doc : documenti) {
             System.out.println("[DEBUG] Aggiunta documento: " + doc.getTitle());
             matrix.aggiungiDocumento(doc.getTitle(), doc.getContent());
         }
 
-        // Verifica risultato finale
         System.out.println("[DEBUG] Documenti effettivamente caricati nella matrice: " + matrix.getDocumenti().size());
         System.out.println("[DEBUG] Titoli documenti nella matrice: " + matrix.getDocumenti());
         System.out.println("[DEBUG] Numero parole totali nella matrice: " + matrix.getTutteLeParole().size());

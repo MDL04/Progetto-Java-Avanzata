@@ -11,6 +11,11 @@ import model.User;
 
 import java.util.Optional;
 
+/**
+ * Questa classe gestisce l'interfaccia utente per la selezione della lingua e della difficoltà del quiz.
+ * È responsabile per la configurazione e l'avvio del quiz, nonché per la gestione dell'uscita dall'applicazione.
+ */
+
 public class GameSelectionController {
 
     @FXML
@@ -28,7 +33,7 @@ public class GameSelectionController {
     private User currentUser;
 
     /**
-     * Inizializza la view
+     * Inizializza la view della selezione delle impostazioni di gioco
      */
     @FXML
     public void initialize() {
@@ -51,7 +56,7 @@ public class GameSelectionController {
     }
 
     /**
-     * Controlla la view delle impostazioni di partita
+     * Gestisce l'evento di avvio del quiz, configurando la lingua e la difficoltà selezionata dall'utente.
      */
     @FXML
     public void handleStartQuiz(){
@@ -110,7 +115,10 @@ public class GameSelectionController {
         }
     }
 
-    /**@param currentUser*/
+    /**
+     * Imposta l'utente corrente che parteciperà al quiz
+     *
+     * @param currentUser*/
     public void setUser(User currentUser) {
         this.currentUser = currentUser;
     }

@@ -14,6 +14,12 @@ import utils.PasswordUtils;
 
 import java.io.IOException;
 
+/**
+ * Controller per la schermata di registrazione dell'utente. Gestisce la registrazione di un nuovo utente,
+ * la validazione dei campi di input e la navigazione tra le schermate.
+ */
+
+
 public class RegisterController {
 
     @FXML
@@ -27,6 +33,10 @@ public class RegisterController {
 
     private final UserDAO userDAO = new UserDAO();
 
+    /**
+     * Gestisce la registrazione di un nuovo utente e verifica
+     * che tutti i dati inseriti siano validi
+     */
     @FXML
     private void handleRegister() {
         String username = usernameFld.getText();
@@ -34,31 +44,26 @@ public class RegisterController {
         String password = passwordFld.getText();
         String confirmPassword = confirmPasswordFld.getText();
 
-        //Controllo campi vuoti
         if (username.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
             showError("Completa tutti i campi!");
             return;
         }
 
-        // Controllo email
         if (!email.contains("@") || !email.substring(email.indexOf("@")).contains(".")) {
             showError("Email non valida: dominio non riconosciuto!");
             return;
         }
 
-        // Controllo password
         if(password.length() < 7){
             showError("La password deve contenere almeno 7 caratteri!");
             return;
         }
 
-        // Controllo che conferma password sia uguale a password
         if(!password.equals(confirmPassword)) {
             showError("Le password non coincidono!");
             return;
         }
 
-        // Se il database è raggiungibile controlla se esista già un utente con quella mail o username
         try {
             if (userDAO.selectByUsername(username).isPresent()) {
                 showError("Username non disponibile!");
@@ -91,6 +96,9 @@ public class RegisterController {
         }
     }
 
+    /**
+     * Permette di andare alla sezione Login
+     */
     @FXML
     void goToLogin(){
         try{
@@ -109,6 +117,10 @@ public class RegisterController {
         }
     }
 
+    /**
+     * Permette di andare alla sezione home
+     * @param event
+     */
     @FXML
     private void goToHome(ActionEvent event) {
         try{
@@ -127,11 +139,19 @@ public class RegisterController {
         }
     }
 
+    /**
+     * Gestisce la visualizzazione di errori
+     * @param message
+     */
     private void showError(String message) {
         messageLbl.setText(message);
         messageLbl.setStyle("-fx-text-fill: red;");
     }
 
+    /**
+     * Gestisce la visualizzazione di successo
+     * @param message
+     */
     private void showSuccess(String message) {
         messageLbl.setText(message);
         messageLbl.setStyle("-fx-text-fill: green;");

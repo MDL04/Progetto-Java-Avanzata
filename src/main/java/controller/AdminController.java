@@ -36,7 +36,7 @@ public class AdminController {
     private ListView<String> stopwordList;
 
     /**
-     * Inizializza la view
+     * Inizializza la view e mostra i documenti già presenti nel database (se presenti)
      */
     @FXML
     private void initialize() {
@@ -199,7 +199,7 @@ public class AdminController {
     }
 
     /**
-     * Permette di tornare alla hompepage
+     * Permette di tornare alla sezione hompepage
      * @param event
      */
     @FXML
@@ -235,6 +235,12 @@ public class AdminController {
         }
     }
 
+    /**
+     * Si occupa di mostrare messaggi informativi
+     *
+     * @param title
+     * @param message
+     */
     private void showInfoAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);

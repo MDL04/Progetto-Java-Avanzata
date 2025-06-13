@@ -23,6 +23,7 @@ import java.util.List;
  * Controller per la schermata della classifica.
  * Gestisce la leaderboard view
  */
+
 public class LeaderboardController {
 
     @FXML
@@ -78,7 +79,7 @@ public class LeaderboardController {
     }
 
     /**
-     * Consente di tornare alla home
+     * Consente di tornare alla sezione home
      * @param event
      */
     @FXML
@@ -101,7 +102,7 @@ public class LeaderboardController {
     }
 
     /**
-     * Consente di tornare alla user_dashboard
+     * Consente di tornare alla sezione user_dashboard
      * @param event
      */
     @FXML

@@ -14,12 +14,20 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * Controller per la schermata delle informazioni.
+ * Questa classe gestisce la visualizzazione delle informazioni relative al gioco
+ * e fornisce un metodo per tornare alla homepage.
+ */
+
+
 public class InfoController {
 
     @FXML private TextFlow descriptionFlow;
 
     /**
-     * Inizializza la view
+     * Inizializza la view delle informazioni.
+     * Questo metodo carica il testo che descrive il gioco e lo visualizza
      */
     @FXML
     public void initialize() {
@@ -42,7 +50,7 @@ public class InfoController {
     }
 
     /**
-     * Permette di tornare alla homepage
+     * Permette di tornare alla sezione homepage
      * @param event
      */
     @FXML

@@ -5,6 +5,11 @@ import java.util.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * La classe {@code QuestionFactory} è responsabile della generazione delle domande per il quiz.
+ * Le domande sono create utilizzando una matrice di documenti e parole, incluse nel {@link WordDocumentMatrix}.
+ */
+
 public class QuestionFactory {
     private final WordDocumentMatrix matrix;
     private final Random random = new Random();
@@ -31,6 +36,10 @@ public class QuestionFactory {
             "oil", "butter"
     );
 
+    /**
+     * Crea un'istanza di quest'oggetto
+     * @param matrix
+     */
     public QuestionFactory(WordDocumentMatrix matrix) {
         if (matrix == null) {
             throw new IllegalArgumentException("WordDocumentMatrix non può essere null");
@@ -38,7 +47,13 @@ public class QuestionFactory {
         this.matrix = matrix;
     }
 
-    // Overload con lingua
+    /**
+     * Genera una domanda del tipo specificato
+     * @param id
+     * @param type Il tipo della domanda da generare
+     * @param lingua
+     * @return
+     */
     public Question generateQuestion(int id, QuestionType type, String lingua) {
         validateMatrix();
         return switch (type) {
@@ -49,6 +64,11 @@ public class QuestionFactory {
         };
     }
 
+    /**
+     * Genera una domanda di tipo 'Frequenza assoluta'
+     * @param id
+     * @return
+     */
     public Question generateAbsoluteFrequencyQuestion(int id) {
         validateMatrix();
         String doc = getRandomDocument();
@@ -65,6 +85,11 @@ public class QuestionFactory {
         return new Question(id, QuestionType.ABSOLUTE_FREQUENCY, domanda, opzioni, String.valueOf(risposta));
     }
 
+    /**
+     * Genera una domanda del tipo 'Confronto tra parole'
+     * @param id
+     * @return
+     */
     public Question generateComparisonQuestion(int id) {
         validateMatrix();
         String doc = getRandomDocument();
@@ -131,6 +156,11 @@ public class QuestionFactory {
         return new Question(id, QuestionType.COMPARISON, domanda, opzioni, risposta);
     }
 
+    /**
+     * Genera una domanda del tipo 'Documenti specifici'
+     * @param id
+     * @return
+     */
     public Question generateDocumentSpecificQuestion(int id) {
         validateMatrix();
         String parola = getRandomWord();
@@ -189,7 +219,13 @@ public class QuestionFactory {
     }
 
 
-    // ====== Domanda di esclusione da vocabolario ======
+    /**
+     * Genera una domanda di esclusione basata sul vocabolario
+     *
+     * @param id
+     * @param lang
+     * @return
+     */
     public Question generateExclusionQuestion(int id, String lang) {
         validateMatrix();
         Set<String> parolePresenti = matrix.getTutteLeParole();
@@ -254,6 +290,12 @@ public class QuestionFactory {
 
     // ========== Metodi di supporto ==========
 
+    /**
+     * Genera una lista di distrattori numerici
+     *
+     * @param corretta
+     * @return
+     */
     private List<String> generaDistrattoriNumerici(int corretta) {
         Set<Integer> opzioni = new HashSet<>();
         opzioni.add(corretta);
@@ -270,6 +312,11 @@ public class QuestionFactory {
                 .toList();
     }
 
+    /**
+     * Restituisce un documento random dalla matrice
+     *
+     * @return
+     */
     private String getRandomDocument() {
         if (matrix == null || matrix.getDocumenti() == null || matrix.getDocumenti().isEmpty()) {
             throw new IllegalStateException("Nessun documento disponibile nella matrice");
@@ -278,6 +325,11 @@ public class QuestionFactory {
         return docs.get(random.nextInt(docs.size()));
     }
 
+    /**
+     * Restituisce una parola random dalla matrice
+     *
+     * @return
+     */
     private String getRandomWord() {
         if (matrix == null || matrix.getTutteLeParole() == null || matrix.getTutteLeParole().isEmpty()) {
             throw new IllegalStateException("Nessuna parola disponibile nella matrice");
@@ -286,6 +338,12 @@ public class QuestionFactory {
         return parole.get(random.nextInt(parole.size()));
     }
 
+    /**
+     * Restituisce una lista di parole random dalla matrice
+     *
+     * @param count Il numero di parole da restituire
+     * @return
+     */
     private List<String> getRandomWords(int count) {
         if (matrix == null || matrix.getTutteLeParole() == null || matrix.getTutteLeParole().isEmpty()) {
             throw new IllegalStateException("Nessuna parola disponibile nella matrice");
@@ -295,6 +353,9 @@ public class QuestionFactory {
         return parole.subList(0, Math.min(count, parole.size()));
     }
 
+    /**
+     * Verifica che la matrice sia valida
+     */
     private void validateMatrix() {
         if (matrix == null) {
             throw new IllegalStateException("WordDocumentMatrix non inizializzata");

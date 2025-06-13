@@ -2,6 +2,12 @@ package quiz;
 
 import java.util.List;
 
+/**
+ * Questa enumerazione rappresenta i diversi tipi di domanda che possono essere generati.
+ * Ogni tipo di domanda ha una lista di modelli predefiniti.
+ */
+
+
 public enum QuestionType {
     ABSOLUTE_FREQUENCY(List.of(
             "Quante volte compare la parola '%s' nel documento '%s'?",

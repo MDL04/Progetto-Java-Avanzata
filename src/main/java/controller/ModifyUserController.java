@@ -20,6 +20,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Controller per la schermata di modifica dell'utente.
+ * Questa classe gestisce la modifica dei dati dell'utente, inclusi nome utente, email, avatar e password
+ */
+
+
 public class ModifyUserController {
 
     private User currentUser;
@@ -64,6 +70,9 @@ public class ModifyUserController {
         this.availableAvatars = new ArrayList<>();
     }
 
+    /**
+     * Inizializza la vista, caricando gli avatar disponibili
+     */
     @FXML
     private void initialize() {
         loadAvailableAvatars();
@@ -118,7 +127,7 @@ public class ModifyUserController {
     }
 
     /**
-     * Imposta il l'avatar di default
+     * Imposta l'avatar di default
      */
     private void loadDefaultAvatar() {
         try {
@@ -138,7 +147,7 @@ public class ModifyUserController {
     }
 
     /**
-     * Setta i dati dell'utente
+     * Setta i dati dell'utente nella vista
      */
     private void loadUserData() {
         if (currentUser != null) {
@@ -161,8 +170,8 @@ public class ModifyUserController {
     }
 
     /**
-     * Salva i dati dell'utente
-     * @param event
+     * Salva i dati modificati dell'utente
+     * @param event evento di salvataggio
      */
     @FXML
     private void handleSave(ActionEvent event) {
@@ -191,7 +200,7 @@ public class ModifyUserController {
 
     /**
      * Aggiorna i dati dell'utente
-     * @return
+     * @return true se l'aggiornamento è stato fatto con successo
      */
     private boolean updateProfile() {
         currentUser.setUsername(usernameField.getText().trim());
@@ -208,7 +217,7 @@ public class ModifyUserController {
 
     /**
      * Valida i dati dell'utente
-     * @return
+     * @return true se sono validi
      */
     private boolean validateInput() {
         String username = usernameField.getText().trim();
@@ -276,7 +285,7 @@ public class ModifyUserController {
 
     /**
      * Permette di cambiare la password se richiesta
-     * @return
+     * @return True se la password è stata aggiornata con successo
      */
     private boolean updatePasswordIfNeeded() {
         String newPassword = newPasswordField.getText();
@@ -296,16 +305,16 @@ public class ModifyUserController {
     }
 
     /**
-     *
+     * Verifica la validità dell'email
      * @param email
-     * @return
+     * @return True se l'email è valida
      */
     private boolean isValidEmail(String email) {
         return email.contains("@") && email.substring(email.indexOf("@")).contains(".");
     }
 
     /**
-     *
+     * Si occupa di mostrare un messaggio di errore o successo
      * @param message
      * @param type
      */
@@ -335,7 +344,7 @@ public class ModifyUserController {
     }
 
     /**
-     * Permette di ritornare alla dashboard
+     * Permette di ritornare alla user-dashboard
      * @param event
      */
     private void goToDashboard(ActionEvent event) {
@@ -362,18 +371,18 @@ public class ModifyUserController {
     }
 
     /**
-     *
+     * Verifica se un nome utente è disponibile
      * @param username
-     * @return
+     * @return True se è disponibile
      */
     private boolean isUsernameAvailable(String username) {
         return !userDAO.selectByUsername(username).isPresent();
     }
 
     /**
-     *
+     * Verifica se un'email è disponibile
      * @param email
-     * @return
+     * @return True se è disponibile
      */
     private boolean isEmailAvailable(String email) {
         return !userDAO.selectByEmail(email).isPresent();

@@ -24,6 +24,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Controller che gestisce l'interfaccia del quiz, la visualizzazione delle domande,
+ * la registrazione delle risposte, e la gestione della fine del quiz, inclusi i risultati.
+ */
+
 public class QuizController {
 
     @FXML private Label questionLabel;
@@ -101,7 +106,7 @@ public class QuizController {
     }
 
     /**
-     * Controlla le domande da far visualizzare
+     * Controlla la selezione della risposta e passa alla domanda successiva
      */
     @FXML
     private void handleNextQuestion() {
@@ -124,7 +129,7 @@ public class QuizController {
     }
 
     /**
-     * Mostra le domande selezionate all'utente
+     * Mostra le domande corrente e le opzioni di risposta
      */
     private void mostraDomandaCorrente() {
         Question q = session.getDomande().get(currentIndex);
@@ -141,7 +146,7 @@ public class QuizController {
     }
 
     /**
-     * Inizializza i dati per il fine quiz
+     * Termina il quiz, calcola il punteggio e il tempo impiegato
      */
     private void fineQuiz() {
         int punteggio = session.valutaRisposte();
@@ -166,7 +171,8 @@ public class QuizController {
     }
 
     /**
-     * Mostra i pulsanti utili a far vedere la fine del quiz e cela quelli non necessari
+     * Mostra i pulsanti utili per rivedere i risultati o tornare
+     * alla user dashboard e cela quelli non necessari
      */
     private void mostraFineQuiz() {
         reviewButton.setVisible(true);
@@ -259,7 +265,7 @@ public class QuizController {
     }
 
     /**
-     * Permette di uscire dalla fase di rispota del gameplay
+     * Permette di uscire dalla fase di risposta del gameplay
      */
     @FXML
     public void handleExitClick() {
@@ -284,7 +290,9 @@ public class QuizController {
         }
     }
 
-    /**@param user*/
+    /**
+     * Setta l'user corrente
+     * @param user*/
     public void setUser(User user) {
         this.currentUser = user;
     }

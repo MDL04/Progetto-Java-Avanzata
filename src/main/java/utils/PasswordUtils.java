@@ -3,8 +3,19 @@ package utils;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+/**
+ * Classe che fornisce metodi per l'hashing delle password
+ */
+
+
 public class PasswordUtils {
 
+    /**
+     * Esegue l'hashing delle password, utilizzando l'algoritmo {@code SHA-256}
+     *
+     * @param password
+     * @return La password 'hashed'
+     */
     public static String hashPassword(String password) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");

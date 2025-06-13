@@ -20,6 +20,11 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Controller per la fase di lettura del quiz. Gestisce il caricamento dei documenti, la visualizzazione,
+ * il timer e la navigazione tra i documenti. Inizializza i documenti e gestisce l'interazione con l'utente.
+ */
+
 public class ReadingPhaseController {
 
     @FXML private Label timerLabel;
@@ -296,7 +301,9 @@ public class ReadingPhaseController {
         }
     }
 
-    /**@param currentUser*/
+    /**
+     * Setta l'user corrente
+     * @param currentUser*/
     public void setUser(User currentUser) {
         this.currentUser = currentUser;
     }

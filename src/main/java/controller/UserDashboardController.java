@@ -21,6 +21,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Optional;
 
+/**
+ * Controller per la schermata della dashboard dell'utente. Gestisce la visualizzazione delle informazioni dell'utente,
+ * come il punteggio, l'avatar e consente l'accesso ad altre schermate come il gioco, la modifica dei dati e la classifica.
+ */
+
 public class UserDashboardController {
 
     private User currentUser;
@@ -44,12 +49,18 @@ public class UserDashboardController {
     @FXML private Label avgMediumLabel;
     @FXML private Label avgHardLabel;
 
-
+    /**
+     * Inizializza la dashboard dell'utente
+     */
     @FXML
     private void initialize() {
         WDMManager.getInstance();
     }
 
+    /**
+     * Gestisce la visualizzazione della schermata di gioco (se selezionata)
+     * @param event L'evento che attiva il gioco
+     */
     @FXML
     private void handleGioca(ActionEvent event) {
         try {
@@ -68,6 +79,10 @@ public class UserDashboardController {
         }
     }
 
+    /**
+     * Gestisce la visualizzazione della schermata di modifica (se selezionata)
+     * @param event L'evento che attiva la sezione modifica
+     */
     @FXML
     private void handleModifica(ActionEvent event) {
         try {
@@ -91,6 +106,10 @@ public class UserDashboardController {
         }
     }
 
+    /**
+     * Gestisce la visualizzazione della schermata della leaderboard (se selezionata)
+     * @param event L'evento che attiva la sezione leaderboard
+     */
     @FXML
     private void goToLeaderboard(ActionEvent event) {
         try{
@@ -114,6 +133,10 @@ public class UserDashboardController {
         }
     }
 
+    /**
+     * Gestisce il logout di un utente
+     * @param event
+     */
     @FXML
     private void handleLogout(ActionEvent event) {
         // Mostra dialogo di conferma
@@ -150,7 +173,11 @@ public class UserDashboardController {
     }
 
 
-
+    /**
+     * Imposta i parametri dell'utente sulla dashboard
+     *
+     * @param user utente corrente
+     */
     public void setUser(User user) {
         this.currentUser = user;
         if (currentUser != null) {
@@ -181,6 +208,9 @@ public class UserDashboardController {
         }
     }
 
+    /**
+     * Carica l'avatar dell'utente (se non disponibile, carica quello di default)
+     */
     private void loadUserAvatar() {
         if (currentUser != null && currentUser.getUrlAvatar() != null) {
             String avatarPath = currentUser.getUrlAvatar();
@@ -205,6 +235,10 @@ public class UserDashboardController {
         }
     }
 
+
+    /**
+     * Carica l'avatar di default
+     */
     private void loadDefaultAvatar() {
         try {
             InputStream defaultStream = getClass().getResourceAsStream("/images/avatar/default.png");
