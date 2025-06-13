@@ -83,7 +83,7 @@
     -fx-text-fill: white;
 }
 
-#timerLabel, #progressLabel, #questionLabel {
+#progressLabel, #questionLabel {
     -fx-font-weight: bold;
     -fx-text-fill: linear-gradient(to right, #0077cc, #f6a500);
 }

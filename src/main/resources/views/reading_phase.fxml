@@ -10,7 +10,7 @@
     <children>
         <HBox style="-fx-padding: 10; -fx-spacing: 20;">
             <children>
-                <Label fx:id="timerLabel" style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Tempo rimanente: 01:00" />
+                <Label fx:id="timerLabel" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: red" text="Tempo rimanente: 01:00" />
                 <Label fx:id="progressLabel" text="Documento 1 di 2" />
             </children>
         </HBox>
