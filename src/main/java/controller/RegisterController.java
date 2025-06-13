@@ -81,7 +81,7 @@ public class RegisterController {
         user.setEmail(email);
         user.setPassword(hashedPassword);
         user.setAdmin(false);
-        user.setUrlAvatar("default_avatar.png");
+        user.setUrlAvatar("/images/avatar/default_avatar.png");
 
         if(userDAO.insert(user)){
             showSuccess("Registrazione completata!");
