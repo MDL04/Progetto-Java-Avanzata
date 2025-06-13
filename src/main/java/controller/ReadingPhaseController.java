@@ -8,10 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import model.Document;
@@ -46,27 +43,26 @@ public class ReadingPhaseController {
         this.lingua = lingua;
         this.difficolta = difficolta;
 
-        // ✅ Parametri basati sulla difficoltà (secondo la traccia)
         switch (difficolta) {
             case "Facile" -> {
                 this.maxDocumenti = 2;
                 this.maxParolePerDocumento = 100;
-                this.tempoPerDocumento = 60; // 60 secondi
+                this.tempoPerDocumento = 90;
             }
             case "Media" -> {
-                this.maxDocumenti = 3;
+                this.maxDocumenti = 2;
                 this.maxParolePerDocumento = 200;
-                this.tempoPerDocumento = 90; // 90 secondi
+                this.tempoPerDocumento = 60;
             }
             case "Difficile" -> {
                 this.maxDocumenti = 3;
                 this.maxParolePerDocumento = 300;
-                this.tempoPerDocumento = 120; // 120 secondi
+                this.tempoPerDocumento = 120;
             }
             default -> {
                 this.maxDocumenti = 2;
                 this.maxParolePerDocumento = 200;
-                this.tempoPerDocumento = 90;
+                this.tempoPerDocumento = 60;
             }
         }
 
@@ -77,7 +73,6 @@ public class ReadingPhaseController {
     private void caricaDocumenti() {
         List<Document> tuttiDocumenti = DocumentDAO.selectDocumentByLanguage(lingua);
 
-        // ✅ Filtra documenti per lunghezza (secondo la traccia)
         documentiDaMostrare = tuttiDocumenti.stream()
                 .filter(doc -> contaParole(doc.getContent()) <= maxParolePerDocumento)
                 .limit(maxDocumenti)
@@ -99,7 +94,6 @@ public class ReadingPhaseController {
 
     private void mostraDocumentoCorrente() {
         if (documentoCorrente >= documentiDaMostrare.size()) {
-            // ✅ Tutti i documenti mostrati, vai al quiz
             avviaQuiz();
             return;
         }
@@ -109,7 +103,6 @@ public class ReadingPhaseController {
         documentArea.setText(doc.getContent());
         progressLabel.setText("Documento " + (documentoCorrente + 1) + " di " + documentiDaMostrare.size());
 
-        // ✅ Avvia timer per questo documento
         tempoRimanente = tempoPerDocumento;
         aggiornaTimer();
 
@@ -131,7 +124,6 @@ public class ReadingPhaseController {
         int secondi = tempoRimanente % 60;
         timerLabel.setText(String.format("Tempo rimanente: %02d:%02d", minuti, secondi));
 
-        // ✅ Cambia colore negli ultimi 10 secondi
         if (tempoRimanente <= 10) {
             timerLabel.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
         } else {
@@ -150,14 +142,14 @@ public class ReadingPhaseController {
 
     private void avviaQuiz() {
         try {
-            // ✅ Crea la matrice dai documenti mostrati
             WordDocumentMatrix matrix = creaMatriceDaiDocumenti();
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/quiz.fxml"));
             Parent root = loader.load();
 
             QuizController quizController = loader.getController();
-            quizController.initializeQuiz(matrix, difficolta, documentiDaMostrare);
+            // Passa la lingua!
+            quizController.initializeQuiz(matrix, difficolta, documentiDaMostrare, lingua);
 
             Stage stage = (Stage) documentArea.getScene().getWindow();
             stage.setScene(new Scene(root));
@@ -176,7 +168,6 @@ public class ReadingPhaseController {
     private WordDocumentMatrix creaMatriceDaiDocumenti() {
         WordDocumentMatrix matrix = new WordDocumentMatrix();
 
-        // Carica stopwords per la lingua
         List<Stopword> stopwordsLingua = StopwordDAO.selectSWByLanguage(lingua);
         Set<String> tutteLeStopwords = stopwordsLingua.stream()
                 .flatMap(sw -> Arrays.stream(sw.getContent().split("\\s+")))
@@ -184,7 +175,6 @@ public class ReadingPhaseController {
                 .collect(Collectors.toSet());
         matrix.setStopwords(tutteLeStopwords);
 
-        // Aggiungi solo i documenti mostrati
         for (Document doc : documentiDaMostrare) {
             matrix.aggiungiDocumento(doc.getTitle(), doc.getContent());
         }

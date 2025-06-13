@@ -6,17 +6,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import model.Document;
 import model.User;
 import model.WordDocumentMatrix;
-import quiz.GameSession;
 import quiz.Question;
 import quiz.QuestionFactory;
+import quiz.QuizAttempt;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -39,17 +36,16 @@ public class QuizController {
     private String difficoltà;
     private String timeSpent;
 
-
-    private GameSession session;
+    private QuizAttempt session;
     private int currentIndex = 0;
     private List<Document> documentiMostrati;
+    private String lingua; // nuovo campo
 
-    public void initializeQuiz(WordDocumentMatrix matrix, String difficoltà, List<Document> documentiMostrati) {
+    public void initializeQuiz(WordDocumentMatrix matrix, String difficoltà, List<Document> documentiMostrati, String lingua) {
         this.documentiMostrati = documentiMostrati;
-
         this.difficoltà = difficoltà;
+        this.lingua = lingua;
 
-        // ✅ Numero domande basato sulla difficoltà
         int numDomande = switch (difficoltà) {
             case "Facile" -> 5;
             case "Media" -> 8;
@@ -59,10 +55,9 @@ public class QuizController {
 
         startTime = LocalDateTime.now();
 
-
         try {
             QuestionFactory factory = new QuestionFactory(matrix);
-            session = new GameSession(1, factory, numDomande);
+            session = new QuizAttempt(1, factory, numDomande, lingua);
 
             resultLabel.setText("Quiz avviato! Ricordi quello che hai letto?");
             mostraDomandaCorrente();
@@ -104,7 +99,7 @@ public class QuizController {
         optionsList.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             nextButton.setDisable(newVal == null);
         });
-        nextButton.setDisable(true); // Disabilita all'inizio della domanda
+        nextButton.setDisable(true);
     }
 
     private void fineQuiz() {
@@ -125,8 +120,6 @@ public class QuizController {
         mostraFineQuiz();
         questionLabel.setText("Complimenti! Quiz terminato!");
         optionsList.getItems().clear();
-
-        // TODO: Salva punteggio nel database
     }
 
     private void mostraFineQuiz() {
@@ -135,7 +128,6 @@ public class QuizController {
         nextButton.setVisible(false);
         nextButton.setManaged(false);
         optionsList.setDisable(true);
-        // Mostra punteggio o messaggio finale
     }
 
     @FXML
@@ -148,7 +140,6 @@ public class QuizController {
             postGameController.updateListView(session);
             postGameController.initData(session, difficoltà , timeSpent);
 
-            // Nuovo Stage per la revisione
             Stage reviewStage = new Stage();
             reviewStage.setScene(new Scene(root));
             reviewStage.setMinWidth(600);

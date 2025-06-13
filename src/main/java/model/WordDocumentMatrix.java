@@ -46,6 +46,8 @@ public class WordDocumentMatrix {
                 .replaceAll("[^\\p{L}\\p{Nd}]+", " ") // rimuove punteggiatura
                 .split("\\s+");
 
+        System.out.println("[DEBUG] Stopwords attive: " + stopwords);
+
         for (String parola : parole) {
             if (parola.isBlank() || stopwords.contains(parola)) continue;
             frequenze.put(parola, frequenze.getOrDefault(parola, 0) + 1);

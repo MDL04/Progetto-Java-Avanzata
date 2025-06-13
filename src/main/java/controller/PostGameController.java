@@ -3,8 +3,8 @@ package controller;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import quiz.GameSession;
 import quiz.Question;
+import quiz.QuizAttempt;
 
 public class PostGameController{
 
@@ -20,13 +20,13 @@ public class PostGameController{
     @FXML
     private ListView listView;
 
-    public void initData(GameSession session, String difficolta, String tempo) {
+    public void initData(QuizAttempt session, String difficolta, String tempo) {
         userScore.setText("Punteggio: " + session.valutaRisposte() + "/" + session.getDomande().size());
         difficulty.setText("Difficoltà: " + difficolta);
         timeSpent.setText("Tempo utilizzato: " + tempo);
     }
 
-    public void updateListView(GameSession session) {
+    public void updateListView(QuizAttempt session) {
         for(Question question : session.getDomande()){
             StringBuilder sb = new StringBuilder();
             sb.append("Domanda ").append(question.getId()).append(": ").append(question.getQuestionText()).append("\n");
