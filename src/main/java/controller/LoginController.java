@@ -14,7 +14,10 @@ import utils.PasswordUtils;
 
 import java.io.IOException;
 import java.util.Optional;
-
+/**
+ * Controller per la schermata di login dell'utente.
+ * Gestisce la view login
+ */
 public class LoginController {
 
     @FXML
@@ -28,6 +31,11 @@ public class LoginController {
 
     private final UserDAO userDAO = new UserDAO();
 
+    /**
+     * Metodo per gestire il login
+     * Verifica se le credenziali inserite sono corrette.
+     * Può portare alla user_dashboard o all'admin_dashboard
+     */
     @FXML
     private void handleLogin() {
         String username = usernameFld.getText();
@@ -58,6 +66,9 @@ public class LoginController {
         }
     }
 
+    /**
+     * Consente di passare alla register view
+     */
     @FXML
     private void goToRegister() {
         try{
@@ -76,6 +87,10 @@ public class LoginController {
         }
     }
 
+    /**
+     * Consente di tornare alla homepage
+     * @param event
+     */
     @FXML
     private void goToHome(ActionEvent event) {
         try{
@@ -90,6 +105,9 @@ public class LoginController {
         }
     }
 
+    /**
+     * Consente di passare alla user_dashboard
+     */
     @FXML
     private void goToUserDashboard() {
         try{
@@ -113,6 +131,9 @@ public class LoginController {
         }
     }
 
+    /**
+     * Consente di passare all'admin_dashboard
+     */
     @FXML
     private void goToAdminDashboard() {
         try{

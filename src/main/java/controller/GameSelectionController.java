@@ -11,6 +11,10 @@ import model.User;
 
 import java.util.Optional;
 
+/**
+ * Controller per la selezione del gioco.
+ * Gestisce la view game_selection
+ */
 public class GameSelectionController {
 
     @FXML
@@ -27,12 +31,15 @@ public class GameSelectionController {
 
     private User currentUser;
 
+    /**
+     * Metodo che inizializza la scena.
+     * Aggiunge gli elementi nelle ComboBox per la lingua e la difficoltà e setta il listener per la chiusura della finestra.
+     */
     @FXML
     public void initialize() {
         languageComboBox.getItems().addAll("it", "en");
         difficultyComboBox.getItems().addAll("Facile", "Media", "Difficile");
 
-        // Listener per quando la scena è disponibile
         vBox.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
                 newScene.windowProperty().addListener((obsWin, oldWin, newWin) -> {
@@ -48,8 +55,13 @@ public class GameSelectionController {
         });
     }
 
+    /**
+     * Gestisce l'azione per avviare il quiz dopo che l'utente ha selezionato lingua e difficoltà.
+     * Se i valori non sono selezionati, mostra un messaggio di errore.
+     * Carica la scena della fase di lettura con i parametri selezionati.
+     */
     @FXML
-    public void handleStartQuiz(){
+    public void handleStartQuiz() {
         String linguaCodice = languageComboBox.getValue();
         String difficoltà = difficultyComboBox.getValue();
 
@@ -59,14 +71,12 @@ public class GameSelectionController {
         }
 
         try {
-            // ✅ VAI ALLA FASE DI LETTURA
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/reading_phase.fxml"));
             Parent root = loader.load();
 
             ReadingPhaseController readingController = loader.getController();
             readingController.setUser(currentUser);
             readingController.initialize(linguaCodice, difficoltà);
-
             Stage stage = (Stage) languageComboBox.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("Fase di Lettura - " + difficoltà);
@@ -78,6 +88,10 @@ public class GameSelectionController {
         }
     }
 
+    /**
+     * Mostra una finestra di conferma quando l'utente tenta di uscire dal gioco.
+     * Permette all'utente di scegliere se uscire senza salvare o annullare l'uscita.
+     */
     @FXML
     public void handleExitClick() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -93,18 +107,21 @@ public class GameSelectionController {
         Optional<ButtonType> result = alert.showAndWait();
         if(result.isPresent()){
             if (result.get() == esciSenzaSalvare) {
-                // Chiudi l'applicazione senza salvare
                 Stage stage = (Stage) languageComboBox.getScene().getWindow();
                 stage.close();
             } else {
-                // Annulla l'uscita
                 alert.close();
             }
         }
     }
 
+    /**
+     * Imposta l'utente corrente.
+     * Questo metodo viene chiamato per assegnare un oggetto User al controller.
+     *
+     * @param currentUser
+     */
     public void setUser(User currentUser) {
         this.currentUser = currentUser;
     }
-
 }

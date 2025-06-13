@@ -19,28 +19,32 @@ import model.User;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Controller per la schermata della classifica.
+ * Gestisce la leaderboard view
+ */
 public class LeaderboardController {
 
     @FXML
-    TableView leaderboardTable;
+    private TableView leaderboardTable;
 
     @FXML
-    TableColumn usernameColumn;
+    private TableColumn usernameColumn;
 
     @FXML
-    TableColumn easyColumn;
+    private TableColumn easyColumn;
 
     @FXML
-    TableColumn mediumColumn;
+    private TableColumn mediumColumn;
 
     @FXML
-    TableColumn hardColumn;
+    private TableColumn hardColumn;
 
     @FXML
-    Button homeButton;
+    private Button homeButton;
 
     @FXML
-    Button dashboardButton;
+    private Button dashboardButton;
 
     boolean isLoggedin = false;
     private User currentUser;
@@ -48,6 +52,9 @@ public class LeaderboardController {
     private ObservableList<User> leaderboardData = FXCollections.observableArrayList();
     private final UserDAO userDAO = new UserDAO();
 
+    /**
+     * Metodo che viene chiamato quando la scena viene inizializzata.
+     */
     @FXML
     private void initialize() {
         setupColumns();
@@ -56,8 +63,12 @@ public class LeaderboardController {
         updateLeaderboard();
     }
 
+    /**
+     * Metodo per aggiornare la visibilità dei pulsanti in base allo stato di login dell'utente.
+     * Mostra il pulsante "Torna alla home" se l'utente non è loggato, altrimenti mostra il pulsante "Dashboard".
+     */
     private void updateButtonVisibility() {
-        if(isLoggedin && currentUser != null) {
+        if (isLoggedin && currentUser != null) {
             homeButton.setVisible(false);
             dashboardButton.setVisible(true);
         } else {
@@ -66,6 +77,10 @@ public class LeaderboardController {
         }
     }
 
+    /**
+     * Consente di tornare alla home
+     * @param event
+     */
     @FXML
     private void goToHome(ActionEvent event) {
         try {
@@ -85,6 +100,10 @@ public class LeaderboardController {
         }
     }
 
+    /**
+     * Consente di tornare alla user_dashboard
+     * @param event
+     */
     @FXML
     private void goToUserDashboard(ActionEvent event) {
         try {
@@ -111,6 +130,9 @@ public class LeaderboardController {
         }
     }
 
+    /**
+     * Imposta le colonne della tabella della classifica.
+     */
     private void setupColumns() {
         usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
         easyColumn.setCellValueFactory(new PropertyValueFactory<>("bestScoreEasy"));
@@ -118,6 +140,9 @@ public class LeaderboardController {
         hardColumn.setCellValueFactory(new PropertyValueFactory<>("bestScoreHard"));
     }
 
+    /**
+     * Aggiorna la classifica con i dati presenti nel database.
+     */
     private void updateLeaderboard() {
         ObservableList<User> data = FXCollections.observableArrayList();
         List<User> users = userDAO.selectAll();
@@ -128,7 +153,10 @@ public class LeaderboardController {
         leaderboardTable.setItems(data);
     }
 
-    // Metodo per settare l'utente corrente
+    /**
+     * Imposta l'utente corrente nel controller.
+     * @param user
+     */
     public void setUser(User user) {
         this.currentUser = user;
         updateButtonVisibility();

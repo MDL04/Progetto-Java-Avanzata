@@ -3,18 +3,28 @@ package model;
 import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
-
+/**
+ * Classe che gestisce l'analisi delle parole nei documenti, l'importazione/esportazione di dati e
+ * il calcolo delle frequenze.
+ */
 public class WordDocumentMatrix {
     private final Map<String, Map<String, Integer>> matrix = new HashMap<>();
     private final Set<String> stopwords = new HashSet<>();
 
-    // --- STOPWORDS ---
-
+    /**
+     * Imposta la lista delle stopwords
+     * @param stopwordList
+     */
     public void setStopwords(Collection<String> stopwordList) {
         stopwords.clear();
         stopwords.addAll(stopwordList.stream().map(String::toLowerCase).collect(Collectors.toSet()));
     }
 
+    /**
+     * Salva le stopwords in un file di testo
+     * @param path
+     * @throws IOException
+     */
     public void salvaStopwords(String path) throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
             for (String stopword : stopwords) {
@@ -24,6 +34,11 @@ public class WordDocumentMatrix {
         }
     }
 
+    /**
+     * Carica le stopwords da un file di testo
+     * @param path
+     * @throws IOException
+     */
     public void caricaStopwords(String path) throws IOException {
         stopwords.clear();
         try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
@@ -34,16 +49,23 @@ public class WordDocumentMatrix {
         }
     }
 
+    /**
+     * Restituisce il set di stopwords
+     * @return
+     */
     public Set<String> getStopwords() {
         return stopwords;
     }
 
-    // --- DOCUMENTI ---
-
+    /**
+     * Aggiunge un documento alla matrice con le frequenze delle parole
+     * @param nome
+     * @param contenuto
+     */
     public void aggiungiDocumento(String nome, String contenuto) {
         Map<String, Integer> frequenze = new HashMap<>();
         String[] parole = contenuto.toLowerCase()
-                .replaceAll("[^\\p{L}\\p{Nd}]+", " ") // rimuove punteggiatura
+                .replaceAll("[^\\p{L}\\p{Nd}]+", " ")
                 .split("\\s+");
 
         System.out.println("[DEBUG] Stopwords attive: " + stopwords);
@@ -59,31 +81,51 @@ public class WordDocumentMatrix {
         matrix.put(nome, frequenze);
     }
 
+    /**
+     * Restituisce la frequenza di una parola
+     * @param documento
+     * @param parola
+     * @return
+     */
     public int getFrequenza(String documento, String parola) {
         return matrix.getOrDefault(documento, Map.of())
                 .getOrDefault(parola.toLowerCase(), 0);
     }
 
+    /**
+     * Verifica se una parola è presente in un documento
+     * @param documento
+     * @param parola
+     * @return
+     */
     public boolean contieneParola(String documento, String parola) {
         return getFrequenza(documento, parola) > 0;
     }
 
+    /**
+     * Restituisce il set di documenti
+     * @return
+     */
     public Set<String> getDocumenti() {
         return matrix.keySet();
     }
 
+    /**
+     * Restituisce il set di parole
+     * @return
+     */
     public Set<String> getTutteLeParole() {
         return matrix.values().stream()
                 .flatMap(m -> m.keySet().stream())
                 .collect(Collectors.toSet());
     }
 
-    public Map<String, Integer> getFrequenzePerDocumento(String documento) {
-        return matrix.getOrDefault(documento, Map.of());
-    }
 
-    // --- EXPORT / IMPORT CSV ---
-
+    /**
+     * Esporta la matrice di documenti e parole in un file CSV.
+     * @param path
+     * @throws IOException
+     */
     public void esportaCSV(String path) throws IOException {
         try (PrintWriter writer = new PrintWriter(new FileWriter(path))) {
             writer.println("documento,parola,frequenza");
@@ -95,6 +137,13 @@ public class WordDocumentMatrix {
         }
     }
 
+    /**
+     * Importa una matrice di documenti e parole da un file CSV
+     * @param wdmPath
+     * @param stopwordPath
+     * @return
+     * @throws IOException
+     */
     public static WordDocumentMatrix importaCSV(String wdmPath, String stopwordPath) throws IOException {
         WordDocumentMatrix matrix = new WordDocumentMatrix();
         matrix.caricaStopwords(stopwordPath);
@@ -118,8 +167,10 @@ public class WordDocumentMatrix {
         return matrix;
     }
 
-    // --- MATRICE INVERTITA (parola -> doc -> frequenza) ---
-
+    /**
+     * Restituisce la matrice invertita, ossia una mappa che associa ogni parola ai documenti in cui appare e alla frequenza
+     * @return
+     */
     public Map<String, Map<String, Integer>> getMatriceInversa() {
         Map<String, Map<String, Integer>> inversa = new HashMap<>();
         for (String doc : matrix.keySet()) {
@@ -134,33 +185,5 @@ public class WordDocumentMatrix {
         return inversa;
     }
 
-    // --- UTILITY ---
-
-    public String documentoConFrequenzaMassima(String parola) {
-        parola = parola.toLowerCase();
-        String bestDoc = null;
-        int max = -1;
-
-        for (String doc : matrix.keySet()) {
-            int f = getFrequenza(doc, parola);
-            if (f > max) {
-                max = f;
-                bestDoc = doc;
-            }
-        }
-        return bestDoc;
-    }
-
-    public boolean parolaInTuttiIDocumenti(String parola) {
-        final String parolaLowerCase = parola.toLowerCase();
-        return matrix.keySet().stream()
-                .allMatch(doc -> contieneParola(doc, parolaLowerCase));
-    }
-
-    public boolean parolaInNessunDocumento(String parola) {
-        final String parolaLowerCase = parola.toLowerCase();
-        return matrix.keySet().stream()
-                .noneMatch(doc -> contieneParola(doc, parolaLowerCase));
-    }
 
 }
