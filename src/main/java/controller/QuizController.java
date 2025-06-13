@@ -1,5 +1,7 @@
 package controller;
 
+import dao.GameSessionDAO;
+import dao.UserDAO;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -9,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import model.Document;
+import model.GameSession;
 import model.User;
 import model.WordDocumentMatrix;
 import quiz.Question;
@@ -19,6 +22,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public class QuizController {
 
@@ -31,6 +35,10 @@ public class QuizController {
     @FXML private Button backButton;
 
     private User currentUser;
+    private UserDAO userDAO;
+
+    private GameSession gameSession;
+    private GameSessionDAO gameSessionDAO;
 
     private LocalDateTime startTime;
     private String difficoltà;
@@ -41,7 +49,8 @@ public class QuizController {
     private List<Document> documentiMostrati;
     private String lingua; // nuovo campo
 
-    public void initializeQuiz(WordDocumentMatrix matrix, String difficoltà, List<Document> documentiMostrati, String lingua) {
+    @FXML
+    public void initialize(WordDocumentMatrix matrix, String difficoltà, List<Document> documentiMostrati, String lingua) {
         this.documentiMostrati = documentiMostrati;
         this.difficoltà = difficoltà;
         this.lingua = lingua;
@@ -66,6 +75,21 @@ public class QuizController {
             resultLabel.setText("Errore nella generazione del quiz: " + e.getMessage());
             e.printStackTrace();
         }
+
+        // Imposta l'handler per la chiusura con la X
+        nextButton.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                newScene.windowProperty().addListener((obsWin, oldWin, newWin) -> {
+                    if (newWin != null) {
+                        Stage stage = (Stage) newWin;
+                        stage.setOnCloseRequest(event -> {
+                            event.consume();
+                            handleExitClick();
+                        });
+                    }
+                });
+            }
+        });
     }
 
     @FXML
@@ -175,5 +199,47 @@ public class QuizController {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Errore nel caricamento della dashboard utente");
             alert.show();
         }
+    }
+
+    private void updateDB() {
+
+        String difficulty = switch (difficoltà) {
+            case "Facile" -> "easy";
+            case "Media" -> "medium";
+            case "Difficile" -> "hard";
+            default -> "unknown";
+        };
+        userDAO.update(currentUser, difficulty, session.getPunteggio());
+
+//        gameSessionDAO.insert();
+    }
+
+    @FXML
+    public void handleExitClick() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Conferma uscita");
+        alert.setHeaderText("Sei sicuro di voler uscire?");
+        alert.setContentText("Se esci non potrai riprendere la tua partita.");
+
+        ButtonType esciSenzaSalvare = new ButtonType("Esci senza salvare");
+        ButtonType annulla = new ButtonType("Annulla", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        alert.getButtonTypes().setAll(esciSenzaSalvare, annulla);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if(result.isPresent()){
+            if (result.get() == esciSenzaSalvare) {
+                // Chiudi l'applicazione senza salvare
+                Stage stage = (Stage) nextButton.getScene().getWindow();
+                stage.close();
+            } else {
+                // Annulla l'uscita
+                alert.close();
+            }
+        }
+    }
+
+    public void setUser(User user) {
+        this.currentUser = user;
     }
 }

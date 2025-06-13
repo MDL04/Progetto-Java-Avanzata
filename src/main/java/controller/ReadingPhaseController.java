@@ -13,11 +13,13 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import model.Document;
 import model.Stopword;
+import model.User;
 import model.WordDocumentMatrix;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -39,7 +41,10 @@ public class ReadingPhaseController {
     private int maxDocumenti;
     private int maxParolePerDocumento;
 
-    public void initializeReadingPhase(String lingua, String difficolta) {
+    private User currentUser;
+
+    @FXML
+    public void initialize(String lingua, String difficolta) {
         this.lingua = lingua;
         this.difficolta = difficolta;
 
@@ -68,6 +73,20 @@ public class ReadingPhaseController {
 
         caricaDocumenti();
         mostraDocumentoCorrente();
+
+        documentArea.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                newScene.windowProperty().addListener((obsWin, oldWin, newWin) -> {
+                    if (newWin != null) {
+                        Stage stage = (Stage) newWin;
+                            stage.setOnCloseRequest(event -> {
+                                event.consume();
+                                handleExitClick();
+                            });
+                    }
+                });
+            }
+        });
     }
 
     private void caricaDocumenti() {
@@ -149,7 +168,7 @@ public class ReadingPhaseController {
 
             QuizController quizController = loader.getController();
             // Passa la lingua!
-            quizController.initializeQuiz(matrix, difficolta, documentiDaMostrare, lingua);
+            quizController.initialize(matrix, difficolta, documentiDaMostrare, lingua);
 
             Stage stage = (Stage) documentArea.getScene().getWindow();
             stage.setScene(new Scene(root));
@@ -180,5 +199,34 @@ public class ReadingPhaseController {
         }
 
         return matrix;
+    }
+
+    @FXML
+    public void handleExitClick() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Conferma uscita");
+        alert.setHeaderText("Sei sicuro di voler uscire?");
+        alert.setContentText("Se esci non potrai riprendere la tua partita.");
+
+        ButtonType esciSenzaSalvare = new ButtonType("Esci senza salvare");
+        ButtonType annulla = new ButtonType("Annulla", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        alert.getButtonTypes().setAll(esciSenzaSalvare, annulla);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if(result.isPresent()){
+            if (result.get() == esciSenzaSalvare) {
+                // Chiudi l'applicazione senza salvare
+                Stage stage = (Stage) documentArea.getScene().getWindow();
+                stage.close();
+            } else {
+                // Annulla l'uscita
+                alert.close();
+            }
+        }
+    }
+
+    public void setUser(User currentUser) {
+        this.currentUser = currentUser;
     }
 }
