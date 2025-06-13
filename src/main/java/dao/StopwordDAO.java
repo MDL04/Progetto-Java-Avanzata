@@ -11,7 +11,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Classe DAO che gestisce le transazioni con il database wordageddon.db per quanto riguarda le stopwords.
+ * Fornisce metodi per inserire, selezionare e cancellare stopwords.
+ */
 public class StopwordDAO {
+
+    /**
+     * Seleziona le stopwords dal database in base alla lingua selezionata
+     * Cattura un SQLException in caso di errore nella selezione.
+     *
+     * @param language la lingua delle stopwords da selezionare
+     * @return una lista con le stopwords selezionate
+     */
     public static List<Stopword> selectSWByLanguage(String language) {
         List<Stopword> SWlist = new ArrayList<>();
         try(Connection c = DBManager.getConnection();
@@ -28,6 +40,14 @@ public class StopwordDAO {
         return SWlist;
     }
 
+
+    /**
+     * Seleziona una stopword in base al titolo del file.
+     * Cattura un SQLException in caso di errore nella selezione.
+     *
+     * @param title il titolo del file dove che contiene le stopwords
+     * @return un oggetto Optional di Stopword che conterrà le stopwords, è vuoto se non viene trovato nulla
+     */
     public static Optional<Stopword> selectSWByTitle(String title) {
         try (Connection connection = DBManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM stopwords WHERE title = ?")) {
@@ -45,6 +65,13 @@ public class StopwordDAO {
         return Optional.empty();
     }
 
+
+    /**
+     * Inserisce un file di stopwords nel database
+     * Cattura un SQLException in caso di errore nell'inserimento.
+     *
+     * @param stopword l'oggetto Stopword da inserire nel database
+     */
     public static void insertStopword(Stopword stopword) {
         try(Connection c = DBManager.getConnection();
             PreparedStatement preparedStatement = c.prepareStatement("INSERT INTO stopwords (title, words, language) VALUES (?, ?, ?)")) {
@@ -57,6 +84,13 @@ public class StopwordDAO {
         }
     }
 
+
+    /**
+     * Elimina una stopword dal database.
+     * Cattura un SQLException in caso di errore nell'eliminazione.
+     *
+     * @param stopword l'oggetto Stopword da eliminare
+     */
     public static void deleteStopword(Stopword stopword){
         try(Connection c = DBManager.getConnection();
             PreparedStatement preparedStatement = c.prepareStatement("DELETE FROM stopwords WHERE id = ?")){
@@ -70,6 +104,12 @@ public class StopwordDAO {
         }
     }
 
+    /**
+     * Seleziona tutte le stopwords presenti nel database.
+     * Cattura un SQLException in caso di errore nella selezione.
+     *
+     * @return una lista di stopwords presenti nel database
+     */
     public static List<Stopword> selectAllStopwords() {
         List<Stopword> SWList = new ArrayList<>();
         try(Connection connection = DBManager.getConnection();

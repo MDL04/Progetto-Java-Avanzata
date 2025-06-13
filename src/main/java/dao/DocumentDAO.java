@@ -11,9 +11,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-
+/**
+ * Classe DAO che gestisce le transazioni con il database wordageddon.db per quanto riguarda i documenti.
+ * Fornisce metodi per inserire, selezionare e cancellare documenti.
+ */
 public class DocumentDAO {
 
+    /**
+     * Seleziona un documento in base alla lingua selezionata.
+     * Cattura un SQLException in caso si di errore nella selezione.
+     *
+     * @param language l'ID del documento da selezionare
+     * @return una lista di documenti della lingua selezionata
+     */
     public static List<Document> selectDocumentByLanguage(String language) {
         List<Document> documents = new ArrayList<>();
         try(Connection c = DBManager.getConnection();
@@ -30,6 +40,13 @@ public class DocumentDAO {
         return documents;
     }
 
+    /**
+     * Seleziona un documento in base al titolo.
+     * Cattura un SQLException in caso si di errore nella selezione.
+     *
+     * @param title il titolo del documento da selezionare
+     * @return un Optional del Document trovato, è null se non viene trovato
+     */
     public static Optional<Document> selectDocumentByTitle(String title) {
         try (Connection connection = DBManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM documents  WHERE title = ?")) {
@@ -47,8 +64,12 @@ public class DocumentDAO {
         return Optional.empty();
     }
 
-
-
+    /**
+     * Inserisce un nuovo documento nel database.
+     *
+     * @param document il documento da inserire
+     * @throws SQLException se si verifica un errore durante l'inserimento
+     */
     public static void insertDocument(Document document) throws SQLException {
         try(Connection c = DBManager.getConnection();
             PreparedStatement preparedStatement = c.prepareStatement("INSERT INTO documents (title, content, language) VALUES (?, ?, ?)")) {
@@ -61,8 +82,12 @@ public class DocumentDAO {
         }
     }
 
-
-
+    /**
+     * Elimina un documento dal database.
+     * Cattura un SQLException in caso si di errore nell'eliminazione.
+     *
+     * @param document il documento da eliminare
+     */
     public static void deleteDocument(Document document) {
         try(Connection c = DBManager.getConnection();
         PreparedStatement preparedStatement = c.prepareStatement("DELETE FROM documents WHERE id = ?")){
@@ -77,6 +102,12 @@ public class DocumentDAO {
 
     }
 
+    /**
+     * Seleziona tutti i documenti presenti nel database.
+     * Cattura un SQLException in caso si di errore nella selezione.
+     *
+     * @return una lista di tutti i documenti
+     */
     public static List<Document> selectAllDocuments() {
         List<Document> documents = new ArrayList<>();
         try(Connection connection = DBManager.getConnection();

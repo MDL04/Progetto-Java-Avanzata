@@ -9,8 +9,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Classe DAO che gestisce le transazioni con il database wordageddon.db per quanto riguarda le sessioni di gioco.
+ * Fornisce metodi per inserire, selezionare e cancellare sessioni di gioco.
+ */
 public class GameSessionDAO {
 
+    /**
+     * Seleziona una sessione di gioco in base all'id.
+     * Cattura un SQLException in caso di errore nella selezione.
+     *
+     * @param id l'id della sessione di gioco da selezionare
+     * @return un Optional contenente la sessione di gioco trovata, o vuoto se non trovata
+     */
     public Optional<GameSession> selectById(int id) {
         Optional<GameSession> result = Optional.empty();
         try (Connection connection = DBManager.getConnection();
@@ -31,6 +42,13 @@ public class GameSessionDAO {
         return result;
     }
 
+    /**
+     * Seleziona le sessioni di gioco in base all'utente, quindi in base al suo id.
+     * Cattura un SQLException in caso si di errore nella selezione.
+     *
+     * @param userId l'id dell'utente associato a quella sessione di gioco
+     * @return una lista di sessioni di gioco associate all'utente
+     */
     public List<GameSession> selectByUserId(int userId){
         List<GameSession> sessions = new ArrayList<>();
         try (Connection connection = DBManager.getConnection();
@@ -52,6 +70,12 @@ public class GameSessionDAO {
         return sessions;
     }
 
+    /**
+     * Seleziona tutte le sessioni di gioco.
+     * Cattura un SQLException in caso si di errore nella selezione.
+     *
+     * @return una lista di tutte le sessioni di gioco
+     */
     public List<GameSession> selectAll() {
         List<GameSession> sessions = new ArrayList<>();
         try (Connection connection = DBManager.getConnection();
@@ -72,6 +96,15 @@ public class GameSessionDAO {
         return sessions;
     }
 
+    /**
+     * Inserisce una nuova sessione di gioco nel database.
+     * Cattura un SQLException in caso si di errore durante l'inserimento.
+     *
+     * @param userId l'id dell'utente associato alla sessione di gioco
+     * @param score il punteggio ottenuto nella sessione di gioco
+     * @param difficulty la difficoltà della sessione di gioco
+     * @param date la data in cui è finita la sessione di gioco
+     */
     public void insert(int userId, int score, String difficulty, LocalDateTime date) {
         try (Connection connection = DBManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO game_sessions (user_id, score, difficulty, date) VALUES (?, ?, ?, ?)")) {
@@ -85,6 +118,12 @@ public class GameSessionDAO {
         }
     }
 
+    /**
+     * Elimina una sessione di gioco in base all'id.
+     * Cattura un SQLException in caso si di errore durante l'eliminazione.
+     *
+     * @param id l'id della sessione di gioco da eliminare
+     */
     public void deleteById(int id) {
         try (Connection connection = DBManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM game_sessions WHERE id = ?")) {

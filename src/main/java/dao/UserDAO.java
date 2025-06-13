@@ -11,8 +11,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Classe DAO che si occupa di fornire metodi che interagiscono con la tabella users del database wordageddon.db.
+ * Fornisce metodi per inserire, selezionare, aggiornare e cancellare utenti.
+ */
 public class UserDAO {
 
+    /**
+     * Seleziona un utente in base al suo id.
+     * Cattura un SQLException in caso di errore nella selezione.
+     *
+     * @param id l'id dell'utente da selezionare
+     * @return un Optional contenente l'utente trovato, o vuoto se non trovato
+     */
     public Optional<User> selectById(long id) {
         Optional<User> result = Optional.empty();
         try (Connection connection = DBManager.getConnection();
@@ -44,6 +55,13 @@ public class UserDAO {
         return result;
     }
 
+    /**
+     * Seleziona un utente in base al suo username.
+     * Cattura un SQLException in caso di errore nella selezione.
+     *
+     * @param username lo username dell'utente da selezionare
+     * @return un Optional contenente l'User trovato, è vuoto altrimenti
+     */
     public Optional<User> selectByUsername(String username) {
         Optional<User> result = Optional.empty();
         try (Connection connection = DBManager.getConnection();
@@ -76,6 +94,13 @@ public class UserDAO {
         return result;
     }
 
+    /**
+     * Seleziona un utente in base alla sua email.
+     * Cattura un SQLException in caso di errore nella selezione.
+     *
+     * @param email l'email dell'utente da selezionare
+     * @return un Optional contenente l'utente, se non viene trovato è null
+     */
     public Optional<User> selectByEmail(String email) {
         Optional<User> result = Optional.empty();
         try (Connection connection = DBManager.getConnection();
@@ -108,6 +133,13 @@ public class UserDAO {
         return result;
     }
 
+    /**
+     * Seleziona tutti gli utenti che non siano amministratori.
+     * Questo tipo di selezione è effettuata ai fini della classifica, in quanto gli amministratori non hanno la possibilità di giocare.
+     * Cattura un SQLException in caso di errore nella selezione.
+     *
+     * @return una lista di User che non sono amministratori
+     */
     public List<User> selectAll() {
         List<User> users = new ArrayList<>();
         try (Connection connection = DBManager.getConnection();
@@ -123,6 +155,13 @@ public class UserDAO {
         return users;
     }
 
+    /**
+     * Inserisce un nuovo utente nel database.
+     * Cattura un SQLException in caso di errore nell'inserimento.
+     *
+     * @param user l'oggetto User da inserire nel database
+     * @return true se l'inserimento è andato a buon fine, false altrimenti
+     */
     public boolean insert(User user) {
         try (Connection connection = DBManager.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO users (username, email, password_hash, is_admin, avatar_url) values (?,?,?,?,?)")) {
@@ -139,6 +178,15 @@ public class UserDAO {
         return false;
     }
 
+    /**
+     * Controlla se le credenziali di accesso sono corrette.
+     * Se la ricerca non va a buon fine vorrà dire che non esisterà un utente con quella combinazione di username e password.
+     * Cattura un SQLException in caso di errore nella selezione.
+     *
+     * @param username lo username dell'utente
+     * @param password la password dell'utente
+     * @return true se le credenziali sono corrette, false altrimenti
+     */
     public boolean checkLogin(String username, String password) {
         try (Connection connection = DBManager.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM users WHERE username = ? AND password_hash = ?")) {
@@ -152,6 +200,16 @@ public class UserDAO {
         return false;
     }
 
+    /**
+     * Aggiorna le statistiche di un utente dopo una partita.
+     * Incrementa il numero di partite giocate, aggiorna il punteggio totale e il miglior punteggio per la difficoltà specificata.
+     * Il miglior punteggio viene aggiornato solo se il nuovo punteggio è superiore a quello attuale.
+     * Cattura un SQLException in caso di errore nell'aggiornamento.
+     *
+     * @param user l'utente da aggiornare
+     * @param difficulty la difficoltà della partita (easy, medium, hard)
+     * @param score il punteggio ottenuto nella partita
+     */
     public void update(User user, String difficulty, int score) {
         try (Connection connection = DBManager.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement("UPDATE users " + "SET " + "games_" + difficulty + " = games_" + difficulty + " + 1, " + "score_total_" + difficulty + " = score_total_" + difficulty + " + ?, " + "best_" + difficulty + " = CASE WHEN best_" + difficulty + " > ? THEN best_" + difficulty + " ELSE ? END " +
@@ -166,6 +224,14 @@ public class UserDAO {
         }
     }
 
+    /**
+     * Aggiorna il profilo di un utente.
+     * Quando si effettua una modifica "base" del profilo utente, quindi username, email e l'immagine del profilo.
+     * Cattura un SQLException in caso di errore nell'aggiornamento.
+     *
+     * @param user l'oggetto User con i nuovi dati da aggiornare
+     * @return true se l'aggiornamento è andato a buon fine, false altrimenti
+     */
     public boolean updateUserProfile(User user) {
         try (Connection connection = DBManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
@@ -183,6 +249,14 @@ public class UserDAO {
         }
     }
 
+    /**
+     * Aggiorna la password di un utente.
+     * Cattura un SQLException in caso di errore nell'aggiornamento.
+     *
+     * @param userId l'id dell'utente di cui aggiornare la password
+     * @param newPasswordHash il nuovo hash della password
+     * @return true se l'aggiornamento è andato a buon fine, false altrimenti
+     */
     public boolean updatePassword(long userId, String newPasswordHash) {
         try (Connection connection = DBManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
@@ -198,7 +272,12 @@ public class UserDAO {
         }
     }
 
-
+    /**
+     * Elimina un utente dal database in base al suo username.
+     * Cattura un SQLException in caso di errore nell'eliminazione.
+     *
+     * @param user l'oggetto User da eliminare
+     */
     public void delete(User user){
             try(Connection connection = DBManager.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM users WHERE username = ?")) {
