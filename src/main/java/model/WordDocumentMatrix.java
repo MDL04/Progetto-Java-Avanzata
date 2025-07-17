@@ -34,6 +34,13 @@ public class WordDocumentMatrix {
         }
     }
 
+    private String normalizzaParola(String parola) {
+        return parola
+                .toLowerCase()
+                .trim()
+                .replaceAll("[^\\p{L}\\p{Nd}]", ""); // Rimuove punteggiatura, spazi speciali ecc.
+    }
+
     /**
      * Carica le stopwords da un file di testo
      * @param path
@@ -44,7 +51,10 @@ public class WordDocumentMatrix {
         try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                stopwords.add(line.trim().toLowerCase());
+                String normalizzata = normalizzaParola(line);
+                if (!normalizzata.isEmpty()) {
+                    stopwords.add(normalizzata);
+                }
             }
         }
     }
@@ -147,6 +157,8 @@ public class WordDocumentMatrix {
     public static WordDocumentMatrix importaCSV(String wdmPath, String stopwordPath) throws IOException {
         WordDocumentMatrix matrix = new WordDocumentMatrix();
         matrix.caricaStopwords(stopwordPath);
+        System.out.println("[DEBUG] Stopwords caricate: " + matrix.stopwords.size());
+        System.out.println("[DEBUG] Prime 10 stopwords: " + matrix.stopwords.stream().limit(10).toList());
 
         try (BufferedReader reader = new BufferedReader(new FileReader(wdmPath))) {
             String line = reader.readLine(); // skip header
@@ -158,14 +170,18 @@ public class WordDocumentMatrix {
                 String word = parts[1].trim().toLowerCase();
                 int freq = Integer.parseInt(parts[2].trim());
 
-                if (matrix.stopwords.contains(word)) continue;
+                if (matrix.stopwords.contains(word)) {
+                    System.out.println("[DEBUG] Parola ignorata perché presente tra le stopwords: " + word);
+                    continue;
+                }
 
                 matrix.matrix
                         .computeIfAbsent(doc, k -> new HashMap<>())
                         .put(word, freq);
+
+                System.out.println("[DEBUG] Parola aggiunta: '" + word + "' con frequenza " + freq + " al documento '" + doc + "'");
             }
         }
-
         return matrix;
     }
 
