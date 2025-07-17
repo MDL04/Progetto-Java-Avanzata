@@ -158,6 +158,8 @@ public class WordDocumentMatrix {
                 String word = parts[1].trim().toLowerCase();
                 int freq = Integer.parseInt(parts[2].trim());
 
+                if (matrix.stopwords.contains(word)) continue;
+
                 matrix.matrix
                         .computeIfAbsent(doc, k -> new HashMap<>())
                         .put(word, freq);
