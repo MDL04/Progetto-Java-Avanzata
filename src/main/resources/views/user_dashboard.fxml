@@ -6,10 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane minHeight="400.0" minWidth="600.0"
-            prefHeight="400.0" prefWidth="600.0"
-            xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="controller.UserDashboardController" stylesheets="@../styles/style.css">
+<AnchorPane minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0" stylesheets="@../styles/style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.UserDashboardController">
    <children>
       <HBox layoutX="31.0" layoutY="28.0" prefHeight="100.0" prefWidth="522.0">
          <children>
@@ -69,40 +66,40 @@
             </VBox>
             <VBox alignment="CENTER">
                <children>
-                  <Label style="-fx-text-fill: white" alignment="CENTER" contentDisplay="CENTER" text="Statistiche personali" />
+                  <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-text-fill: white" text="Statistiche personali" />
                   <GridPane fx:id="statsGrid" prefWidth="275.0">
                      <columnConstraints>
-                        <ColumnConstraints prefWidth="90.0"/>
-                        <ColumnConstraints prefWidth="90.0"/>
-                        <ColumnConstraints prefWidth="90.0"/>
-                        <ColumnConstraints prefWidth="90.0"/>
+                        <ColumnConstraints prefWidth="150.0" />
+                        <ColumnConstraints prefWidth="90.0" />
+                        <ColumnConstraints prefWidth="90.0" />
+                        <ColumnConstraints prefWidth="90.0" />
                      </columnConstraints>
                      <rowConstraints>
-                        <RowConstraints prefHeight="30.0"/>
-                        <RowConstraints prefHeight="30.0"/>
-                        <RowConstraints prefHeight="30.0"/>
-                        <RowConstraints prefHeight="30.0"/>
+                        <RowConstraints prefHeight="30.0" />
+                        <RowConstraints prefHeight="30.0" />
+                        <RowConstraints prefHeight="30.0" />
+                        <RowConstraints prefHeight="30.0" />
                      </rowConstraints>
                      <!-- Intestazioni colonne -->
-                     <Label style="-fx-text-fill: white" text="" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                     <Label text="Facile" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
-                     <Label text="Medio" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
-                     <Label text="Difficile" GridPane.rowIndex="0" GridPane.columnIndex="3"/>
+                     <Label style="-fx-text-fill: white" text="" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                     <Label text="Facile" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                     <Label text="Medio" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                     <Label text="Difficile" GridPane.columnIndex="3" GridPane.rowIndex="0" />
                      <!-- Miglior punteggio -->
-                     <Label text="Miglior" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                     <Label fx:id="bestEasyLabel" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
-                     <Label fx:id="bestMediumLabel" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
-                     <Label fx:id="bestHardLabel" GridPane.rowIndex="1" GridPane.columnIndex="3"/>
+                     <Label text="Miglior punteggio" textAlignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                     <Label fx:id="bestEasyLabel" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                     <Label fx:id="bestMediumLabel" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                     <Label fx:id="bestHardLabel" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                      <!-- Partite giocate -->
-                     <Label text="Partite" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                     <Label fx:id="gamesEasyLabel" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-                     <Label fx:id="gamesMediumLabel" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
-                     <Label fx:id="gamesHardLabel" GridPane.rowIndex="2" GridPane.columnIndex="3"/>
+                     <Label text="Partite giocate" textAlignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                     <Label fx:id="gamesEasyLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                     <Label fx:id="gamesMediumLabel" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                     <Label fx:id="gamesHardLabel" GridPane.columnIndex="3" GridPane.rowIndex="2" />
                      <!-- Punteggio medio -->
-                     <Label text="Media" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-                     <Label fx:id="avgEasyLabel" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
-                     <Label fx:id="avgMediumLabel" GridPane.rowIndex="3" GridPane.columnIndex="2"/>
-                     <Label fx:id="avgHardLabel" GridPane.rowIndex="3" GridPane.columnIndex="3"/>
+                     <Label text="Media" textAlignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                     <Label fx:id="avgEasyLabel" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                     <Label fx:id="avgMediumLabel" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                     <Label fx:id="avgHardLabel" GridPane.columnIndex="3" GridPane.rowIndex="3" />
                   </GridPane>
                </children>
                <HBox.margin>

@@ -102,11 +102,12 @@ public class GameSelectionController {
 
         alert.getButtonTypes().setAll(esciSenzaSalvare, annulla);
 
+        Stage stage = (Stage) languageComboBox.getScene().getWindow();
+        alert.initOwner(stage);
         Optional<ButtonType> result = alert.showAndWait();
         if(result.isPresent()){
             if (result.get() == esciSenzaSalvare) {
                 // Chiudi l'applicazione senza salvare
-                Stage stage = (Stage) languageComboBox.getScene().getWindow();
                 stage.close();
             } else {
                 // Annulla l'uscita

@@ -279,10 +279,11 @@ public class QuizController {
 
         alert.getButtonTypes().setAll(esciSenzaSalvare, annulla);
 
+        Stage stage = (Stage) nextButton.getScene().getWindow();
+        alert.initOwner(stage);
         Optional<ButtonType> result = alert.showAndWait();
         if(result.isPresent()){
             if (result.get() == esciSenzaSalvare) {
-                Stage stage = (Stage) nextButton.getScene().getWindow();
                 stage.close();
             } else {
                 alert.close();

@@ -288,11 +288,12 @@ public class ReadingPhaseController {
 
         alert.getButtonTypes().setAll(esciSenzaSalvare, annulla);
 
+        Stage stage = (Stage) documentArea.getScene().getWindow();
+        alert.initOwner(stage);
         Optional<ButtonType> result = alert.showAndWait();
         if(result.isPresent()){
             if (result.get() == esciSenzaSalvare) {
                 // Chiudi l'applicazione senza salvare
-                Stage stage = (Stage) documentArea.getScene().getWindow();
                 stage.close();
             } else {
                 // Annulla l'uscita

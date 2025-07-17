@@ -2,20 +2,19 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0"
-            xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="controller.QuizController" stylesheets="@../styles/style.css">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" stylesheets="@../styles/style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.QuizController">
 
-    <VBox alignment="TOP_CENTER" prefWidth="600" spacing="16" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+    <VBox alignment="TOP_CENTER" prefWidth="600" spacing="15.0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
         <!-- Sezione visualizzazione domanda -->
-        <Label fx:id="questionLabel" maxWidth="Infinity" style="-fx-font-size: 16px; -fx-font-weight: bold;" wrapText="false" />
+        <Label fx:id="questionLabel" maxHeight="Infinity" maxWidth="580" prefWidth="580" style="-fx-font-size: 16px; -fx-font-weight: bold;" wrapText="true" VBox.vgrow="ALWAYS" />
 
         <!-- Etichetta avanzamento quiz -->
         <Label fx:id="progressLabel" maxWidth="600" style="-fx-font-size: 13px; -fx-text-fill: #337ab7;" wrapText="true" />
 
         <!-- Lista delle opzioni -->
-        <ListView fx:id="optionsList" maxHeight="160" prefWidth="500" />
+        <ListView fx:id="optionsList" fixedCellSize="24" maxHeight="200" minHeight="100" prefHeight="100" prefWidth="560.0" VBox.vgrow="NEVER" />
 
         <!-- Pulsante per andare alla prossima domanda -->
         <Button fx:id="nextButton" disable="true" onAction="#handleNextQuestion" prefWidth="250" text="Prossima Domanda" />
@@ -23,8 +22,8 @@
         <!-- Etichetta per risultati / errori -->
         <Label fx:id="resultLabel" alignment="CENTER" style="-fx-text-fill: #008000; -fx-font-size: 14px;" />
 
-        <Button fx:id="reviewButton" onAction="#handleReview" prefWidth="180" text="Rivedi Risposte" visible="false" />
+        <Button fx:id="reviewButton" onAction="#handleReview" prefWidth="250.0" text="Rivedi Risposte" visible="false" />
 
-        <Button fx:id="backButton" onAction="#goToDashboard" prefWidth="180" text="Torna all'Area Utente" visible="false" />
+        <Button fx:id="backButton" onAction="#goToDashboard" prefWidth="250.0" text="Torna all'Area Utente" visible="false" />
     </VBox>
 </AnchorPane>

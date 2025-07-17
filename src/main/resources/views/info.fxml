@@ -4,12 +4,9 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane minHeight="400.0" minWidth="600.0"
-            prefHeight="400.0" prefWidth="600.0"
-            xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="controller.InfoController">
+<AnchorPane minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0" stylesheets="@../styles/style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.InfoController">
     <TextFlow fx:id="descriptionFlow" prefHeight="333.0" prefWidth="600.0" style="-fx-background-color: white; -fx-padding: 10; -fx-border-color: #cccccc; -fx-border-radius: 5;">
     </TextFlow>
-    <Button alignment="CENTER" layoutX="241.0" layoutY="349.0" onAction="#goToHome" text="Torna alla home" />
+    <Button layoutX="219.0" layoutY="344.0" onAction="#goToHome" text="Torna alla home" />
 
 </AnchorPane>

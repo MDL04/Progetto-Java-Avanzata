@@ -71,6 +71,7 @@ public class LeaderboardController {
     private void updateButtonVisibility() {
         if (isLoggedin && currentUser != null) {
             homeButton.setVisible(false);
+            homeButton.setManaged(false);
             dashboardButton.setVisible(true);
         } else {
             homeButton.setVisible(true);

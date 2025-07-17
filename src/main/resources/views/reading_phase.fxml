@@ -3,15 +3,12 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns="http://javafx.com/javafx/11.0.1"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="controller.ReadingPhaseController"
-      stylesheets="@../styles/style.css">
+<VBox stylesheets="@../styles/style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ReadingPhaseController">
     <children>
-        <HBox style="-fx-padding: 10; -fx-spacing: 20;">
+        <HBox alignment="CENTER_LEFT" style="-fx-padding: 10; -fx-spacing: 20;">
             <children>
-                <Label fx:id="timerLabel" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: red" text="Tempo rimanente: 01:00" />
                 <Label fx:id="progressLabel" text="Documento 1 di 2" />
+                <Label fx:id="timerLabel" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: red" text="Tempo rimanente: 01:00" />
             </children>
         </HBox>
 
