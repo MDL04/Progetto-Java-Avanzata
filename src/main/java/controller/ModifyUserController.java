@@ -53,15 +53,6 @@ public class ModifyUserController {
     @FXML
     private PasswordField confirmPasswordField;
 
-    @FXML
-    private Button saveButton;
-
-    @FXML
-    private Button cancelButton;
-
-    @FXML
-    private Label messageLabel;
-
     /**
      *  Costruisce un'istanza di ModifyUserController
      */
@@ -153,8 +144,6 @@ public class ModifyUserController {
         if (currentUser != null) {
             usernameField.setText(currentUser.getUsername());
             emailField.setText(currentUser.getEmail());
-
-            // Carica l'avatar attuale
             String currentAvatar = currentUser.getUrlAvatar();
             if (currentAvatar != null && !currentAvatar.isEmpty()) {
                 // Estrai il nome del file dall'URL

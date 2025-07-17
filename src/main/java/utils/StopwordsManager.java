@@ -11,7 +11,6 @@ import java.util.Random;
 
 public class StopwordsManager {
     private final List<String> stopwords = new ArrayList<String>();
-    // Oggetto Random per la generazione casuale
     private final Random random = new Random();
 
     /**

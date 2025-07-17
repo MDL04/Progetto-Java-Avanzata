@@ -51,7 +51,6 @@ public class AdminController {
         for (Stopword sw : allSW)
             stopwordList.getItems().add(sw.getTitle());
 
-        // ⚠️ Inizializza WDM appena avvii la schermata
         WDMManager.getInstance();
     }
 
@@ -88,7 +87,6 @@ public class AdminController {
                 DocumentDAO.insertDocument(doc);
                 documentList.getItems().add(title);
 
-                // ✅ Ricarica WDM
                 WDMManager.delete();
                 WDMManager.getInstance();
 
@@ -131,7 +129,6 @@ public class AdminController {
                 StopwordDAO.insertStopword(stopword);
                 stopwordList.getItems().add(title);
 
-                // ✅ Ricarica WDM
                 WDMManager.delete();
                 WDMManager.getInstance();
             } catch (IOException e) {
@@ -159,7 +156,6 @@ public class AdminController {
                     DocumentDAO.deleteDocument(optionalDocument.get());
                     documentList.getItems().remove(selected);
 
-                    // ✅ Ricarica WDM
                     WDMManager.delete();
                     WDMManager.getInstance();
                 } else {
@@ -187,8 +183,7 @@ public class AdminController {
                 if (optionalStopword.isPresent()) {
                     StopwordDAO.deleteStopword(optionalStopword.get());
                     stopwordList.getItems().remove(selected);
-
-                    // ✅ Ricarica WDM
+                    
                     WDMManager.delete();
                     WDMManager.getInstance();
                 } else {

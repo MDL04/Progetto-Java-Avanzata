@@ -38,7 +38,7 @@ public class WordDocumentMatrix {
         return parola
                 .toLowerCase()
                 .trim()
-                .replaceAll("[^\\p{L}\\p{Nd}]", ""); // Rimuove punteggiatura, spazi speciali ecc.
+                .replaceAll("[^\\p{L}\\p{Nd}]", "");
     }
 
     /**
@@ -78,14 +78,10 @@ public class WordDocumentMatrix {
                 .replaceAll("[^\\p{L}\\p{Nd}]+", " ")
                 .split("\\s+");
 
-        System.out.println("[DEBUG] Stopwords attive: " + stopwords);
 
         for (String parola : parole) {
             if (parola.isBlank() || stopwords.contains(parola)) continue;
             frequenze.put(parola, frequenze.getOrDefault(parola, 0) + 1);
-            System.out.println("[DEBUG] >>> aggiungiDocumento: " + nome);
-            System.out.println("[DEBUG] >>> Frequenze parole = " + frequenze);
-
         }
 
         matrix.put(nome, frequenze);
@@ -100,16 +96,6 @@ public class WordDocumentMatrix {
     public int getFrequenza(String documento, String parola) {
         return matrix.getOrDefault(documento, Map.of())
                 .getOrDefault(parola.toLowerCase(), 0);
-    }
-
-    /**
-     * Verifica se una parola è presente in un documento
-     * @param documento
-     * @param parola
-     * @return
-     */
-    public boolean contieneParola(String documento, String parola) {
-        return getFrequenza(documento, parola) > 0;
     }
 
     /**
@@ -157,8 +143,6 @@ public class WordDocumentMatrix {
     public static WordDocumentMatrix importaCSV(String wdmPath, String stopwordPath) throws IOException {
         WordDocumentMatrix matrix = new WordDocumentMatrix();
         matrix.caricaStopwords(stopwordPath);
-        System.out.println("[DEBUG] Stopwords caricate: " + matrix.stopwords.size());
-        System.out.println("[DEBUG] Prime 10 stopwords: " + matrix.stopwords.stream().limit(10).toList());
 
         try (BufferedReader reader = new BufferedReader(new FileReader(wdmPath))) {
             String line = reader.readLine(); // skip header
@@ -170,16 +154,11 @@ public class WordDocumentMatrix {
                 String word = parts[1].trim().toLowerCase();
                 int freq = Integer.parseInt(parts[2].trim());
 
-                if (matrix.stopwords.contains(word)) {
-                    System.out.println("[DEBUG] Parola ignorata perché presente tra le stopwords: " + word);
-                    continue;
-                }
+                if (matrix.stopwords.contains(word)) continue;
 
                 matrix.matrix
                         .computeIfAbsent(doc, k -> new HashMap<>())
                         .put(word, freq);
-
-                System.out.println("[DEBUG] Parola aggiunta: '" + word + "' con frequenza " + freq + " al documento '" + doc + "'");
             }
         }
         return matrix;

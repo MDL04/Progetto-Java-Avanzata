@@ -139,13 +139,11 @@ public class UserDashboardController {
      */
     @FXML
     private void handleLogout(ActionEvent event) {
-        // Mostra dialogo di conferma
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Conferma Logout");
         alert.setHeaderText("Stai per effettuare il logout");
         alert.setContentText("Sei sicuro di voler uscire? I dati non salvati andranno persi.");
 
-        // Personalizza i pulsanti
         ButtonType confirmButton = new ButtonType("Conferma", ButtonBar.ButtonData.OK_DONE);
         ButtonType cancelButton = new ButtonType("Annulla", ButtonBar.ButtonData.CANCEL_CLOSE);
         alert.getButtonTypes().setAll(confirmButton, cancelButton);
@@ -188,20 +186,16 @@ public class UserDashboardController {
                     new Stop(0, Color.web("#0077cc")),  // Blu
                     new Stop(1, Color.web("#f6a500"))); // Arancione
 
-            // Applicazione del gradiente al testo della label
             userLabel.setTextFill(gradient);
 
-            // Miglior punteggio
             bestEasyLabel.setText(String.valueOf(user.getBestScoreEasy()));
             bestMediumLabel.setText(String.valueOf(user.getBestScoreMedium()));
             bestHardLabel.setText(String.valueOf(user.getBestScoreHard()));
 
-            // Partite giocate
             gamesEasyLabel.setText(String.valueOf(user.getPartiteEasy()));
             gamesMediumLabel.setText(String.valueOf(user.getPartiteMedium()));
             gamesHardLabel.setText(String.valueOf(user.getPartiteHard()));
 
-            // Punteggio medio
             avgEasyLabel.setText(user.getPartiteEasy() > 0 ? String.valueOf(user.getScoreEasy() / user.getPartiteEasy()) : "0");
             avgMediumLabel.setText(user.getPartiteMedium() > 0 ? String.valueOf(user.getScoreMedium() / user.getPartiteMedium()) : "0");
             avgHardLabel.setText(user.getPartiteHard() > 0 ? String.valueOf(user.getScoreHard() / user.getPartiteHard()) : "0");
@@ -216,13 +210,11 @@ public class UserDashboardController {
             String avatarPath = currentUser.getUrlAvatar();
 
             try {
-                // Prova a caricare l'avatar dell'utente
                 InputStream imageStream = getClass().getResourceAsStream(avatarPath);
                 if (imageStream != null) {
                     Image userImage = new Image(imageStream);
                     userAvatarImageView.setImage(userImage);
                 } else {
-                    // Se non trova l'avatar, carica quello di default
                     loadDefaultAvatar();
                 }
             } catch (Exception e) {
@@ -230,7 +222,6 @@ public class UserDashboardController {
                 loadDefaultAvatar();
             }
         } else {
-            // Se l'utente non ha un avatar impostato, carica quello di default
             loadDefaultAvatar();
         }
     }

@@ -80,22 +80,18 @@
                         <RowConstraints prefHeight="30.0" />
                         <RowConstraints prefHeight="30.0" />
                      </rowConstraints>
-                     <!-- Intestazioni colonne -->
                      <Label style="-fx-text-fill: white" text="" GridPane.columnIndex="0" GridPane.rowIndex="0" />
                      <Label text="Facile" GridPane.columnIndex="1" GridPane.rowIndex="0" />
                      <Label text="Medio" GridPane.columnIndex="2" GridPane.rowIndex="0" />
                      <Label text="Difficile" GridPane.columnIndex="3" GridPane.rowIndex="0" />
-                     <!-- Miglior punteggio -->
                      <Label text="Miglior punteggio" textAlignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="1" />
                      <Label fx:id="bestEasyLabel" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                      <Label fx:id="bestMediumLabel" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                      <Label fx:id="bestHardLabel" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                     <!-- Partite giocate -->
                      <Label text="Partite giocate" textAlignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="2" />
                      <Label fx:id="gamesEasyLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                      <Label fx:id="gamesMediumLabel" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                      <Label fx:id="gamesHardLabel" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-                     <!-- Punteggio medio -->
                      <Label text="Media" textAlignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="3" />
                      <Label fx:id="avgEasyLabel" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                      <Label fx:id="avgMediumLabel" GridPane.columnIndex="2" GridPane.rowIndex="3" />

@@ -50,7 +50,6 @@ public class LeaderboardController {
     boolean isLoggedin = false;
     private User currentUser;
 
-    private ObservableList<User> leaderboardData = FXCollections.observableArrayList();
     private final UserDAO userDAO = new UserDAO();
 
     /**

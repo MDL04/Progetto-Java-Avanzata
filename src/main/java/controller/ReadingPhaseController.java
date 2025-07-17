@@ -251,7 +251,7 @@ public class ReadingPhaseController {
         java.io.File stopwordsFile = new java.io.File("stopwords.txt");
         if (wdmFile.exists() && stopwordsFile.exists()) {
             try {
-                WordDocumentMatrix completa = WordDocumentMatrix.importaCSV("wdm.csv", "stopwords.csv");
+                WordDocumentMatrix completa = WordDocumentMatrix.importaCSV("wdm.csv", "stopwords.txt");
                 System.out.println(wdmFile.getAbsolutePath() + wdmFile.toString());
                 WordDocumentMatrix sessione = new WordDocumentMatrix();
                 sessione.setStopwords(completa.getStopwords());

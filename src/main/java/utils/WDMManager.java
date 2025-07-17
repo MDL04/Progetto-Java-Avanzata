@@ -65,38 +65,18 @@ public class WDMManager {
      * Carica i documenti e le stopwords dal databaase e li carica nella matrice.
      */
     private static void caricaDaDatabase() {
-        System.out.println("=== [DEBUG] Avvio caricamento da database ===");
-
         List<Document> documenti = DocumentDAO.selectAllDocuments();
         List<Stopword> stopwordsDB = StopwordDAO.selectAllStopwords();
-
-        System.out.println("[DEBUG] Documenti trovati nel DB: " + documenti.size());
-        for (Document doc : documenti) {
-            System.out.println("[DEBUG] Documento: titolo='" + doc.getTitle() + "', lunghezza contenuto=" + doc.getContent().length());
-        }
-
-        System.out.println("[DEBUG] Stopwords trovate nel DB: " + stopwordsDB.size());
 
         Set<String> tutteLeStopwords = stopwordsDB.stream()
                 .flatMap(sw -> Arrays.stream(sw.getContent().split("\\s+")))
                 .map(String::toLowerCase)
                 .collect(Collectors.toSet());
-
-        System.out.println("[DEBUG] Numero totale di stopwords: " + tutteLeStopwords.size());
-        System.out.println("[DEBUG] Prime 10 stopwords: " + tutteLeStopwords.stream().limit(10).toList());
-
         matrix.setStopwords(tutteLeStopwords);
 
         for (Document doc : documenti) {
-            System.out.println("[DEBUG] Aggiunta documento: " + doc.getTitle());
             matrix.aggiungiDocumento(doc.getTitle(), doc.getContent());
         }
-
-        System.out.println("[DEBUG] Documenti effettivamente caricati nella matrice: " + matrix.getDocumenti().size());
-        System.out.println("[DEBUG] Titoli documenti nella matrice: " + matrix.getDocumenti());
-        System.out.println("[DEBUG] Numero parole totali nella matrice: " + matrix.getTutteLeParole().size());
-
-        System.out.println("=== [DEBUG] Fine caricamento da database ===");
     }
 
 }

@@ -42,7 +42,6 @@ public class QuizController {
     private User currentUser;
     private UserDAO userDAO;
 
-    private GameSession gameSession;
     private GameSessionDAO gameSessionDAO;
 
     private LocalDateTime startTime;
@@ -52,8 +51,6 @@ public class QuizController {
 
     private QuizAttempt session;
     private int currentIndex = 0;
-    private List<Document> documentiMostrati;
-    private String lingua; // nuovo campo
 
     /**
      * Inizializza la view del quiz
@@ -64,9 +61,7 @@ public class QuizController {
      */
     @FXML
     public void initialize(WordDocumentMatrix matrix, String difficoltà, List<Document> documentiMostrati, String lingua) {
-        this.documentiMostrati = documentiMostrati;
         this.difficoltà = difficoltà;
-        this.lingua = lingua;
 
         int numDomande = switch (difficoltà) {
             case "Facile" -> 5;

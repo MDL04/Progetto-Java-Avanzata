@@ -14,7 +14,9 @@ public class QuestionFactory {
     private final WordDocumentMatrix matrix;
     private final Random random = new Random();
 
-    // Lista delle parole dal file vocab_it.txt
+    /**
+     * Lista di parole utili per la generazione di domande di esclusione in lingua italiana
+     */
     private static final List<String> VOCABOLARIO_IT = List.of(
             "cane", "gatto", "libro", "scuola", "computer", "albero", "strada", "bambino",
             "città", "mare", "sole", "notte", "amico", "tempo", "gioco", "cibo", "viaggio",
@@ -25,7 +27,9 @@ public class QuestionFactory {
             "olio", "burro"
     );
 
-    // Lista delle parole dal file vocab_en.txt
+    /**
+     * Lista di parole utili per la generazione di domande di esclusione in lingua inglese
+     */
     private static final List<String> VOCABOLARIO_EN = List.of(
             "dog", "cat", "book", "school", "computer", "tree", "street", "child",
             "city", "sea", "sun", "night", "friend", "time", "game", "food", "trip",
@@ -287,8 +291,6 @@ public class QuestionFactory {
             throw new RuntimeException("Errore nel caricamento del vocabolario: " + path, e);
         }
     }
-
-    // ========== Metodi di supporto ==========
 
     /**
      * Genera una lista di distrattori numerici
