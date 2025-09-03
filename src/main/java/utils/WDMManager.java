@@ -3,6 +3,8 @@ package utils;
 import model.Document;
 import model.WordDocumentMatrix;
 
+import java.util.List;
+import java.util.ArrayList;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -15,10 +17,10 @@ public class WDMManager {
     private static WordDocumentMatrix matrix;
 
     /**
-     * Restituisce l'istanza della matrice e se non è stata creata, la carica da file CSV, altrimenti da database
+     * Restituisce l'istanza della matrice e se non è stata creata, la carica da file CSV, altrimenti analizza i file in resources
      * @return
      */
-    public static WordDocumentMatrix getInstance(String language) {
+    public static WordDocumentMatrix getInstance() {
         if (matrix == null) {
             File csv = new File("wdm.csv");
             File stopwords = new File("stopwords.txt");
@@ -26,10 +28,10 @@ public class WDMManager {
                 try {
                     matrix = WordDocumentMatrix.importaCSV("wdm.csv", "stopwords.txt");
                 } catch (IOException e) {
-                    matrix = creaDaFile(language);
+                    matrix = creaDaFile();
                 }
             } else {
-                matrix = creaDaFile(language);
+                matrix = creaDaFile();
             }
         }
         return matrix;
@@ -40,16 +42,24 @@ public class WDMManager {
      */
     public static void delete() {
         matrix = null;
+        File wdm = new File("wdm.csv");
+        File stopwords = new File("stopwords.txt");
+        if (wdm.exists()) wdm.delete();
+        if (stopwords.exists()) stopwords.delete();
     }
 
     /**
      * Carica i documenti e le stopwords dalla cartella risorse e li carica nella matrice.
      */
-    private static WordDocumentMatrix creaDaFile(String language) {
+    private static WordDocumentMatrix creaDaFile() {
         WordDocumentMatrix m = new WordDocumentMatrix();
         try {
-            List<Document> docs = FileManager.caricaDocumenti(language);
-            List<String> stopwords = FileManager.caricaStopwords(language);
+            List<Document> docs = new ArrayList<>();
+            docs.addAll(FileManager.caricaDocumenti("it"));
+            docs.addAll(FileManager.caricaDocumenti("en"));
+            List<String> stopwords = new ArrayList<>();
+            stopwords.addAll(FileManager.caricaStopwords("it"));
+            stopwords.addAll(FileManager.caricaStopwords("en"));
             m.setStopwords(stopwords);
             for (Document doc : docs) {
                 m.aggiungiDocumento(doc.getTitle(), doc.getContent());

@@ -77,6 +77,9 @@ public class ReadingPhaseController {
         }
 
         caricaDocumenti();
+        if (documentiDaMostrare == null || documentiDaMostrare.isEmpty()) {
+            return;
+        }
         mostraDocumentoCorrente();
 
         documentArea.sceneProperty().addListener((obs, oldScene, newScene) -> {
@@ -100,15 +103,25 @@ public class ReadingPhaseController {
     private void caricaDocumenti() {
         try {
             List<Document> tuttiDocumenti = FileManager.caricaDocumenti(lingua);
+            Collections.shuffle(tuttiDocumenti);
             documentiDaMostrare = tuttiDocumenti.stream()
                     .filter(doc -> contaParole(doc.getContent()) <= maxParolePerDocumento)
                     .limit(maxDocumenti)
                     .toList();
+            if (documentiDaMostrare.size() < maxDocumenti) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Errore");
+                alert.setHeaderText("Documenti insufficienti");
+                alert.setContentText("Servono almeno " + maxDocumenti + " documenti per la lingua e la difficoltà selezionate.");
+                alert.showAndWait();
+                documentiDaMostrare = List.of();
+                return;
+            }
             if (documentiDaMostrare.isEmpty()) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Errore");
                 alert.setHeaderText("Nessun documento disponibile");
-                alert.setContentText("Non ci sono documenti per la lingua e difficoltà selezionate");
+                alert.setContentText("Non ci sono documenti per la lingua e la difficoltà selezionate");
                 alert.showAndWait();
             }
         } catch (IOException e) {
@@ -298,9 +311,14 @@ public class ReadingPhaseController {
         }
     }
 
+    public List<Document> getDocumentiDaMostrare() {
+        return documentiDaMostrare;
+    }
+
     /**
      * Setta l'user corrente
-     * @param currentUser*/
+     * @param currentUser
+     */
     public void setUser(User currentUser) {
         this.currentUser = currentUser;
     }

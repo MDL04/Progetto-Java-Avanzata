@@ -76,6 +76,10 @@ public class GameSelectionController {
             readingController.setUser(currentUser);
             readingController.initialize(linguaCodice, difficoltà);
 
+            if (readingController.getDocumentiDaMostrare() == null || readingController.getDocumentiDaMostrare().isEmpty()) {
+                return;
+            }
+
             Stage stage = (Stage) languageComboBox.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("Fase di Lettura - " + difficoltà);

@@ -97,7 +97,7 @@ public class AdminController {
                 documentList.getItems().add(file.getName());
 
                 WDMManager.delete();
-                WDMManager.getInstance(language);
+                WDMManager.getInstance();
 
                 showInfoAlert("Successo", "Documento caricato correttamente.");
             } catch (IOException e) {
@@ -140,7 +140,7 @@ public class AdminController {
                 stopwordList.getItems().add(file.getName());
 
                 WDMManager.delete();
-                WDMManager.getInstance(language);
+                WDMManager.getInstance();
 
                 showInfoAlert("Successo", "Stopwords caricate correttamente.");
             } catch (IOException e) {
@@ -183,7 +183,7 @@ public class AdminController {
                     documentList.getItems().remove(selected);
 
                     WDMManager.delete();
-                    WDMManager.getInstance(language);
+                    WDMManager.getInstance();
 
                     showInfoAlert("Successo", "Documento eliminato correttamente.");
                 } catch (IOException e) {
@@ -228,7 +228,7 @@ public class AdminController {
                     stopwordList.getItems().remove(selected);
 
                     WDMManager.delete();
-                    WDMManager.getInstance(language);
+                    WDMManager.getInstance();
 
                     showInfoAlert("Successo", "Stopwords eliminate correttamente.");
                 } catch (IOException e) {
