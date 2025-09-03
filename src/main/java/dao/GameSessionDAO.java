@@ -13,7 +13,7 @@ import java.util.Optional;
  * Classe DAO che gestisce le transazioni con il database wordageddon.db per quanto riguarda le sessioni di gioco.
  * Fornisce metodi per inserire, selezionare e cancellare sessioni di gioco.
  */
-public class GameSessionDAO {
+public class GameSessionDAO implements DAO<GameSession>{
 
     /**
      * Seleziona una sessione di gioco in base all'id.
@@ -22,11 +22,11 @@ public class GameSessionDAO {
      * @param id l'id della sessione di gioco da selezionare
      * @return un Optional contenente la sessione di gioco trovata, o vuoto se non trovata
      */
-    public Optional<GameSession> selectById(int id) {
+    public Optional<GameSession> selectById(long id) {
         Optional<GameSession> result = Optional.empty();
         try (Connection connection = DBManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM game_sessions WHERE id = ?")) {
-            preparedStatement.setInt(1, id);
+            preparedStatement.setLong(1, id);
             ResultSet rs = preparedStatement.executeQuery();
             if (rs.next()) {
                 GameSession gameSession = null;

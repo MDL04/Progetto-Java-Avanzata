@@ -1,7 +1,5 @@
 package controller;
 
-import dao.DocumentDAO;
-import dao.StopwordDAO;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,6 +15,9 @@ import utils.WDMManager;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,18 +41,28 @@ public class AdminController {
      */
     @FXML
     private void initialize() {
-        List<Document> allDocs = new ArrayList<>();
-        allDocs.addAll(DocumentDAO.selectAllDocuments());
-        List<Stopword> allSW = new ArrayList<>();
-        allSW.addAll(StopwordDAO.selectAllStopwords());
-
-        for (Document doc : allDocs)
-            documentList.getItems().add(doc.getTitle());
-
-        for (Stopword sw : allSW)
-            stopwordList.getItems().add(sw.getTitle());
-
-        WDMManager.getInstance();
+        documentList.getItems().clear();
+        stopwordList.getItems().clear();
+        try {
+            // Carica documenti IT
+            for (Document doc : utils.FileDocumentManager.loadDocuments("it")) {
+                documentList.getItems().add(doc.getTitle());
+            }
+            // Carica documenti EN
+            for (Document doc : utils.FileDocumentManager.loadDocuments("en")) {
+                documentList.getItems().add(doc.getTitle());
+            }
+            // Carica stopwords IT
+            for (String sw : utils.FileDocumentManager.loadStopwords("it")) {
+                stopwordList.getItems().add(sw);
+            }
+            // Carica stopwords EN
+            for (String sw : utils.FileDocumentManager.loadStopwords("en")) {
+                stopwordList.getItems().add(sw);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -81,17 +92,18 @@ public class AdminController {
 
         if (file != null) {
             try {
-                String content = Files.readString(file.toPath());
-                String title = file.getName();
-                Document doc = new Document(0, language, content, title);
-                DocumentDAO.insertDocument(doc);
-                documentList.getItems().add(title);
+                Path targetDir = Path.of("src/main/resources/documents/" + language);
+                Files.createDirectories(targetDir);
+                Path targetFile = targetDir.resolve(file.getName());
+                Files.copy(file.toPath(), targetFile, StandardCopyOption.REPLACE_EXISTING);
+
+                documentList.getItems().add(file.getName());
 
                 WDMManager.delete();
-                WDMManager.getInstance();
+                WDMManager.getInstance(language);
 
                 showInfoAlert("Successo", "Documento caricato correttamente.");
-            } catch (IOException | SQLException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
                 showInfoAlert("Errore", "Errore durante il caricamento del documento.");
             }
@@ -123,14 +135,17 @@ public class AdminController {
         File file = fileChooser.showOpenDialog(null);
         if (file != null) {
             try {
-                String words = Files.readString(file.toPath());
-                String title = file.getName();
-                Stopword stopword = new Stopword(language, words, 0, title);
-                StopwordDAO.insertStopword(stopword);
-                stopwordList.getItems().add(title);
+                Path targetDir = Path.of("src/main/resources/stopwords/" + language);
+                Files.createDirectories(targetDir);
+                Path targetFile = targetDir.resolve(file.getName());
+                Files.copy(file.toPath(), targetFile, StandardCopyOption.REPLACE_EXISTING);
+
+                stopwordList.getItems().add(file.getName());
 
                 WDMManager.delete();
-                WDMManager.getInstance();
+                WDMManager.getInstance(language);
+
+                showInfoAlert("Successo", "Stopwords caricate correttamente.");
             } catch (IOException e) {
                 e.printStackTrace();
                 showInfoAlert("Errore", "Errore durante il caricamento delle stopwords.");
@@ -151,15 +166,33 @@ public class AdminController {
             Optional<ButtonType> result = alert.showAndWait();
 
             if (result.isPresent() && result.get() == ButtonType.OK) {
-                Optional<Document> optionalDocument = DocumentDAO.selectDocumentByTitle(selected);
-                if (optionalDocument.isPresent()) {
-                    DocumentDAO.deleteDocument(optionalDocument.get());
+                // Sostituisci il blocco try-catch in handleRemoveSelectedDocument con:
+                try {
+                    String language = null;
+                    Path filePath = Path.of("src/main/resources/documents/it", selected);
+                    if (Files.exists(filePath)) {
+                        language = "it";
+                    } else {
+                        filePath = Path.of("src/main/resources/documents/en", selected);
+                        if (Files.exists(filePath)) {
+                            language = "en";
+                        }
+                    }
+                    if (language == null) {
+                        showInfoAlert("Errore", "Documento non trovato.");
+                        return;
+                    }
+
+                    Files.deleteIfExists(filePath);
                     documentList.getItems().remove(selected);
 
                     WDMManager.delete();
-                    WDMManager.getInstance();
-                } else {
-                    showInfoAlert("Errore", "Documento \"" + selected + "\" non trovato nel database.");
+                    WDMManager.getInstance(language);
+
+                    showInfoAlert("Successo", "Documento eliminato correttamente.");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    showInfoAlert("Errore", "Errore durante l'eliminazione del documento.");
                 }
             }
         }
@@ -179,15 +212,33 @@ public class AdminController {
             Optional<ButtonType> result = alert.showAndWait();
 
             if (result.isPresent() && result.get() == ButtonType.OK) {
-                Optional<Stopword> optionalStopword = StopwordDAO.selectSWByTitle(selected);
-                if (optionalStopword.isPresent()) {
-                    StopwordDAO.deleteStopword(optionalStopword.get());
+                // Sostituisci il blocco try-catch in handleRemoveSelectedStopword con:
+                try {
+                    String language = null;
+                    Path filePath = Path.of("src/main/resources/stopwords/it", selected);
+                    if (Files.exists(filePath)) {
+                        language = "it";
+                    } else {
+                        filePath = Path.of("src/main/resources/stopwords/en", selected);
+                        if (Files.exists(filePath)) {
+                            language = "en";
+                        }
+                    }
+                    if (language == null) {
+                        showInfoAlert("Errore", "File di stopwords non trovato.");
+                        return;
+                    }
+
+                    Files.deleteIfExists(filePath);
                     stopwordList.getItems().remove(selected);
-                    
+
                     WDMManager.delete();
-                    WDMManager.getInstance();
-                } else {
-                    showInfoAlert("Errore", "Stopwords \"" + selected + "\" non trovato nel database.");
+                    WDMManager.getInstance(language);
+
+                    showInfoAlert("Successo", "Stopwords eliminate correttamente.");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    showInfoAlert("Errore", "Errore durante l'eliminazione delle stopwords.");
                 }
             }
         }

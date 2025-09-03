@@ -1,7 +1,5 @@
 package controller;
 
-import dao.DocumentDAO;
-import dao.StopwordDAO;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
@@ -15,6 +13,7 @@ import model.Document;
 import model.Stopword;
 import model.User;
 import model.WordDocumentMatrix;
+import utils.FileDocumentManager;
 
 import java.io.IOException;
 import java.util.*;
@@ -101,20 +100,21 @@ public class ReadingPhaseController {
      * Permette di recuperare un documento dal database
      */
     private void caricaDocumenti() {
-        List<Document> tuttiDocumenti = DocumentDAO.selectDocumentByLanguage(lingua);
-
-        documentiDaMostrare = tuttiDocumenti.stream()
-                .filter(doc -> contaParole(doc.getContent()) <= maxParolePerDocumento)
-                .limit(maxDocumenti)
-                .toList();
-
-        if (documentiDaMostrare.isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Errore");
-            alert.setHeaderText("Nessun documento disponibile");
-            alert.setContentText("Non ci sono documenti per la lingua e difficoltà selezionate");
-            alert.showAndWait();
-            return;
+        try {
+            List<Document> tuttiDocumenti = FileDocumentManager.loadDocuments(lingua);
+            documentiDaMostrare = tuttiDocumenti.stream()
+                    .filter(doc -> contaParole(doc.getContent()) <= maxParolePerDocumento)
+                    .limit(maxDocumenti)
+                    .toList();
+            if (documentiDaMostrare.isEmpty()) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Errore");
+                alert.setHeaderText("Nessun documento disponibile");
+                alert.setContentText("Non ci sono documenti per la lingua e difficoltà selezionate");
+                alert.showAndWait();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -170,7 +170,7 @@ public class ReadingPhaseController {
         if (tempoRimanente <= 10) {
             timerLabel.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
         } else {
-            timerLabel.setStyle("-fx-text-fill: black;");
+            timerLabel.setStyle("-fx-text-fill: #ffffff;");
         }
     }
 
@@ -224,18 +224,15 @@ public class ReadingPhaseController {
      */
     private WordDocumentMatrix creaMatriceDaiDocumenti() {
         WordDocumentMatrix matrix = new WordDocumentMatrix();
-
-        List<Stopword> stopwordsLingua = StopwordDAO.selectSWByLanguage(lingua);
-        Set<String> tutteLeStopwords = stopwordsLingua.stream()
-                .flatMap(sw -> Arrays.stream(sw.getContent().split("\\s+")))
-                .map(String::toLowerCase)
-                .collect(Collectors.toSet());
-        matrix.setStopwords(tutteLeStopwords);
-
-        for (Document doc : documentiDaMostrare) {
-            matrix.aggiungiDocumento(doc.getTitle(), doc.getContent());
+        try {
+            List<String> stopwordsLingua = FileDocumentManager.loadStopwords(lingua);
+            matrix.setStopwords(stopwordsLingua);
+            for (Document doc : documentiDaMostrare) {
+                matrix.aggiungiDocumento(doc.getTitle(), doc.getContent());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
         return matrix;
     }
 

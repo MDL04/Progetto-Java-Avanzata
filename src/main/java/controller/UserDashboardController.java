@@ -54,7 +54,6 @@ public class UserDashboardController {
      */
     @FXML
     private void initialize() {
-        WDMManager.getInstance();
     }
 
     /**

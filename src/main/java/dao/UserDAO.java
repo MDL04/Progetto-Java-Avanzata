@@ -15,7 +15,7 @@ import java.util.Optional;
  * Classe DAO che si occupa di fornire metodi che interagiscono con la tabella users del database wordageddon.db.
  * Fornisce metodi per inserire, selezionare, aggiornare e cancellare utenti.
  */
-public class UserDAO {
+public class UserDAO implements DAO<User>{
 
     /**
      * Seleziona un utente in base al suo id.

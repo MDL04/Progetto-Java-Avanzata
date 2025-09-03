@@ -1,7 +1,5 @@
 package utils;
 
-import dao.DocumentDAO;
-import dao.StopwordDAO;
 import model.Document;
 import model.Stopword;
 import model.WordDocumentMatrix;
@@ -24,7 +22,7 @@ public class WDMManager {
      * Restituisce l'istanza della matrice e se non è stata creata, la carica da file CSV, altrimenti da database
      * @return
      */
-    public static WordDocumentMatrix getInstance() {
+    public static WordDocumentMatrix getInstance(String language) {
         if (matrix == null) {
             File csv = new File("wdm.csv");
             File stopwords = new File("stopwords.txt");
@@ -32,23 +30,10 @@ public class WDMManager {
                 try {
                     matrix = WordDocumentMatrix.importaCSV("wdm.csv", "stopwords.txt");
                 } catch (IOException e) {
-                    matrix = new WordDocumentMatrix();
-                    caricaDaDatabase();
-                    try {
-                        matrix.esportaCSV("wdm.csv");
-                        matrix.salvaStopwords("stopwords.txt");
-                    } catch (IOException ignored) {}
+                    matrix = creaDaFile(language);
                 }
             } else {
-                matrix = new WordDocumentMatrix();
-                caricaDaDatabase();
-                try {
-                    matrix.esportaCSV("wdm.csv");
-                    matrix.salvaStopwords("stopwords.txt");
-                } catch (IOException ignored) {
-                    ignored.printStackTrace();
-                    System.err.println("Errore durante l'esportazione del file CSV o salvataggio delle stopwords.");
-                }
+                matrix = creaDaFile(language);
             }
         }
         return matrix;
@@ -62,21 +47,22 @@ public class WDMManager {
     }
 
     /**
-     * Carica i documenti e le stopwords dal databaase e li carica nella matrice.
+     * Carica i documenti e le stopwords dalla cartella risorse e li carica nella matrice.
      */
-    private static void caricaDaDatabase() {
-        List<Document> documenti = DocumentDAO.selectAllDocuments();
-        List<Stopword> stopwordsDB = StopwordDAO.selectAllStopwords();
-
-        Set<String> tutteLeStopwords = stopwordsDB.stream()
-                .flatMap(sw -> Arrays.stream(sw.getContent().split("\\s+")))
-                .map(String::toLowerCase)
-                .collect(Collectors.toSet());
-        matrix.setStopwords(tutteLeStopwords);
-
-        for (Document doc : documenti) {
-            matrix.aggiungiDocumento(doc.getTitle(), doc.getContent());
+    private static WordDocumentMatrix creaDaFile(String language) {
+        WordDocumentMatrix m = new WordDocumentMatrix();
+        try {
+            List<Document> docs = utils.FileDocumentManager.loadDocuments(language);
+            List<String> stopwords = utils.FileDocumentManager.loadStopwords(language);
+            m.setStopwords(stopwords);
+            for (Document doc : docs) {
+                m.aggiungiDocumento(doc.getTitle(), doc.getContent());
+            }
+            m.esportaCSV("wdm.csv");
+            m.salvaStopwords("stopwords.txt");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        return m;
     }
-
 }
