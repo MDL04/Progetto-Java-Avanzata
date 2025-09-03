@@ -107,8 +107,6 @@ public class QuestionFactory {
 
         switch (template) {
             case "Quante volte compare la parola più frequente nel documento '%s'?" -> {
-                // Trova la parola con massima frequenza
-
                 String parolaMax = parole.stream()
                         .max(Comparator.comparingInt(p -> matrix.getFrequenza(doc, p)))
                         .orElse(parole.get(0));
@@ -260,7 +258,6 @@ public class QuestionFactory {
         List<String> opzioni = new ArrayList<>();
         opzioni.add(rispostaCorretta);
 
-        // Rendi la lista modificabile prima di mischiare
         List<String> paroleApparseShufflable = new ArrayList<>(paroleApparse);
         Collections.shuffle(paroleApparseShufflable);
         opzioni.addAll(paroleApparseShufflable.subList(0, 3));
