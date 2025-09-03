@@ -9,7 +9,7 @@ import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import model.Document;
-import model.Stopword;
+import utils.FileManager;
 import utils.WDMManager;
 
 import java.io.File;
@@ -17,9 +17,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.nio.file.Paths;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -45,19 +42,19 @@ public class AdminController {
         stopwordList.getItems().clear();
         try {
             // Carica documenti IT
-            for (Document doc : utils.FileDocumentManager.loadDocuments("it")) {
+            for (Document doc : FileManager.caricaDocumenti("it")) {
                 documentList.getItems().add(doc.getTitle());
             }
             // Carica documenti EN
-            for (Document doc : utils.FileDocumentManager.loadDocuments("en")) {
+            for (Document doc : FileManager.caricaDocumenti("en")) {
                 documentList.getItems().add(doc.getTitle());
             }
             // Carica stopwords IT
-            for (String sw : utils.FileDocumentManager.loadStopwords("it")) {
+            for (String sw : FileManager.caricaStopwords("it")) {
                 stopwordList.getItems().add(sw);
             }
             // Carica stopwords EN
-            for (String sw : utils.FileDocumentManager.loadStopwords("en")) {
+            for (String sw : FileManager.caricaStopwords("en")) {
                 stopwordList.getItems().add(sw);
             }
         } catch (IOException e) {
@@ -166,7 +163,6 @@ public class AdminController {
             Optional<ButtonType> result = alert.showAndWait();
 
             if (result.isPresent() && result.get() == ButtonType.OK) {
-                // Sostituisci il blocco try-catch in handleRemoveSelectedDocument con:
                 try {
                     String language = null;
                     Path filePath = Path.of("src/main/resources/documents/it", selected);
@@ -212,7 +208,6 @@ public class AdminController {
             Optional<ButtonType> result = alert.showAndWait();
 
             if (result.isPresent() && result.get() == ButtonType.OK) {
-                // Sostituisci il blocco try-catch in handleRemoveSelectedStopword con:
                 try {
                     String language = null;
                     Path filePath = Path.of("src/main/resources/stopwords/it", selected);

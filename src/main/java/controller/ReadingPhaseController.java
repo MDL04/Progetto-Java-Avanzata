@@ -10,14 +10,12 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import model.Document;
-import model.Stopword;
 import model.User;
 import model.WordDocumentMatrix;
-import utils.FileDocumentManager;
+import utils.FileManager;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Controller per la fase di lettura del quiz. Gestisce il caricamento dei documenti, la visualizzazione,
@@ -101,7 +99,7 @@ public class ReadingPhaseController {
      */
     private void caricaDocumenti() {
         try {
-            List<Document> tuttiDocumenti = FileDocumentManager.loadDocuments(lingua);
+            List<Document> tuttiDocumenti = FileManager.caricaDocumenti(lingua);
             documentiDaMostrare = tuttiDocumenti.stream()
                     .filter(doc -> contaParole(doc.getContent()) <= maxParolePerDocumento)
                     .limit(maxDocumenti)
@@ -225,7 +223,7 @@ public class ReadingPhaseController {
     private WordDocumentMatrix creaMatriceDaiDocumenti() {
         WordDocumentMatrix matrix = new WordDocumentMatrix();
         try {
-            List<String> stopwordsLingua = FileDocumentManager.loadStopwords(lingua);
+            List<String> stopwordsLingua = FileManager.caricaStopwords(lingua);
             matrix.setStopwords(stopwordsLingua);
             for (Document doc : documentiDaMostrare) {
                 matrix.aggiungiDocumento(doc.getTitle(), doc.getContent());

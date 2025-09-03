@@ -145,7 +145,7 @@ public class WordDocumentMatrix {
         matrix.caricaStopwords(stopwordPath);
 
         try (BufferedReader reader = new BufferedReader(new FileReader(wdmPath))) {
-            String line = reader.readLine(); // skip header
+            String line = reader.readLine();
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
                 if (parts.length != 3) continue;

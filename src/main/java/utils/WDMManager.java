@@ -1,15 +1,11 @@
 package utils;
 
 import model.Document;
-import model.Stopword;
 import model.WordDocumentMatrix;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Classe responsabile della gestione della matrice dei documenti
@@ -52,8 +48,8 @@ public class WDMManager {
     private static WordDocumentMatrix creaDaFile(String language) {
         WordDocumentMatrix m = new WordDocumentMatrix();
         try {
-            List<Document> docs = utils.FileDocumentManager.loadDocuments(language);
-            List<String> stopwords = utils.FileDocumentManager.loadStopwords(language);
+            List<Document> docs = FileManager.caricaDocumenti(language);
+            List<String> stopwords = FileManager.caricaStopwords(language);
             m.setStopwords(stopwords);
             for (Document doc : docs) {
                 m.aggiungiDocumento(doc.getTitle(), doc.getContent());
