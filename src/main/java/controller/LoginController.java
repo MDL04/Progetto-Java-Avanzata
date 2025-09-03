@@ -2,8 +2,7 @@ package controller;
 
 import dao.UserDAO;
 import javafx.animation.PauseTransition;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -38,77 +37,64 @@ public class LoginController {
     private Button loginBtn;
 
     private final UserDAO userDAO = new UserDAO();
-    private final BooleanProperty credentialsValid = new SimpleBooleanProperty(false);
-    private final PauseTransition typingDelay = new PauseTransition(Duration.millis(300));
 
     @FXML
     private void initialize() {
-        loginBtn.disableProperty().bind(credentialsValid.not());
-
-        ChangeListener<String> onType = (observableValue, oldValue, newValue) -> {
+        loginBtn.disableProperty().bind(
+                Bindings.createBooleanBinding(
+                        () -> usernameFld.getText().isBlank() || passwordFld.getText().isBlank(),
+                        usernameFld.textProperty(), passwordFld.textProperty()
+                )
+        );
+        ChangeListener<String> clearMsg = (obs, o, n) -> {
             messageLbl.setText("");
             messageLbl.setStyle("");
-            typingDelay.stop();
-            typingDelay.setOnFinished(e -> validateCredentials());
-            typingDelay.playFromStart();
         };
-        usernameFld.textProperty().addListener(onType);
-        passwordFld.textProperty().addListener(onType);
+        usernameFld.textProperty().addListener(clearMsg);
+        passwordFld.textProperty().addListener(clearMsg);
     }
 
-    private void validateCredentials() {
-        String u = usernameFld.getText();
-        String p = passwordFld.getText();
-
-        if (u == null || u.isBlank() || p == null || p.isBlank()) {
-            credentialsValid.set(false);
-            return;
-        }
-        String hashed = PasswordUtils.hashPassword(p);
-
-        credentialsValid.set(userDAO.checkLogin(u, hashed));
-        if (!userDAO.checkLogin(u, hashed)) {
-            messageLbl.setText("Credenziali non valide");
-            messageLbl.setStyle("-fx-text-fill: red;");
-        } else {
-            messageLbl.setText("Credenziali valide");
-            messageLbl.setStyle("-fx-text-fill: green;");
-        }
-    }
-
-    /**
-     * Metodo per gestire il login
-     * Verifica se le credenziali inserite sono corrette.
-     * Può portare alla user_dashboard o all'admin_dashboard
-     */
     @FXML
     private void handleLogin() {
         String username = usernameFld.getText();
         String password = passwordFld.getText();
-        String hashed = PasswordUtils.hashPassword(password);
+        String hashed   = PasswordUtils.hashPassword(password);
 
-        if(userDAO.selectByUsername(username).isEmpty()){
-            messageLbl.setText("Username non trovato!");
-            messageLbl.setStyle("-fx-text-fill: red;");
+        Optional<User> userOpt = userDAO.selectByUsername(username);
+        if (userOpt.isEmpty()) {
+            showError("Username non trovato!");
             return;
         }
 
-        if(userDAO.checkLogin(username, hashed)){
-            messageLbl.setText("Login riuscito: " + username + "!");
-            messageLbl.setStyle("-fx-text-fill: green;");
-            Optional<User> userOpt = userDAO.selectByUsername(username);
-            if(userOpt.isPresent()) {
-                User user = userOpt.get();
-                if(!user.isAdmin()) {
-                    goToUserDashboard();
-                } else {
-                    goToAdminDashboard();
-                }
-            }
-        } else {
-            messageLbl.setText("Credenziali errate!");
-            messageLbl.setStyle("-fx-text-fill: red;");
+        if (!userDAO.checkLogin(username, hashed)) {
+            showError("Credenziali non valide");
+            return;
         }
+
+        showInfo("Login effettuato con successo: " + username + "!");
+
+        User user = userOpt.get();
+        PauseTransition navigationDelay = new PauseTransition(Duration.seconds(2.2));
+        navigationDelay.setOnFinished(e -> {
+            if (!user.isAdmin()) goToUserDashboard();
+            else goToAdminDashboard();
+        });
+        navigationDelay.play();
+    }
+
+    private void showError(String msg) {
+        messageLbl.setText(msg);
+        messageLbl.setStyle("-fx-text-fill: red;");
+    }
+
+    private void showInfo(String msg) {
+        Alert a = new Alert(Alert.AlertType.INFORMATION);
+        a.setHeaderText(null);
+        a.setContentText(msg);
+        a.show();
+        PauseTransition delay = new PauseTransition(Duration.seconds(2));
+        delay.setOnFinished(e -> a.close());
+        delay.play();
     }
 
     /**

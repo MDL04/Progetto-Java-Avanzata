@@ -84,7 +84,6 @@ public class QuizController {
             e.printStackTrace();
         }
 
-        // Imposta l'handler per la chiusura con la X
         nextButton.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
                 newScene.windowProperty().addListener((obsWin, oldWin, newWin) -> {

@@ -111,7 +111,6 @@ public class LeaderboardController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/user_dashboard.fxml"));
             Parent root = loader.load();
 
-            // Passa l'utente al controller della dashboard
             UserDashboardController dashboardController = loader.getController();
             if (currentUser != null) {
                 dashboardController.setUser(currentUser);

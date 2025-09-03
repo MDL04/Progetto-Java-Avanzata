@@ -265,11 +265,9 @@ public class ReadingPhaseController {
                 sessione.setStopwords(completa.getStopwords());
                 for (Document doc : documentiDaMostrare) {
                     if (completa.getDocumenti().contains(doc.getTitle())) {
-                        // Copia le frequenze delle parole per il documento
                         Map<String, Integer> freq = new HashMap<>(completa.getFrequenzeDocumento(doc.getTitle()));
                         sessione.aggiungiFrequenzeDocumento(doc.getTitle(), freq);
                     } else {
-                        // Se non c'è, aggiungi normalmente
                         sessione.aggiungiDocumento(doc.getTitle(), doc.getContent());
                     }
                 }
@@ -302,10 +300,8 @@ public class ReadingPhaseController {
         Optional<ButtonType> result = alert.showAndWait();
         if(result.isPresent()){
             if (result.get() == esciSenzaSalvare) {
-                // Chiudi l'applicazione senza salvare
                 stage.close();
             } else {
-                // Annulla l'uscita
                 alert.close();
             }
         }

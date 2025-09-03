@@ -41,19 +41,15 @@ public class AdminController {
         documentList.getItems().clear();
         stopwordList.getItems().clear();
         try {
-            // Carica documenti IT
             for (Document doc : FileManager.caricaDocumenti("it")) {
                 documentList.getItems().add(doc.getTitle());
             }
-            // Carica documenti EN
             for (Document doc : FileManager.caricaDocumenti("en")) {
                 documentList.getItems().add(doc.getTitle());
             }
-            // Carica stopwords IT
             for (String sw : FileManager.caricaStopwords("it")) {
                 stopwordList.getItems().add(sw);
             }
-            // Carica stopwords EN
             for (String sw : FileManager.caricaStopwords("en")) {
                 stopwordList.getItems().add(sw);
             }
