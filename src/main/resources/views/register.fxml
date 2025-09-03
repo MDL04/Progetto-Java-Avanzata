@@ -18,7 +18,7 @@
         <PasswordField fx:id="passwordFld" promptText="Password" />
         <PasswordField fx:id="confirmPasswordFld" promptText="Conferma Password" />
 
-        <Button onAction="#handleRegister" text="Registrati" />
+        <Button fx:id="regBtn" onAction="#handleRegister" text="Registrati" />
         <Label fx:id="messageLbl" />
 
         <HBox alignment="CENTER">

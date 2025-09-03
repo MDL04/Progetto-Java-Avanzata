@@ -14,7 +14,6 @@ import java.util.Optional;
  * Fornisce metodi per inserire, selezionare e cancellare sessioni di gioco.
  */
 public class GameSessionDAO implements DAO<GameSession>{
-
     /**
      * Seleziona una sessione di gioco in base all'id.
      * Cattura un SQLException in caso di errore nella selezione.
@@ -22,6 +21,7 @@ public class GameSessionDAO implements DAO<GameSession>{
      * @param id l'id della sessione di gioco da selezionare
      * @return un Optional contenente la sessione di gioco trovata, o vuoto se non trovata
      */
+    @Override
     public Optional<GameSession> selectById(long id) {
         Optional<GameSession> result = Optional.empty();
         try (Connection connection = DBManager.getConnection();
@@ -76,6 +76,7 @@ public class GameSessionDAO implements DAO<GameSession>{
      *
      * @return una lista di tutte le sessioni di gioco
      */
+    @Override
     public List<GameSession> selectAll() {
         List<GameSession> sessions = new ArrayList<>();
         try (Connection connection = DBManager.getConnection();
@@ -131,6 +132,13 @@ public class GameSessionDAO implements DAO<GameSession>{
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void delete(GameSession gs) {
+        if (gs == null || gs.getId() <= 0)
+            throw new IllegalArgumentException("GameSession o id null");
+        deleteById(gs.getId());
     }
 
 }

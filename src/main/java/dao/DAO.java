@@ -6,7 +6,5 @@ import java.util.Optional;
 public interface DAO<T> {
     Optional<T> selectById(long id);
     List<T> selectAll();
-    //void insert(T t);
-    //void delete(T t);
-    //void update(T t);
+    void delete(T t);
 }

@@ -24,6 +24,7 @@ public class UserDAO implements DAO<User>{
      * @param id l'id dell'utente da selezionare
      * @return un Optional contenente l'utente trovato, o vuoto se non trovato
      */
+    @Override
     public Optional<User> selectById(long id) {
         Optional<User> result = Optional.empty();
         try (Connection connection = DBManager.getConnection();
@@ -140,6 +141,7 @@ public class UserDAO implements DAO<User>{
      *
      * @return una lista di User che non sono amministratori
      */
+    @Override
     public List<User> selectAll() {
         List<User> users = new ArrayList<>();
         try (Connection connection = DBManager.getConnection();
@@ -278,6 +280,7 @@ public class UserDAO implements DAO<User>{
      *
      * @param user l'oggetto User da eliminare
      */
+    @Override
     public void delete(User user){
             try(Connection connection = DBManager.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM users WHERE username = ?")) {

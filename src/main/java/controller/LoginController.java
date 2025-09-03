@@ -1,6 +1,10 @@
 package controller;
 
 import dao.UserDAO;
+import javafx.animation.PauseTransition;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -9,6 +13,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import model.User;
 import utils.PasswordUtils;
 
@@ -29,7 +34,47 @@ public class LoginController {
     @FXML
     private Label messageLbl;
 
+    @FXML
+    private Button loginBtn;
+
     private final UserDAO userDAO = new UserDAO();
+    private final BooleanProperty credentialsValid = new SimpleBooleanProperty(false);
+    private final PauseTransition typingDelay = new PauseTransition(Duration.millis(300));
+
+    @FXML
+    private void initialize() {
+        loginBtn.disableProperty().bind(credentialsValid.not());
+
+        ChangeListener<String> onType = (observableValue, oldValue, newValue) -> {
+            messageLbl.setText("");
+            messageLbl.setStyle("");
+            typingDelay.stop();
+            typingDelay.setOnFinished(e -> validateCredentials());
+            typingDelay.playFromStart();
+        };
+        usernameFld.textProperty().addListener(onType);
+        passwordFld.textProperty().addListener(onType);
+    }
+
+    private void validateCredentials() {
+        String u = usernameFld.getText();
+        String p = passwordFld.getText();
+
+        if (u == null || u.isBlank() || p == null || p.isBlank()) {
+            credentialsValid.set(false);
+            return;
+        }
+        String hashed = PasswordUtils.hashPassword(p);
+
+        credentialsValid.set(userDAO.checkLogin(u, hashed));
+        if (!userDAO.checkLogin(u, hashed)) {
+            messageLbl.setText("Credenziali non valide");
+            messageLbl.setStyle("-fx-text-fill: red;");
+        } else {
+            messageLbl.setText("Credenziali valide");
+            messageLbl.setStyle("-fx-text-fill: green;");
+        }
+    }
 
     /**
      * Metodo per gestire il login

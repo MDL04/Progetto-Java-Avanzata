@@ -17,7 +17,7 @@
         <TextField fx:id="usernameFld" promptText="Username" />
         <PasswordField fx:id="passwordFld" promptText="Password" />
 
-        <Button onAction="#handleLogin" text="Login" />
+        <Button fx:id="loginBtn" onAction="#handleLogin" text="Login" />
         <Label fx:id="messageLbl" />
 
         <HBox alignment="CENTER">
